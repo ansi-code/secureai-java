@@ -5,7 +5,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 import java.io.File;
 
-public class YAMLParser {
+public class YAML {
     private static ObjectMapper yamlMapper = new ObjectMapper(new YAMLFactory());
 
     public static <T> T parse(String filePath, Class<T> classType) {
