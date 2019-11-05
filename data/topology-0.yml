@@ -1,0 +1,6 @@
+id: Test Config
+nodes:
+  node1:
+    id: 1
+  node2:
+    id: 2

@@ -11,10 +11,11 @@
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
     <dependencies>
+
+        <!-- D4J -->
         <dependency>
             <groupId>org.nd4j</groupId>
-            <!-- Use nd4j-native-platform for CPU and nd4j-cuda-8.0-platform or nd4j-cuda-9.2-platform for GPU -->
-            <!-- Note: Some use-cases (like Word2Vec work better with CPU) -->
+            <!-- Use nd4j-native-platform for CPU and nd4j-cuda-8.0-platform or nd4j-cuda-10.1-platform for GPU -->
             <artifactId>nd4j-native-platform</artifactId>
             <version>${dl4j.version}</version>
         </dependency>
@@ -31,13 +32,31 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
-            <version>1.7.21</version>
+            <version>1.7.7</version>
         </dependency>
         <dependency>
             <groupId>commons-cli</groupId>
             <artifactId>commons-cli</artifactId>
             <version>1.2</version>
         </dependency>
+
+        <!-- Jackson -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-yaml</artifactId>
+            <version>2.5.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.5.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.8.1</version>
+        </dependency>
+
     </dependencies>
     <build>
         <finalName>secureai</finalName>
