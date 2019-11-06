@@ -12,18 +12,18 @@
     </properties>
     <dependencies>
 
+        <!-- CUDA 10.0: before everything install https://developer.nvidia.com/cuda-10.0-download-archive -->
         <dependency>
             <groupId>org.bytedeco</groupId>
-            <artifactId>cuda</artifactId>
-            <version>10.1-7.5-1.5</version>
-            <classifier>windows-x86_64-redist</classifier>
+            <artifactId>cuda-platform</artifactId>
+            <version>10.0-7.4-1.5</version>
         </dependency>
 
         <!-- D4J -->
         <dependency>
             <groupId>org.nd4j</groupId>
-            <!-- Use nd4j-native-platform for CPU and nd4j-cuda-8.0-platform or nd4j-cuda-10.1-platform for GPU -->
-            <artifactId>nd4j-cuda-10.1-platform</artifactId>
+            <!-- Use nd4j-native-platform for CPU and nd4j-cuda-10.0-platform for GPU -->
+            <artifactId>nd4j-cuda-10.0-platform</artifactId>
             <version>${dl4j.version}</version>
         </dependency>
         <dependency>
