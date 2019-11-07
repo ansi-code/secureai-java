@@ -27,6 +27,7 @@ public class Example {
         int batchSize = 128; // batch size for each epoch
         int rngSeed = 123; // random number seed for reproducibility
         int numEpochs = 1; // number of epochs to perform
+        System.setProperty("org.deeplearning4j.resources.baseurl", "https://raw.githubusercontent.com/suriyadeepan/datasets/master/toy-"); // this is a tmp fix for broken d4j blob endpoint
 
         //Get the DataSetIterators:
         DataSetIterator mnistTrain = new MnistDataSetIterator(batchSize, true, rngSeed);
