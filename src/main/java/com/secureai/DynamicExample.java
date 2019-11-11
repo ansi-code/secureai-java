@@ -1,5 +1,6 @@
 package com.secureai;
 
+import org.deeplearning4j.datasets.fetchers.MnistDataFetcher;
 import org.deeplearning4j.datasets.iterator.impl.MnistDataSetIterator;
 import org.deeplearning4j.eval.Evaluation;
 import org.deeplearning4j.nn.api.Layer;
@@ -15,6 +16,8 @@ import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.api.rng.DefaultRandom;
+import org.nd4j.linalg.dataset.DataSet;
+import org.nd4j.linalg.dataset.api.iterator.BaseDatasetIterator;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.learning.config.Nesterovs;
@@ -22,7 +25,9 @@ import org.nd4j.linalg.lossfunctions.LossFunctions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 public class DynamicExample {
@@ -32,7 +37,6 @@ public class DynamicExample {
         //number of rows and columns in the input pictures
         final int numRows = 28;
         final int numColumns = 28;
-        int outputNum = 10; // number of output classes
         int batchSize = 128; // batch size for each epoch
         int rngSeed = 123; // random number seed for reproducibility
         int numEpochs = 1; // number of epochs to perform
@@ -40,34 +44,10 @@ public class DynamicExample {
 
         //Get the DataSetIterators:
         DataSetIterator mnistTrain = new MnistDataSetIterator(batchSize, true, rngSeed);
-        /*
-        DataSetIterator mnistTrain = new MnistDataSetIterator(batchSize, true, rngSeed){
-            @Override
-            public DataSet next() {
-                return super.next();
-            }
-
-            @Override
-            public int totalOutcomes() {
-                return 9;
-            }
-
-            @Override
-            public List<String> getLabels() {
-                List<String> orig = super.getLabels();
-                orig.remove(orig.size()-1);
-                return orig;
-            }
-
-            @Override
-            public DataSet next(int num) {
-                DataSet orig = super.next(num);
-                orig.
-                return super.next(num);
-            }
-        }
-        */
         DataSetIterator mnistTest = new MnistDataSetIterator(batchSize, false, rngSeed);
+
+        DataSetIterator mnist9Train = new Mnist9DataSetIterator(batchSize, true, rngSeed);
+        DataSetIterator mnist9Test = new Mnist9DataSetIterator(batchSize, false, rngSeed);
 
 
         log.info("Build model....");
@@ -85,7 +65,7 @@ public class DynamicExample {
                         .build())
                 .layer(new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD) //create hidden layer
                         .nIn(1000)
-                        .nOut(outputNum)
+                        .nOut(9)
                         .activation(Activation.SOFTMAX)
                         .weightInit(WeightInit.XAVIER)
                         .build())
@@ -99,21 +79,37 @@ public class DynamicExample {
         model.setListeners(new ScoreIterationListener(1));
 
         log.info("Train model....");
-        model.fit(mnistTrain, numEpochs);
+        model.fit(mnist9Train, numEpochs);
 
 
         log.info("Evaluate model....");
-        Evaluation eval = model.evaluate(mnistTest);
+        Evaluation eval = model.evaluate(mnist9Test);
         log.info(eval.stats());
         log.info("****************Example finished********************");
+
+
+        // #############   NEW MODEL
 
         MultiLayerNetwork newModel = addOutputs(model, 1);
         System.out.println(newModel.summary());
 
+        //print the score with every 1 iteration
+        newModel.setListeners(new ScoreIterationListener(1));
+
+        log.info("Train model....");
+        newModel.fit(mnistTrain, numEpochs);
+
+
+        log.info("Evaluate model....");
+        Evaluation eval1 = newModel.evaluate(mnistTest);
+        log.info(eval1.stats());
+        log.info("****************Example finished********************");
+
+
     }
 
     private static MultiLayerNetwork addOutputs(MultiLayerNetwork model, int n) {
-        Layer outputLayer = model.getLayer(model.getLayers().length-1);
+        Layer outputLayer = model.getLayer(model.getLayers().length - 1);
         Map<String, INDArray> oldParamsTable = outputLayer.paramTable();
         INDArray weights = oldParamsTable.get("W");
         INDArray biases = oldParamsTable.get("b");
@@ -122,11 +118,35 @@ public class DynamicExample {
         oldParamsTable.put("b", Nd4j.hstack(biases, Nd4j.zeros(biases.rows(), n)));
 
         MultiLayerNetwork newModel = new TransferLearning.Builder(model)
-                .nOutReplace(model.getLayers().length-1, weights.columns() + n, WeightInit.ONES)
+                .nOutReplace(model.getLayers().length - 1, weights.columns() + n, WeightInit.ONES)
                 .build();
 
-        newModel.getLayer(model.getLayers().length-1).setParamTable(oldParamsTable);
+        newModel.getLayer(model.getLayers().length - 1).setParamTable(oldParamsTable);
 
         return newModel;
+    }
+
+    public static class Mnist9DataSetIterator extends BaseDatasetIterator {
+        public Mnist9DataSetIterator(int batch, int numExamples) throws IOException {
+            this(batch, numExamples, false);
+        }
+
+        public Mnist9DataSetIterator(int batch, int numExamples, boolean binarize) throws IOException {
+            this(batch, numExamples, binarize, true, false, 0L);
+        }
+
+        public Mnist9DataSetIterator(int batchSize, boolean train, int seed) throws IOException {
+            this(batchSize, train ? '\uea60' : 10000, false, train, true, (long) seed);
+        }
+
+        public Mnist9DataSetIterator(int batch, int numExamples, boolean binarize, boolean train, boolean shuffle, long rngSeed) throws IOException {
+            super(batch, numExamples, new MnistDataFetcher(binarize, train, shuffle, rngSeed, numExamples) {
+                @Override
+                public void fetch(int numExamples) {
+                    super.fetch(numExamples);
+                    this.curr.filterAndStrip(new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8});
+                }
+            });
+        }
     }
 }
