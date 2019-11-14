@@ -1,0 +1,71 @@
+id: 3-tier-sample-topology
+
+nodes:
+  # Classic Api Gateway
+  api-gateway-main:
+    type: api-gateway
+    replication: 1
+
+  # Services
+  microservice-rest:
+    type: image
+    replication: 2
+  microservice-log:
+    type: image
+    replication: 1
+  microservice-batch-processing:
+    type: image
+    replication: 1
+  microservice-stream-processing:
+    type: image
+    replication: 1
+
+  # Databases
+  database-mysql-core:
+    type: database
+    replication: 3
+  database-mongo-analytics:
+    type: database
+    replication: 1
+
+edges:
+  # First tier
+  api-gateway-main-to-microservice-rest:
+    type: http
+    direction: bidirectional
+    from: api-gateway-main
+    to: microservice-rest
+  api-gateway-main-to-microservice-log:
+    type: amqp
+    direction: unidirectional
+    from: api-gateway-main
+    to: microservice-log
+
+  # Second tier
+  microservice-rest-to-database-mysql-core:
+    type: proprietary
+    direction: bidirectional
+    from: microservice-rest
+    to: database-mysql-core
+  microservice-log-to-microservice-batch-processing:
+    type: grpc
+    direction: bidirectional
+    from: microservice-log
+    to: microservice-batch-processing
+  microservice-log-to-microservice-stream-processing:
+    type: kafka
+    direction: unidirectional
+    from: microservice-log
+    to: microservice-stream-processing
+
+  # Third tier
+  microservice-batch-processing-to-database-mongo-analytics:
+    type: proprietary
+    direction: bidirectional
+    from: microservice-batch-processing
+    to: database-mongo-analytics
+  microservice-stream-processing-to-database-mongo-analytics:
+    type: proprietary
+    direction: unidirectional
+    from: microservice-stream-processing
+    to: database-mongo-analytics

@@ -7,6 +7,6 @@ public class Main {
 
     public static void main(String... args) {
         System.out.println("Hello World");
-        System.out.println(YAML.parse("data/topology-0.yml", Topology.class));
+        System.out.println(YAML.parse("data/topology-1.yml", Topology.class));
     }
 }
