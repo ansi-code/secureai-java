@@ -69,6 +69,23 @@
             <version>1.16.20</version>
         </dependency>
 
+        <!-- Rl4J -->
+        <dependency>
+            <groupId>org.deeplearning4j</groupId>
+            <artifactId>rl4j-core</artifactId>
+            <version>${dl4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.deeplearning4j</groupId>
+            <artifactId>rl4j-gym</artifactId>
+            <version>${dl4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.deeplearning4j</groupId>
+            <artifactId>rl4j-ale</artifactId>
+            <version>${dl4j.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>
