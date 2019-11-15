@@ -9,15 +9,13 @@ public class SystemAction {
     private Integer executionTime;
     private Integer executionCost;
     private Boolean isDisruptive;
+    private PreSystemStateFunction preSystemStateFunction;
+    private PostSystemStateFunction postSystemStateFunction;
 
     public interface PreSystemStateFunction {
         boolean run(SystemState state);
     }
-
     public interface PostSystemStateFunction {
         void run(SystemState state);
     }
-
-    private PreSystemStateFunction preSystemStateFunction;
-    private PostSystemStateFunction postSystemStateFunction;
 }

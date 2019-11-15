@@ -1,7 +1,7 @@
 package com.secureai.rl.abs;
 
 public class StateSpace {
-    public int getSize(){
+    public int getSize() {
         return 0;
     }
 

@@ -20,7 +20,7 @@ public class QNAgent {
     private Random random = new Random(12345);
 
     public QNAgent(StateSpace stateSpace, ActionSpace actionSpace, double learningRate, double discountFactor) {
-        this.qTable = Nd4j.zeros(stateSpace.getSize(), actionSpace.getSize());
+        this.qTable = Nd4j.rand(stateSpace.getSize(), actionSpace.getSize());
         this.stateSpace = stateSpace;
         this.actionSpace = actionSpace;
         this.learningRate = learningRate;
@@ -37,7 +37,7 @@ public class QNAgent {
 
     public Action choose(State state) {
         double epsilon = 0.2;
-        if(this.random.nextDouble() <= epsilon) {
+        if (this.random.nextDouble() <= epsilon) {
             int randomActionIndex = random.nextInt(actionSpace.getSize());
             return this.actionSpace.get(randomActionIndex);
         }

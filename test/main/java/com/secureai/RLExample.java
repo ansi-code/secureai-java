@@ -1,18 +1,16 @@
 package com.secureai;
 
-import java.io.IOException;
-
-import org.deeplearning4j.rl4j.mdp.toy.SimpleToy;
-import org.deeplearning4j.rl4j.space.Box;
 import org.deeplearning4j.rl4j.learning.sync.qlearning.QLearning;
 import org.deeplearning4j.rl4j.learning.sync.qlearning.discrete.QLearningDiscreteDense;
 import org.deeplearning4j.rl4j.mdp.gym.GymEnv;
 import org.deeplearning4j.rl4j.network.dqn.DQNFactoryStdDense;
 import org.deeplearning4j.rl4j.policy.DQNPolicy;
+import org.deeplearning4j.rl4j.space.Box;
 import org.deeplearning4j.rl4j.space.DiscreteSpace;
 import org.deeplearning4j.rl4j.util.DataManager;
 import org.nd4j.linalg.learning.config.Adam;
 
+import java.io.IOException;
 import java.util.logging.Logger;
 
 public class RLExample {
@@ -47,13 +45,13 @@ public class RLExample {
         //record the training data in rl4j-data in a new folder (save)
         DataManager manager = new DataManager(true);
 
-        SimpleToy mdp = new SimpleToy(20);
+        //SimpleToy mdp = new SimpleToy(20);
 
         //define the mdp from gym (name, render)
         GymEnv<Box, Integer, DiscreteSpace> mdp = null;
         try {
             mdp = new GymEnv("CartPole-v0", false, false);
-        } catch (RuntimeException e){
+        } catch (RuntimeException e) {
             System.out.print("To run this example, download and start the gym-http-api repo found at https://github.com/openai/gym-http-api.");
         }
         //define the training
@@ -94,7 +92,7 @@ public class RLExample {
             Logger.getAnonymousLogger().info("Reward: " + reward);
         }
 
-        Logger.getAnonymousLogger().info("average: " + rewards/1000);
+        Logger.getAnonymousLogger().info("average: " + rewards / 1000);
 
     }
 }
