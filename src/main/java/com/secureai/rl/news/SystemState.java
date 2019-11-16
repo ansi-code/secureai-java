@@ -2,45 +2,37 @@ package com.secureai.rl.news;
 
 import lombok.Getter;
 import org.deeplearning4j.rl4j.space.Encodable;
-
-import java.util.Arrays;
+import org.nd4j.linalg.api.ndarray.INDArray;
+import org.nd4j.linalg.factory.Nd4j;
 
 public class SystemState implements Encodable {
 
     @Getter
-    private double[] state; // Unrolled state
+    private INDArray state;
 
     public SystemState(double[] state) {
-        this.state = state;
+        this.state = Nd4j.create(state);
     }
 
     public SystemState(int... shape) {
-        this.state = new double[Arrays.stream(shape).reduce(1, (left, right) -> left * right)];
+        this.state = Nd4j.rand(shape);
     }
 
     public double get(int... shape) {
-        return this.state[Arrays.stream(shape).reduce(1, (left, right) -> left * right)]; //TODO
+        return this.state.getDouble(shape);
     }
 
     public void set(double v, int... shape) {
-        this.state[Arrays.stream(shape).reduce(1, (left, right) -> left * right)] = v; //TODO
+        this.state.putScalar(shape, v);
+    }
+
+    public void reset() {
+        this.state = Nd4j.rand(this.state.shape());
     }
 
     @Override
     public double[] toArray() {
-        return state;
-    }
-
-    public int to1D( int x, int y, int z ) {
-        return (z * xMax * yMax) + (y * xMax) + x;
-    }
-
-    public int[] to3D( int idx ) {
-        final int z = idx / (xMax * yMax);
-        idx -= (z * xMax * yMax);
-        final int y = idx / xMax;
-        final int x = idx % xMax;
-        return new int[]{ x, y, z };
+        return this.state.toDoubleVector();
     }
 
 }

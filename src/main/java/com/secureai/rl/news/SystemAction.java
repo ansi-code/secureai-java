@@ -13,9 +13,14 @@ public class SystemAction {
     private PostSystemStateFunction postSystemStateFunction;
 
     public interface PreSystemStateFunction {
-        boolean run(com.secureai.rl.SystemState state);
+        boolean run(SystemState state);
     }
     public interface PostSystemStateFunction {
         void run(SystemState state);
+    }
+
+    public void run(SystemState state) {
+        if (this.preSystemStateFunction.run(state))
+            this.postSystemStateFunction.run(state);
     }
 }

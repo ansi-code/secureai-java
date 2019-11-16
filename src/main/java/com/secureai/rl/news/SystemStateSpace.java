@@ -1,12 +1,12 @@
 package com.secureai.rl.news;
 
 import com.secureai.model.Topology;
-import org.nd4j.linalg.factory.Nd4j;
+import com.secureai.rl.news.abs.ArrayObservationSpace;
 
-public class SystemStateSpace {
+public class SystemStateSpace extends ArrayObservationSpace<SystemState> {
 
     public SystemStateSpace(Topology topology) {
-        this.state = Nd4j.zeros(topology.getNodes().size() * NodeState.values().length);
+        super(new int[]{topology.getNodes().size() * NodeState.values().length});
     }
 
     public enum NodeState {
