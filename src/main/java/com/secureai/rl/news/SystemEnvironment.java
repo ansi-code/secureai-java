@@ -1,4 +1,4 @@
-package com.secureai.rl.rl4j;
+package com.secureai.rl.news;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +10,7 @@ import org.deeplearning4j.rl4j.space.ObservationSpace;
 import org.json.JSONObject;
 
 @Slf4j
-public class SystemEnv implements MDP<SystemState, Integer, DiscreteSpace> {
+public class SystemEnvironment implements MDP<SystemState, Integer, DiscreteSpace> {
     @Getter
     private DiscreteSpace actionSpace = new DiscreteSpace(2);
     @Getter
@@ -35,8 +35,8 @@ public class SystemEnv implements MDP<SystemState, Integer, DiscreteSpace> {
         return new StepReply<>(systemState, reward, isDone(), new JSONObject("{}"));
     }
 
-    public SystemEnv newInstance() {
-        return new SystemEnv();
+    public SystemEnvironment newInstance() {
+        return new SystemEnvironment();
     }
 
 }

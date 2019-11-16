@@ -1,8 +1,8 @@
 package com.secureai;
 
 import com.secureai.nn.NNBuilder;
-import com.secureai.rl.rl4j.SystemEnv;
-import com.secureai.rl.rl4j.SystemState;
+import com.secureai.rl.news.SystemEnvironment;
+import com.secureai.rl.news.SystemState;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.rl4j.learning.sync.qlearning.QLearning;
 import org.deeplearning4j.rl4j.learning.sync.qlearning.discrete.QLearningDiscreteDense;
@@ -37,7 +37,7 @@ public class Main {
 
         DataManager manager = new DataManager(true);
 
-        SystemEnv mdp = new SystemEnv();
+        SystemEnvironment mdp = new SystemEnvironment();
         MultiLayerNetwork nn = new NNBuilder().build(10, 1);
 
         QLearningDiscreteDense<SystemState> dql = new QLearningDiscreteDense<>(mdp, new DQN(nn), qlConfiguration, manager);
