@@ -11,7 +11,7 @@ public class DiscreteState implements Encodable {
     private INDArray state;
 
     public DiscreteState(int... shape) {
-        this.reset();
+        this.state = Nd4j.zeros(shape);
     }
 
     public int get(int... indices) {
@@ -32,7 +32,7 @@ public class DiscreteState implements Encodable {
 
     @Override
     public double[] toArray() {
-        return this.state.toDoubleVector();
+        return this.state.ravel().toDoubleVector();
     }
 
 }

@@ -27,7 +27,7 @@ public class SystemEnvironment implements MDP<SystemState, Integer, SystemAction
     public SystemEnvironment(Topology topology) {
         this.actionSpace = new SystemActionSpace(topology);
         this.observationSpace = new SystemStateSpace(topology);
-        this.systemState = new SystemState();
+        this.systemState = new SystemState(topology);
         this.systemRewardFunction = new SystemRewardFunction(this.actionSpace, this.observationSpace);
         this.systemTerminateFunction = new SystemTerminateFunction();
         this.step = 0;

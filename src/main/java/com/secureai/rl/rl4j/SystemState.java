@@ -1,9 +1,14 @@
 package com.secureai.rl.rl4j;
 
+import com.secureai.model.Topology;
 import com.secureai.rl.rl4j.abs.DiscreteState;
 import com.secureai.utils.RandomUtils;
 
 public class SystemState extends DiscreteState {
+
+    public SystemState(Topology topology) {
+        super(topology.getNodes().size(), NodeState.values().length);
+    }
 
     @Override
     public void reset() {
