@@ -1,5 +1,6 @@
-package com.secureai.rl.news;
+package com.secureai.rl.rl4j;
 
+import com.secureai.Config;
 import com.secureai.model.Topology;
 import lombok.Getter;
 import org.deeplearning4j.gym.StepReply;
@@ -7,6 +8,7 @@ import org.deeplearning4j.rl4j.mdp.MDP;
 import org.json.JSONObject;
 
 public class SystemEnvironment implements MDP<SystemState, Integer, SystemActionSpace> {
+
     @Getter
     private SystemActionSpace actionSpace;
     @Getter
@@ -14,7 +16,9 @@ public class SystemEnvironment implements MDP<SystemState, Integer, SystemAction
     @Getter
     private SystemState systemState;
     @Getter
-    private SystemRewardFunction systemRewardFunction = new SystemRewardFunction();
+    private SystemRewardFunction systemRewardFunction;
+    @Getter
+    private SystemTerminateFunction systemTerminateFunction;
     @Getter
     private int step;
 
@@ -24,6 +28,8 @@ public class SystemEnvironment implements MDP<SystemState, Integer, SystemAction
         this.actionSpace = new SystemActionSpace(topology);
         this.observationSpace = new SystemStateSpace(topology);
         this.systemState = new SystemState();
+        this.systemRewardFunction = new SystemRewardFunction(this.actionSpace, this.observationSpace);
+        this.systemTerminateFunction = new SystemTerminateFunction();
         this.step = 0;
         this.topology = topology;
     }
@@ -33,7 +39,7 @@ public class SystemEnvironment implements MDP<SystemState, Integer, SystemAction
     }
 
     public boolean isDone() {
-        return this.step == 100;
+        return systemTerminateFunction.terminated(this.systemState) || this.step >= Config.MAX_STEPS;
     }
 
     public SystemState reset() {

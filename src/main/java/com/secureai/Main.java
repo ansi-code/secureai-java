@@ -1,8 +1,10 @@
 package com.secureai;
 
+import com.secureai.model.Topology;
 import com.secureai.nn.NNBuilder;
-import com.secureai.rl.news.SystemEnvironment;
-import com.secureai.rl.news.SystemState;
+import com.secureai.rl.rl4j.SystemEnvironment;
+import com.secureai.rl.rl4j.SystemState;
+import com.secureai.utils.YAML;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.rl4j.learning.sync.qlearning.QLearning;
 import org.deeplearning4j.rl4j.learning.sync.qlearning.discrete.QLearningDiscreteDense;
@@ -18,6 +20,8 @@ public class Main {
         //System.out.println("Hello World");
         //System.out.println(YAML.parse("data/topology-1.yml", Topology.class));
         //YAML.parse("data/topology-1.yml", Topology.class).prettyPrint();
+
+        Topology topology = YAML.parse("data/topology-1.yml", Topology.class);
 
         QLearning.QLConfiguration qlConfiguration = new QLearning.QLConfiguration(
                 123,    //Random seed
@@ -37,10 +41,10 @@ public class Main {
 
         DataManager manager = new DataManager(true);
 
-        SystemEnvironment mdp = new SystemEnvironment();
-        MultiLayerNetwork nn = new NNBuilder().build(10, 1);
+        SystemEnvironment mdp = new SystemEnvironment(topology);
+        MultiLayerNetwork nn = new NNBuilder().build(mdp.getObservationSpace().size(), mdp.getActionSpace().size());
 
-        QLearningDiscreteDense<SystemState> dql = new QLearningDiscreteDense<>(mdp, new DQN(nn), qlConfiguration, manager);
+        QLearningDiscreteDense<SystemState> dql = new QLearningDiscreteDense(mdp, new DQN(nn), qlConfiguration, manager);
         dql.train();
 
         DQNPolicy<SystemState> pol = dql.getPolicy();

@@ -1,4 +1,4 @@
-package com.secureai.rl.news.abs;
+package com.secureai.rl.rl4j.abs;
 
 import lombok.Value;
 import lombok.experimental.NonFinal;

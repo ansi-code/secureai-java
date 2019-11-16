@@ -9,6 +9,7 @@ public class Edge {
     private Direction direction;
     private String from;
     private String to;
+
     public enum Direction {
         unidirectional, bidirectional
     }
