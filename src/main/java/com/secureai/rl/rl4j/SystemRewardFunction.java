@@ -24,6 +24,6 @@ public class SystemRewardFunction implements RewardFunction<SystemState, SystemA
         if (this.stateSpace.getReplications(action.getNodeIndex()) > 1)
             return 1d / currentState.size();
 
-        return (this.stateSpace.getInConnections(action.getNodeIndex()) + this.stateSpace.getOutConnections(action.getNodeIndex())) / currentState.size();
+        return ((double) this.stateSpace.getInConnections(action.getNodeIndex()) + this.stateSpace.getOutConnections(action.getNodeIndex())) / currentState.size();
     }
 }

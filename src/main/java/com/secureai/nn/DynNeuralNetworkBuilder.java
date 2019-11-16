@@ -7,7 +7,6 @@ import org.deeplearning4j.nn.weights.WeightInit;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
 
-import java.util.Arrays;
 import java.util.Map;
 
 public class DynNeuralNetworkBuilder {
@@ -36,11 +35,11 @@ public class DynNeuralNetworkBuilder {
                 .build();
 
         newModel.getLayer(this.model.getLayers().length - 1).setParamTable(oldParamsTable);
-        
+
         this.model = newModel;
         return this;
     }
-    
+
     public MultiLayerNetwork build() {
         return this.model;
     }
