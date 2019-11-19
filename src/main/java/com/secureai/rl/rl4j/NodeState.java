@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public enum NodeState {
+
     active(0),
     updated(1),
     corrupted(2),
@@ -14,4 +15,5 @@ public enum NodeState {
     @Getter
     @NonNull
     private int value;
+
 }

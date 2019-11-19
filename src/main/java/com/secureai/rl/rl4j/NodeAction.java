@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public enum NodeAction {
+
     start(new NodeActionDefinition(200, 20, false,
             (state, i) -> !state.get(i, NodeState.active),
             (state, i) -> state.set(i, NodeState.active, RandomUtils.random.nextDouble() < 0.9))),
@@ -33,4 +34,5 @@ public enum NodeAction {
     @Getter
     @NonNull
     private NodeActionDefinition definition;
+
 }

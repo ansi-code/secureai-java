@@ -38,11 +38,12 @@ public class SystemState extends DiscreteState {
     }
 
     public SystemState set(int i, NodeState nodeState, boolean value) {
-        this.set(i, nodeState.getValue(), value ? 1 : 0);
+        this.set(value ? 1 : 0, i, nodeState.getValue());
         return this;
     }
 
     public long size() {
         return this.getState().shape()[0]; // nodes count
     }
+
 }

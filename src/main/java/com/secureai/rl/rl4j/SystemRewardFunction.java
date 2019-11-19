@@ -26,4 +26,5 @@ public class SystemRewardFunction implements RewardFunction<SystemState, SystemA
 
         return ((double) this.stateSpace.getInConnections(action.getNodeIndex()) + this.stateSpace.getOutConnections(action.getNodeIndex())) / currentState.size();
     }
+
 }

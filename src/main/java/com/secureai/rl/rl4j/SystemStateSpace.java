@@ -27,4 +27,5 @@ public class SystemStateSpace extends ArrayObservationSpace<SystemState> {
     public int size() {
         return topology.getNodes().size() * NodeState.values().length;
     }
+
 }

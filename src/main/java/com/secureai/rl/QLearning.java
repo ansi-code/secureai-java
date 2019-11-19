@@ -17,7 +17,7 @@ public class QLearning<O extends DiscreteState> {
 
 
     public QLearning(MDP<O, Integer, DiscreteSpace> mdp, double learningRate, double discountFactor) {
-        this.qTable = Nd4j.rand(mdp.getObservationSpace().getShape()[0], mdp.getActionSpace().getSize());
+        this.qTable = Nd4j.rand((int) Math.pow(2, mdp.getObservationSpace().getShape()[0]), mdp.getActionSpace().getSize());
         this.mdp = mdp;
         this.learningRate = learningRate;
         this.discountFactor = discountFactor;
@@ -31,7 +31,7 @@ public class QLearning<O extends DiscreteState> {
         int newState = step.getObservation().toInt();
         double reward = step.getReward();
 
-        this.qTable.put(oldState, action, this.qTable.getDouble(oldState, action) + this.learningRate * (reward + this.discountFactor * this.qTable.getColumn(newState).maxNumber().doubleValue() - this.qTable.getDouble(oldState, action)));
+        this.qTable.put(oldState, action, this.qTable.getDouble(oldState, action) + this.learningRate * (reward + this.discountFactor * this.qTable.getRow(newState).maxNumber().doubleValue() - this.qTable.getDouble(oldState, action)));
 
         return step;
     }
@@ -41,7 +41,7 @@ public class QLearning<O extends DiscreteState> {
         if (RandomUtils.getRandom().nextDouble() <= epsilon)
             return this.mdp.getActionSpace().randomAction();
 
-        return this.qTable.getColumn(state.toInt()).argMax().getInt(0);
+        return this.qTable.getRow(state.toInt()).argMax().getInt(0);
     }
 
     public void train() {
@@ -50,7 +50,7 @@ public class QLearning<O extends DiscreteState> {
             for (int j = 0; j < 99 && !this.mdp.isDone(); j++) { // batches
                 StepReply<O> step = this.trainStep(state);
                 state = step.getObservation();
-                System.out.println(step.getReward());
+                System.out.println("Reward: " + String.valueOf(step.getReward()));
             }
         }
 

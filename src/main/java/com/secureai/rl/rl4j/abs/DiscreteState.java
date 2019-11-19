@@ -16,6 +16,13 @@ public class DiscreteState implements Encodable {
         this.state = Nd4j.zeros(shape);
     }
 
+    private static int toBase10(int[] values, int base) {
+        int num = 0;
+        for (int i = values.length - 1, power = 1; i >= 0; power *= base)
+            num += values[i--] * power;
+        return num;
+    }
+
     public int get(int... indices) {
         return this.state.getInt(indices);
     }
@@ -38,17 +45,7 @@ public class DiscreteState implements Encodable {
     }
 
     public int toInt() {
-        System.out.println(Arrays.toString(this.state.ravel().toIntVector()));
-        System.out.println(toBase10(this.state.ravel().toIntVector(), 2));
         return toBase10(this.state.ravel().toIntVector(), 2);
-    }
-
-    private static int toBase10(int[] values, int base)
-    {
-        int num = 0;
-        for (int i = values.length - 1, power = 1; i >= 0; i--)
-            num += values[i] * (power *= base);
-        return num;
     }
 
 }

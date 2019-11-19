@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class NodeActionDefinition {
+
     private double executionTime;
     private double executionCost;
     private boolean isDisruptive;
@@ -23,4 +24,5 @@ public class NodeActionDefinition {
     public interface PostNodeStateFunction {
         void run(SystemState state, int i);
     }
+
 }

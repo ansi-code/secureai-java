@@ -1,0 +1,32 @@
+id: 3-tier-sample-topology-1
+
+nodes:
+  # Classic Api Gateway
+  api-gateway-main:
+    type: api-gateway
+    replication: 1
+
+  # Services
+  microservice-rest:
+    type: image
+    replication: 1
+
+  # Databases
+  database-mysql-core:
+    type: database
+    replication: 1
+
+edges:
+  # First tier
+  api-gateway-main-to-microservice-rest:
+    type: http
+    direction: bidirectional
+    from: api-gateway-main
+    to: microservice-rest
+
+  # Second tier
+  microservice-rest-to-database-mysql-core:
+    type: proprietary
+    direction: bidirectional
+    from: microservice-rest
+    to: database-mysql-core
