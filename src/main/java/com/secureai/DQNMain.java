@@ -14,7 +14,7 @@ import org.deeplearning4j.rl4j.util.DataManager;
 
 import java.io.IOException;
 
-public class Main {
+public class DQNMain {
 
     public static void main(String... args) throws IOException {
         //System.out.println("Hello World");

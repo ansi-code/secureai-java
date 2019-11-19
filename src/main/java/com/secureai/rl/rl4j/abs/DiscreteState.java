@@ -5,6 +5,8 @@ import org.deeplearning4j.rl4j.space.Encodable;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
 
+import java.util.Arrays;
+
 public class DiscreteState implements Encodable {
 
     @Getter
@@ -33,6 +35,20 @@ public class DiscreteState implements Encodable {
     @Override
     public double[] toArray() {
         return this.state.ravel().toDoubleVector();
+    }
+
+    public int toInt() {
+        System.out.println(Arrays.toString(this.state.ravel().toIntVector()));
+        System.out.println(toBase10(this.state.ravel().toIntVector(), 2));
+        return toBase10(this.state.ravel().toIntVector(), 2);
+    }
+
+    private static int toBase10(int[] values, int base)
+    {
+        int num = 0;
+        for (int i = values.length - 1, power = 1; i >= 0; i--)
+            num += values[i] * (power *= base);
+        return num;
     }
 
 }
