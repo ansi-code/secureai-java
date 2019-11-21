@@ -9,15 +9,15 @@ import org.nd4j.linalg.factory.Nd4j;
 
 import java.util.Map;
 
-public class DynNeuralNetworkBuilder {
+public class DynNNBuilder {
 
     private MultiLayerNetwork model;
 
-    public DynNeuralNetworkBuilder(MultiLayerNetwork model) {
+    public DynNNBuilder(MultiLayerNetwork model) {
         this.model = model;
     }
 
-    private DynNeuralNetworkBuilder addOutputs(int n) {
+    private DynNNBuilder addOutputs(int n) {
         Layer outputLayer = this.model.getLayer(this.model.getLayers().length - 1);
 
         Map<String, INDArray> oldParamsTable = outputLayer.paramTable();
