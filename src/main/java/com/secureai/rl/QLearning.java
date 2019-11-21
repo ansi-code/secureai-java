@@ -1,7 +1,8 @@
 package com.secureai.rl;
 
-import com.secureai.rl.rl4j.abs.DiscreteState;
+import com.secureai.rl.abs.DiscreteState;
 import com.secureai.utils.RandomUtils;
+import com.secureai.utils.Stat;
 import org.deeplearning4j.gym.StepReply;
 import org.deeplearning4j.rl4j.mdp.MDP;
 import org.deeplearning4j.rl4j.space.DiscreteSpace;
@@ -45,14 +46,15 @@ public class QLearning<O extends DiscreteState> {
     }
 
     public void train() {
+        Stat<Double> stat = new Stat<>("output/qlearning_1.csv");
         for (int i = 0; i < 99; i++) { // episodes
             O state = this.mdp.reset();
             for (int j = 0; j < 99 && !this.mdp.isDone(); j++) { // batches
                 StepReply<O> step = this.trainStep(state);
                 state = step.getObservation();
                 System.out.println("Reward: " + String.valueOf(step.getReward()));
+                stat.append(step.getReward());
             }
         }
-
     }
 }

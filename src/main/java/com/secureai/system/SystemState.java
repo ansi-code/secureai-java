@@ -1,7 +1,7 @@
-package com.secureai.rl.rl4j;
+package com.secureai.system;
 
 import com.secureai.model.Topology;
-import com.secureai.rl.rl4j.abs.DiscreteState;
+import com.secureai.rl.abs.DiscreteState;
 import com.secureai.utils.RandomUtils;
 
 public class SystemState extends DiscreteState {

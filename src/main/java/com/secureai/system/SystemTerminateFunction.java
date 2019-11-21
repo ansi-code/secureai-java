@@ -1,6 +1,6 @@
-package com.secureai.rl.rl4j;
+package com.secureai.system;
 
-import com.secureai.rl.rl4j.abs.TerminateFunction;
+import com.secureai.rl.abs.TerminateFunction;
 
 public class SystemTerminateFunction implements TerminateFunction<SystemState> {
 

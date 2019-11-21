@@ -2,8 +2,8 @@ package com.secureai;
 
 import com.secureai.model.Topology;
 import com.secureai.nn.NNBuilder;
-import com.secureai.rl.rl4j.SystemEnvironment;
-import com.secureai.rl.rl4j.SystemState;
+import com.secureai.system.SystemEnvironment;
+import com.secureai.system.SystemState;
 import com.secureai.utils.YAML;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.rl4j.learning.sync.qlearning.QLearning;

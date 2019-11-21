@@ -1,11 +1,9 @@
-package com.secureai.rl.rl4j.abs;
+package com.secureai.rl.abs;
 
 import lombok.Getter;
 import org.deeplearning4j.rl4j.space.Encodable;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
-
-import java.util.Arrays;
 
 public class DiscreteState implements Encodable {
 

@@ -2,8 +2,8 @@ package com.secureai;
 
 import com.secureai.model.Topology;
 import com.secureai.rl.QLearning;
-import com.secureai.rl.rl4j.SystemEnvironment;
-import com.secureai.rl.rl4j.SystemState;
+import com.secureai.system.SystemEnvironment;
+import com.secureai.system.SystemState;
 import com.secureai.utils.YAML;
 
 import java.io.IOException;

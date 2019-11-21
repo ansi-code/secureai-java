@@ -1,7 +1,7 @@
-package com.secureai.rl.rl4j;
+package com.secureai.system;
 
 import com.secureai.model.Topology;
-import com.secureai.rl.rl4j.abs.ArrayObservationSpace;
+import com.secureai.rl.abs.ArrayObservationSpace;
 
 public class SystemStateSpace extends ArrayObservationSpace<SystemState> {
 

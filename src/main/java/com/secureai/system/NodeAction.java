@@ -1,4 +1,4 @@
-package com.secureai.rl.rl4j;
+package com.secureai.system;
 
 import com.secureai.utils.RandomUtils;
 import lombok.Getter;

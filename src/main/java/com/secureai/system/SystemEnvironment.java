@@ -1,4 +1,4 @@
-package com.secureai.rl.rl4j;
+package com.secureai.system;
 
 import com.secureai.Config;
 import com.secureai.model.Topology;

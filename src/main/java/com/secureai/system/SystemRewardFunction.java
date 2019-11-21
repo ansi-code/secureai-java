@@ -1,6 +1,6 @@
-package com.secureai.rl.rl4j;
+package com.secureai.system;
 
-import com.secureai.rl.rl4j.abs.RewardFunction;
+import com.secureai.rl.abs.RewardFunction;
 
 public class SystemRewardFunction implements RewardFunction<SystemState, SystemAction> {
 
