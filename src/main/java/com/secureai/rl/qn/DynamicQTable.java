@@ -25,12 +25,12 @@ public class DynamicQTable implements QTable {
 
     @Override
     public double get(int state, int action) {
-        return this.getOrPut(state)[action];
+        return this.get(state)[action];
     }
 
     @Override
     public void set(int state, int action, double value) {
-        this.getOrPut(state)[action] = value;
+        this.get(state)[action] = value;
     }
 
     @Override
@@ -40,11 +40,11 @@ public class DynamicQTable implements QTable {
 
     @Override
     public double max(int state) {
-        return Arrays.stream(this.getOrPut(state)).max().orElse(0d);
+        return Arrays.stream(this.get(state)).max().orElse(0d);
     }
 
     @Override
     public int argMax(int state) {
-        return ArrayUtils.argmax(this.getOrPut(state));
+        return ArrayUtils.argmax(this.get(state));
     }
 }
