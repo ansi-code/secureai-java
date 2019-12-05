@@ -44,7 +44,7 @@ public class DQNMain {
         SystemEnvironment mdp = new SystemEnvironment(topology);
         MultiLayerNetwork nn = new NNBuilder().build(mdp.getObservationSpace().size(), mdp.getActionSpace().size());
 
-        QLearningDiscreteDense<SystemState> dql = new QLearningDiscreteDense(mdp, new DQN(nn), qlConfiguration, manager);
+        QLearningDiscreteDense<SystemState> dql = new QLearningDiscreteDense<>(mdp, new DQN(nn), qlConfiguration, manager);
         dql.train();
 
         DQNPolicy<SystemState> pol = dql.getPolicy();

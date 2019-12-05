@@ -5,9 +5,10 @@ import com.secureai.model.Topology;
 import lombok.Getter;
 import org.deeplearning4j.gym.StepReply;
 import org.deeplearning4j.rl4j.mdp.MDP;
+import org.deeplearning4j.rl4j.space.DiscreteSpace;
 import org.json.JSONObject;
 
-public class SystemEnvironment implements MDP<SystemState, Integer, SystemActionSpace> {
+public class SystemEnvironment implements MDP<SystemState, Integer, DiscreteSpace> { // SystemActionSpace
 
     @Getter
     private SystemActionSpace actionSpace;

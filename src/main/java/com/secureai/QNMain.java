@@ -1,7 +1,7 @@
 package com.secureai;
 
 import com.secureai.model.Topology;
-import com.secureai.rl.QLearning;
+import com.secureai.rl.qn.QLearning;
 import com.secureai.system.SystemEnvironment;
 import com.secureai.system.SystemState;
 import com.secureai.utils.YAML;
@@ -15,7 +15,16 @@ public class QNMain {
 
         SystemEnvironment mdp = new SystemEnvironment(topology);
 
-        QLearning<SystemState> ql = new QLearning(mdp, .628, .9);
+        QLearning.QNConfiguration qnConfiguration = new QLearning.QNConfiguration(
+                123,    //Random seed
+                2000,    //episodes
+                64, //batch
+                .628, //rate
+                .9,     //discount
+                .2    //espilon
+        );
+
+        QLearning<SystemState> ql = new QLearning<SystemState>(mdp, qnConfiguration);
         ql.train();
     }
 }
