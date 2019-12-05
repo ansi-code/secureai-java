@@ -7,6 +7,7 @@ import org.deeplearning4j.nn.weights.WeightInit;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
 
+import java.util.Arrays;
 import java.util.Map;
 
 public class DynNNBuilder {
@@ -17,15 +18,15 @@ public class DynNNBuilder {
         this.model = model;
     }
 
-    private DynNNBuilder addOutputs(int n) {
+    public DynNNBuilder addOutputs(int n) {
         Layer outputLayer = this.model.getLayer(this.model.getLayers().length - 1);
 
         Map<String, INDArray> oldParamsTable = outputLayer.paramTable();
         INDArray weights = oldParamsTable.get("W");
         INDArray biases = oldParamsTable.get("b");
-        //System.out.println(Arrays.toString(outputLayer.params().shape()));
-        //System.out.println(Arrays.toString(weights.shape()));
-        //System.out.println(Arrays.toString(biases.shape()));
+        System.out.println(Arrays.toString(outputLayer.params().shape()));
+        System.out.println(Arrays.toString(weights.shape()));
+        System.out.println(Arrays.toString(biases.shape()));
 
         oldParamsTable.put("W", Nd4j.hstack(weights, Nd4j.rand(new int[]{weights.rows(), n}).mul(-0.0001).add(0.0001)));
         oldParamsTable.put("b", Nd4j.hstack(biases, Nd4j.zeros(biases.rows(), n)));

@@ -1,5 +1,6 @@
 package com.secureai;
 
+import com.secureai.nn.DynNNBuilder;
 import org.deeplearning4j.datasets.fetchers.MnistDataFetcher;
 import org.deeplearning4j.datasets.iterator.impl.MnistDataSetIterator;
 import org.deeplearning4j.eval.Evaluation;
@@ -85,7 +86,7 @@ public class DynamicExample {
 
         // #############   NEW MODEL
 
-        MultiLayerNetwork newModel = addOutputs(model, 1);
+        MultiLayerNetwork newModel = new DynNNBuilder(model).addOutputs(1).build();
         System.out.println(newModel.summary());
 
         //print the score with every 1 iteration
@@ -101,24 +102,6 @@ public class DynamicExample {
         log.info("****************Example finished********************");
 
 
-    }
-
-    private static MultiLayerNetwork addOutputs(MultiLayerNetwork model, int n) {
-        Layer outputLayer = model.getLayer(model.getLayers().length - 1);
-        Map<String, INDArray> oldParamsTable = outputLayer.paramTable();
-        INDArray weights = oldParamsTable.get("W");
-        INDArray biases = oldParamsTable.get("b");
-
-        oldParamsTable.put("W", Nd4j.hstack(weights, Nd4j.rand(new int[]{weights.rows(), n}).mul(-0.0001).add(0.0001)));
-        oldParamsTable.put("b", Nd4j.hstack(biases, Nd4j.zeros(biases.rows(), n)));
-
-        MultiLayerNetwork newModel = new TransferLearning.Builder(model)
-                .nOutReplace(model.getLayers().length - 1, weights.columns() + n, WeightInit.ONES)
-                .build();
-
-        newModel.getLayer(model.getLayers().length - 1).setParamTable(oldParamsTable);
-
-        return newModel;
     }
 
     public static class Mnist9DataSetIterator extends BaseDatasetIterator {
