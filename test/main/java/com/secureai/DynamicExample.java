@@ -68,11 +68,13 @@ public class DynamicExample {
                 .build();
 
         MultiLayerNetwork model = new MultiLayerNetwork(conf);
+
         model.init();
         System.out.println(model.summary());
 
         //print the score with every 1 iteration
         model.setListeners(new ScoreIterationListener(1));
+
 
         log.info("Train model....");
         model.fit(mnist9Train, numEpochs);
@@ -86,7 +88,8 @@ public class DynamicExample {
 
         // #############   NEW MODEL
 
-        MultiLayerNetwork newModel = new DynNNBuilder(model).addOutputs(1).build();
+        //MultiLayerNetwork newModel = new DynNNBuilder(model).addOutputs(1).build();
+        MultiLayerNetwork newModel = new DynNNBuilder(model).forLayer(-1).appendOutputBlock().build();
         System.out.println(newModel.summary());
 
         //print the score with every 1 iteration
