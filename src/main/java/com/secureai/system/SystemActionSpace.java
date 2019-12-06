@@ -1,14 +1,13 @@
 package com.secureai.system;
 
 import com.secureai.model.Topology;
-import com.secureai.utils.ArrayUtils;
 import lombok.Getter;
 import org.deeplearning4j.rl4j.space.DiscreteSpace;
-import scala.Array;
 
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class SystemActionSpace extends DiscreteSpace {
 
@@ -35,11 +34,11 @@ public class SystemActionSpace extends DiscreteSpace {
     }
 
     public Boolean[] actionsFilter(SystemState systemState) {
-        return ArrayUtils.flatten(IntStream.range(0, topology.getNodes().size()).mapToObj(i -> this.actionsFilter(systemState, i)).toArray(Boolean[]::new)).toArray(Boolean[]::new);
+        return IntStream.range(0, topology.getNodes().size()).mapToObj(i -> this.actionsFilter(systemState, i)).flatMap(s -> s).toArray(Boolean[]::new);
     }
 
-    public Boolean[] actionsFilter(SystemState systemState, int i) {
-        return Arrays.stream(NodeAction.values()).map(a -> a.getDefinition().getPreNodeStateFunction().run(systemState, i)).toArray(Boolean[]::new);
+    public Stream<Boolean> actionsFilter(SystemState systemState, int i) {
+        return Arrays.stream(NodeAction.values()).map(a -> a.getDefinition().getPreNodeStateFunction().run(systemState, i));
     }
 
 }

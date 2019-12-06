@@ -18,6 +18,6 @@ public class ArrayUtils {
     }
 
     public static <T> Stream<T> flatten(T[] array) {
-        return Arrays.stream(array).flatMap(o -> array.getClass().isArray() ? flatten(array): Stream.of(o));
+        return Arrays.stream(array).flatMap(o -> array.getClass().isArray() ? flatten(array) : Stream.of(o));
     }
 }
