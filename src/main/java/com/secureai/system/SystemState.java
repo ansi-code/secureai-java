@@ -1,6 +1,6 @@
 package com.secureai.system;
 
-import com.secureai.model.Topology;
+import com.secureai.model.topology.Topology;
 import com.secureai.rl.abs.DiscreteState;
 import com.secureai.utils.RandomUtils;
 

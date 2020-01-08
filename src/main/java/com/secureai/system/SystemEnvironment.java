@@ -1,7 +1,7 @@
 package com.secureai.system;
 
 import com.secureai.Config;
-import com.secureai.model.Topology;
+import com.secureai.model.topology.Topology;
 import lombok.Getter;
 import org.deeplearning4j.gym.StepReply;
 import org.deeplearning4j.rl4j.mdp.MDP;

@@ -1,15 +1,4 @@
-id: classic-action-definition
-
-state-variables:
-
-  active:
-    id: 1
-  updated:
-    id: 2
-  corrupted:
-    id: 3
-  vulnerable:
-    id: 4
+id: action-set-1
 
 actions:
 
@@ -43,17 +32,3 @@ actions:
     disruptive: true
     pre-condition: state[active] == true && state[vulnerable] == true
     post-condition: state[vulnerable] = rand(0.1)
-
-  # Then fake action to show learning capabilities
-  heal2faster:
-    execution-time: 600
-    execution-cost: 100
-    disruptive: true
-    pre-condition: state[active] == true && state[corrupted] == true
-    post-condition: state[corrupted] = rand(0.1)
-  heal2slower:
-    execution-time: 2400
-    execution-cost: 400
-    disruptive: true
-    pre-condition: state[active] == true && state[corrupted] == true
-    post-condition: state[corrupted] = rand(0.1)

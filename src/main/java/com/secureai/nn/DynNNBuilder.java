@@ -38,14 +38,12 @@ public class DynNNBuilder {
 
     public DynNNBuilder insertOutputBlock(int i) {
         Map<String, INDArray> paramsTable = this.model.getLayer(this.currentLayerIndex).paramTable();
-        INDArray weights = paramsTable.get("W");
-        INDArray biases = paramsTable.get("b");
 
-        paramsTable.put("W", Nd4jUtils.hInsert(weights, Nd4j.rand(new int[]{weights.rows(), this.currentLayerBlockSize}).mul(-0.0001).add(0.0001), i * this.currentLayerBlockSize));
-        paramsTable.put("b", Nd4jUtils.hInsert(biases, Nd4j.zeros(new int[]{biases.rows(), this.currentLayerBlockSize}), i * this.currentLayerBlockSize));
+        paramsTable.put("W", Nd4jUtils.hInsert(paramsTable.get("W"), Nd4j.rand(new int[]{paramsTable.get("W").rows(), this.currentLayerBlockSize}).mul(-0.0001).add(0.0001), i * this.currentLayerBlockSize));
+        paramsTable.put("b", Nd4jUtils.hInsert(paramsTable.get("b"), Nd4j.zeros(new int[]{paramsTable.get("b").rows(), this.currentLayerBlockSize}), i * this.currentLayerBlockSize));
 
         MultiLayerNetwork newModel = new TransferLearning.Builder(this.model)
-                .nOutReplace(this.currentLayerIndex, weights.columns() + this.currentLayerBlockSize, WeightInit.ONES)
+                .nOutReplace(this.currentLayerIndex, paramsTable.get("W").columns(), WeightInit.ONES)
                 .build();
         newModel.getLayer(this.currentLayerIndex).setParamTable(paramsTable);
         this.model = newModel;
@@ -70,7 +68,11 @@ public class DynNNBuilder {
         paramsTable.put("W", Nd4jUtils.hDelete(paramsTable.get("W"), NDArrayIndex.interval(i * this.currentLayerBlockSize, 1, (i + 1) * this.currentLayerBlockSize)));
         paramsTable.put("b", Nd4jUtils.hDelete(paramsTable.get("b"), NDArrayIndex.interval(i * this.currentLayerBlockSize, 1, (i + 1) * this.currentLayerBlockSize)));
 
-        this.model.getLayer(this.currentLayerIndex).setParamTable(paramsTable);
+        MultiLayerNetwork newModel = new TransferLearning.Builder(this.model)
+                .nOutReplace(this.currentLayerIndex, paramsTable.get("W").columns(), WeightInit.ONES)
+                .build();
+        newModel.getLayer(this.currentLayerIndex).setParamTable(paramsTable);
+        this.model = newModel;
 
         return this;
     }

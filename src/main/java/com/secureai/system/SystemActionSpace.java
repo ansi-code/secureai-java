@@ -1,6 +1,6 @@
 package com.secureai.system;
 
-import com.secureai.model.Topology;
+import com.secureai.model.topology.Topology;
 import lombok.Getter;
 import org.deeplearning4j.rl4j.space.DiscreteSpace;
 

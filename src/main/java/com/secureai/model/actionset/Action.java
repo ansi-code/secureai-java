@@ -1,4 +1,4 @@
-package com.secureai.parser;
+package com.secureai.model.actionset;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;

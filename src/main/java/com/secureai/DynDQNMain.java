@@ -1,6 +1,6 @@
 package com.secureai;
 
-import com.secureai.model.Topology;
+import com.secureai.model.topology.Topology;
 import com.secureai.nn.NNBuilder;
 import com.secureai.system.SystemEnvironment;
 import com.secureai.system.SystemState;
@@ -11,10 +11,8 @@ import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.rl4j.learning.sync.qlearning.QLearning;
 import org.deeplearning4j.rl4j.learning.sync.qlearning.discrete.QLearningDiscreteDense;
 import org.deeplearning4j.rl4j.network.dqn.DQN;
-import org.deeplearning4j.rl4j.policy.DQNPolicy;
 import org.deeplearning4j.rl4j.util.DataManager;
 
-import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.BlockingQueue;
@@ -22,8 +20,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class DynDQNMain {
 
-    static QLearningDiscreteDense<SystemState> dql = null;
     public static final BlockingQueue<Runnable> queue = new LinkedBlockingQueue<>();
+    static QLearningDiscreteDense<SystemState> dql = null;
 
     public static void main(String... args) throws InterruptedException {
 
@@ -67,7 +65,7 @@ public class DynDQNMain {
             }
         }, 0, 10000); // After 0s and period 10s
 
-        while(true) {
+        while (true) {
             queue.take().run();
         }
     }

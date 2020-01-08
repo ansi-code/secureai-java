@@ -1,4 +1,4 @@
-package com.secureai.model;
+package com.secureai.model.topology;
 
 import lombok.Data;
 

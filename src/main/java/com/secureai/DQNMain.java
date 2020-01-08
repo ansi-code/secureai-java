@@ -1,6 +1,6 @@
 package com.secureai;
 
-import com.secureai.model.Topology;
+import com.secureai.model.topology.Topology;
 import com.secureai.nn.NNBuilder;
 import com.secureai.system.SystemEnvironment;
 import com.secureai.system.SystemState;

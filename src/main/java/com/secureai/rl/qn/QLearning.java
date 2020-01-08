@@ -55,7 +55,7 @@ public class QLearning<O extends DiscreteState> {
                 StepReply<O> step = this.trainStep(state);
                 state = step.getObservation();
 
-                LOGGER.info("Reward: " + String.valueOf(step.getReward()));
+                LOGGER.info("Reward: " + step.getReward());
                 stat.append(step.getReward());
             }
         }

@@ -1,4 +1,4 @@
-id: 3-tier-sample-topology
+id: 3-tier-sample-topology-2
 
 nodes:
   # Classic Api Gateway
@@ -23,7 +23,7 @@ nodes:
   # Databases
   database-mysql-core:
     type: database
-    replication: 3
+    replication: 1
   database-mongo-analytics:
     type: database
     replication: 1

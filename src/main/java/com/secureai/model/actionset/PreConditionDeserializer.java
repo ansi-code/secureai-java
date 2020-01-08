@@ -1,4 +1,4 @@
-package com.secureai.parser;
+package com.secureai.model.actionset;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -23,7 +23,7 @@ public class PreConditionDeserializer extends StdDeserializer<NodeActionDefiniti
     }
 
     @Override
-    public NodeActionDefinition.PreNodeStateFunction deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
+    public NodeActionDefinition.PreNodeStateFunction deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
         return this.parsePreConditions(jsonParser.getValueAsString());
     }
 
