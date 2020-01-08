@@ -9,7 +9,7 @@ nodes:
   # Services
   microservice-rest:
     type: image
-    replication: 2
+    replication: 1
   microservice-log:
     type: image
     replication: 1

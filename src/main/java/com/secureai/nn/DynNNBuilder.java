@@ -21,10 +21,7 @@ public class DynNNBuilder {
     }
 
     public DynNNBuilder forLayer(int i) {
-        if (i > 0)
-            this.currentLayerIndex = i;
-        else
-            this.currentLayerIndex = this.model.getLayers().length + i;
+        this.currentLayerIndex = i > 0 ? i : this.model.getLayers().length + i;
 
         return this;
     }

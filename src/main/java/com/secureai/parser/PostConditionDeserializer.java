@@ -51,7 +51,7 @@ public class PostConditionDeserializer extends StdDeserializer<NodeActionDefinit
     private NodeActionDefinition.PostNodeStateFunction parsePostCondition(String str) {
         String[] components = str.split(" = ");
         NodeState nodeState = NodeState.valueOf(StringUtils.substringBetween(components[0], "[", "]"));
-        double threshold = Double.valueOf(StringUtils.substringBetween(components[1], "rand(", ")"));
+        double threshold = Double.parseDouble(StringUtils.substringBetween(components[1], "rand(", ")"));
 
         return (state, i) -> state.set(i, nodeState, RandomUtils.random.nextDouble() < threshold);
     }
