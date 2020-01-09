@@ -1,4 +1,4 @@
-package com.secureai.nn;
+package com.secureai.dyn;
 
 import lombok.Getter;
 import lombok.Setter;
