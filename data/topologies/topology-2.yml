@@ -1,6 +1,6 @@
 id: 3-tier-sample-topology-2
 
-nodes:
+resources:
   # Classic Api Gateway
   api-gateway-main:
     type: api-gateway
@@ -28,7 +28,7 @@ nodes:
     type: database
     replication: 1
 
-edges:
+connections:
   # First tier
   api-gateway-main-to-microservice-rest:
     type: http

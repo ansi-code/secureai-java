@@ -3,7 +3,7 @@ package com.secureai.model.topology;
 import lombok.Data;
 
 @Data
-public class Edge {
+public class Connection {
 
     private String type;
     private Direction direction;

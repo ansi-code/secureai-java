@@ -1,6 +1,6 @@
 package com.secureai.system;
 
-import com.secureai.model.topology.Node;
+import com.secureai.model.topology.Resource;
 import com.secureai.model.topology.Topology;
 import com.secureai.utils.IteratorUtils;
 
@@ -32,7 +32,7 @@ public class SystemDefinition {
         return this.topology.getEdges().values().stream().filter(edge -> edge.getFrom().equals(node)).count();
     }
 
-    public Node getNode(int i) {
+    public Resource getNode(int i) {
         return IteratorUtils.getInCollection(this.topology.getNodes().values(), i);
     }
 
