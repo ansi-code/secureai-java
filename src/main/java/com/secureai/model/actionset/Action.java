@@ -8,10 +8,10 @@ import lombok.Data;
 @Data
 public class Action {
     @JsonProperty("execution-time")
-    private Integer executionTime;
+    private Double executionTime;
 
     @JsonProperty("execution-cost")
-    private Integer executionCost;
+    private Double executionCost;
 
     private Boolean disruptive;
 

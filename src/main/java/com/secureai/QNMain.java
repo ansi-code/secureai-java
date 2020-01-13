@@ -1,5 +1,6 @@
 package com.secureai;
 
+import com.secureai.model.actionset.ActionSet;
 import com.secureai.model.topology.Topology;
 import com.secureai.rl.qn.QLearning;
 import com.secureai.system.SystemEnvironment;
@@ -11,9 +12,10 @@ import java.io.IOException;
 public class QNMain {
 
     public static void main(String... args) throws IOException {
-        Topology topology = YAML.parse("data/topology-2.yml", Topology.class);
+        Topology topology = YAML.parse("data/topologies/topology-2.yml", Topology.class);
+        ActionSet actionSet = YAML.parse("data/action-sets/action-set-1.yml", ActionSet.class);
 
-        SystemEnvironment mdp = new SystemEnvironment(topology);
+        SystemEnvironment mdp = new SystemEnvironment(topology, actionSet);
 
         QLearning.QNConfiguration qnConfiguration = new QLearning.QNConfiguration(
                 123,    //Random seed

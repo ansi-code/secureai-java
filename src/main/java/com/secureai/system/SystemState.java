@@ -1,13 +1,12 @@
 package com.secureai.system;
 
-import com.secureai.model.topology.Topology;
 import com.secureai.rl.abs.DiscreteState;
 import com.secureai.utils.RandomUtils;
 
 public class SystemState extends DiscreteState {
 
-    public SystemState(Topology topology) {
-        super(topology.getNodes().size(), NodeState.values().length);
+    public SystemState(SystemDefinition systemDefinition) {
+        super(systemDefinition.getTopology().getResources().size(), NodeState.values().length);
     }
 
     @Override

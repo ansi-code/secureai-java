@@ -1,31 +1,30 @@
 package com.secureai.system;
 
-import com.secureai.model.topology.Topology;
 import com.secureai.rl.abs.ArrayObservationSpace;
 
 public class SystemStateSpace extends ArrayObservationSpace<SystemState> {
 
-    private Topology topology;
+    private SystemDefinition systemDefinition;
 
-    public SystemStateSpace(Topology topology) {
-        super(new int[]{topology.getNodes().size() * NodeState.values().length});
-        this.topology = topology;
+    public SystemStateSpace(SystemDefinition systemDefinition) {
+        super(new int[]{systemDefinition.getTopology().getResources().size() * NodeState.values().length});
+        this.systemDefinition = systemDefinition;
     }
 
     public long getReplications(Integer nodeIndex) {
-        return this.topology.getNode(nodeIndex).getReplication();
+        return this.systemDefinition.getNode(nodeIndex).getReplication();
     }
 
     public long getInConnections(Integer nodeIndex) {
-        return this.topology.getInEdgesCount(this.topology.getNodeName(nodeIndex));
+        return this.systemDefinition.getInConnectionsCount(this.systemDefinition.getNodeName(nodeIndex));
     }
 
     public long getOutConnections(Integer nodeIndex) {
-        return this.topology.getOutEdgesCount(this.topology.getNodeName(nodeIndex));
+        return this.systemDefinition.getOutConnectionsCount(this.systemDefinition.getNodeName(nodeIndex));
     }
 
     public int size() {
-        return topology.getNodes().size() * NodeState.values().length;
+        return this.systemDefinition.getTopology().getResources().size() * NodeState.values().length;
     }
 
 }

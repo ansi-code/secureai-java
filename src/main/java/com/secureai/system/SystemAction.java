@@ -1,5 +1,6 @@
 package com.secureai.system;
 
+import com.secureai.model.actionset.Action;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -8,11 +9,11 @@ import lombok.Data;
 public class SystemAction {
 
     private Integer nodeIndex;
-    private NodeAction nodeAction;
+    private Action action;
 
     public void run(SystemState systemState) {
-        if (this.nodeAction.getDefinition().getPreNodeStateFunction().run(systemState, nodeIndex))
-            this.nodeAction.getDefinition().getPostNodeStateFunction().run(systemState, nodeIndex);
+        if (this.action.getPreCondition().run(systemState, nodeIndex))
+            this.action.getPostCondition().run(systemState, nodeIndex);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.secureai;
 
+import com.secureai.model.actionset.ActionSet;
 import com.secureai.model.topology.Topology;
 import com.secureai.nn.NNBuilder;
 import com.secureai.system.SystemEnvironment;
@@ -34,7 +35,9 @@ public class DynDQNMain {
                 if (dql != null)
                     dql.getConfiguration().setMaxStep(0);
 
-                Topology topology = YAML.parse(String.format("data/topology-%d.yml", RandomUtils.getRandom().nextDouble() >= .5 ? 1 : 2), Topology.class);
+                Topology topology = YAML.parse(String.format("data/topologies/topology-%d.yml", RandomUtils.getRandom().nextDouble() >= .5 ? 1 : 2), Topology.class);
+                ActionSet actionSet = YAML.parse(String.format("data/action-sets/action-set-%d.yml", RandomUtils.getRandom().nextDouble() >= .5 ? 1 : 2), ActionSet.class);
+
 
                 QLearning.QLConfiguration qlConfiguration = new QLearning.QLConfiguration(
                         123,    //Random seed
@@ -54,7 +57,7 @@ public class DynDQNMain {
 
                 DataManager manager = new DataManager(true);
 
-                SystemEnvironment mdp = new SystemEnvironment(topology);
+                SystemEnvironment mdp = new SystemEnvironment(topology, actionSet);
                 MultiLayerNetwork nn = new NNBuilder().build(mdp.getObservationSpace().size(), mdp.getActionSpace().size());
 
                 queue.add(() -> {

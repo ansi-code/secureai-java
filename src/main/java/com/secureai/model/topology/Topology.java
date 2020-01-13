@@ -7,6 +7,6 @@ import java.util.Map;
 @Data
 public class Topology {
     private String id;
-    private Map<String, Resource> nodes;
-    private Map<String, Connection> edges;
+    private Map<String, Resource> resources;
+    private Map<String, Connection> connections;
 }

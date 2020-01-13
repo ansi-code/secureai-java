@@ -1,6 +1,7 @@
 package com.secureai.system;
 
 import com.secureai.Config;
+import com.secureai.model.actionset.ActionSet;
 import com.secureai.model.topology.Topology;
 import lombok.Getter;
 import org.deeplearning4j.gym.StepReply;
@@ -13,6 +14,8 @@ public class SystemEnvironment implements MDP<SystemState, Integer, DiscreteSpac
     @Getter
     private SystemActionSpace actionSpace;
     @Getter
+    private ActionSet actionSet;
+    @Getter
     private SystemStateSpace observationSpace;
     @Getter
     private SystemState systemState;
@@ -24,15 +27,20 @@ public class SystemEnvironment implements MDP<SystemState, Integer, DiscreteSpac
     private int step;
 
     private Topology topology;
+    private SystemDefinition systemDefinition;
 
-    public SystemEnvironment(Topology topology) {
-        this.actionSpace = new SystemActionSpace(topology);
-        this.observationSpace = new SystemStateSpace(topology);
-        this.systemState = new SystemState(topology);
+    public SystemEnvironment(Topology topology, ActionSet actionSet) {
+        this.systemDefinition = new SystemDefinition(topology);
+
+        this.actionSpace = new SystemActionSpace(this.systemDefinition, actionSet);
+        this.observationSpace = new SystemStateSpace(this.systemDefinition);
+        this.systemState = new SystemState(this.systemDefinition);
         this.systemRewardFunction = new SystemRewardFunction(this.actionSpace, this.observationSpace);
         this.systemTerminateFunction = new SystemTerminateFunction();
+
         this.step = 0;
         this.topology = topology;
+        this.actionSet = actionSet;
     }
 
     public void close() {
@@ -63,7 +71,7 @@ public class SystemEnvironment implements MDP<SystemState, Integer, DiscreteSpac
     }
 
     public SystemEnvironment newInstance() {
-        return new SystemEnvironment(this.topology);
+        return new SystemEnvironment(this.topology, this.actionSet);
     }
 
 }

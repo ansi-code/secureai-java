@@ -14,11 +14,11 @@ public class SystemRewardFunction implements RewardFunction<SystemState, SystemA
 
     @Override
     public double reward(SystemState oldState, SystemAction action, SystemState currentState) {
-        return -((action.getNodeAction().getDefinition().getExecutionTime() / this.actionSpace.getMaxExecutionTime()) + (action.getNodeAction().getDefinition().getExecutionCost() / this.actionSpace.getMaxExecutionCost())) * this.destruction(action, currentState);
+        return -((action.getAction().getExecutionTime() / this.actionSpace.getMaxExecutionTime()) + (action.getAction().getExecutionCost() / this.actionSpace.getMaxExecutionCost())) * this.destruction(action, currentState);
     }
 
     public double destruction(SystemAction action, SystemState currentState) {
-        if (!action.getNodeAction().getDefinition().isDisruptive())
+        if (!action.getAction().getDisruptive())
             return 1d / currentState.size();
 
         if (this.stateSpace.getReplications(action.getNodeIndex()) > 1)

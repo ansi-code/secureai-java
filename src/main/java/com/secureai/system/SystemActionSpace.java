@@ -1,32 +1,34 @@
 package com.secureai.system;
 
-import com.secureai.model.topology.Topology;
+import com.secureai.model.actionset.Action;
+import com.secureai.model.actionset.ActionSet;
+import com.secureai.utils.IteratorUtils;
 import lombok.Getter;
 import org.deeplearning4j.rl4j.space.DiscreteSpace;
 
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class SystemActionSpace extends DiscreteSpace {
 
-    private final Topology topology;
+    private final SystemDefinition systemDefinition;
+    private final ActionSet actionSet;
     @Getter
     private double maxExecutionTime;
     @Getter
     private double maxExecutionCost;
 
-    public SystemActionSpace(Topology topology) {
-        super(topology.getNodes().size() * NodeAction.values().length);
-        this.topology = topology;
-        this.maxExecutionTime = Arrays.stream(NodeAction.values()).max(Comparator.comparingDouble(o -> o.getDefinition().getExecutionTime())).orElse(NodeAction.heal).getDefinition().getExecutionTime();
-        this.maxExecutionCost = Arrays.stream(NodeAction.values()).max(Comparator.comparingDouble(o -> o.getDefinition().getExecutionCost())).orElse(NodeAction.heal).getDefinition().getExecutionCost();
+    public SystemActionSpace(SystemDefinition systemDefinition, ActionSet actionSet) {
+        super(systemDefinition.getTopology().getResources().size() * actionSet.getActions().size());
+        this.systemDefinition = systemDefinition;
+        this.actionSet = actionSet;
+        this.maxExecutionTime = actionSet.getActions().values().stream().map(Action::getExecutionTime).max(Double::compareTo).orElse(0d);
+        this.maxExecutionCost = actionSet.getActions().values().stream().map(Action::getExecutionCost).max(Double::compareTo).orElse(0d);
     }
 
     @Override
     public SystemAction encode(Integer a) {
-        return new SystemAction(a / NodeAction.values().length, NodeAction.values()[a % NodeAction.values().length]);
+        return new SystemAction(a / actionSet.getActions().size(), IteratorUtils.getInCollection(actionSet.getActions().values(), a % actionSet.getActions().size()));
     }
 
     public int size() {
@@ -34,11 +36,11 @@ public class SystemActionSpace extends DiscreteSpace {
     }
 
     public Boolean[] actionsFilter(SystemState systemState) {
-        return IntStream.range(0, topology.getNodes().size()).mapToObj(i -> this.actionsFilter(systemState, i)).flatMap(s -> s).toArray(Boolean[]::new);
+        return IntStream.range(0, systemDefinition.getTopology().getResources().size()).mapToObj(i -> this.actionsFilter(systemState, i)).flatMap(s -> s).toArray(Boolean[]::new);
     }
 
     public Stream<Boolean> actionsFilter(SystemState systemState, int i) {
-        return Arrays.stream(NodeAction.values()).map(a -> a.getDefinition().getPreNodeStateFunction().run(systemState, i));
+        return this.actionSet.getActions().values().stream().map(a -> a.getPreCondition().run(systemState, i));
     }
 
 }
