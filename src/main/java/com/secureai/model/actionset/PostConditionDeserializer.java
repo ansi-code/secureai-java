@@ -3,7 +3,7 @@ package com.secureai.model.actionset;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import com.secureai.system.NodeState;
+import com.secureai.model.stateset.State;
 import com.secureai.utils.RandomUtils;
 import org.apache.commons.lang.StringUtils;
 
@@ -48,7 +48,7 @@ public class PostConditionDeserializer extends StdDeserializer<Action.PostNodeSt
 
     private Action.PostNodeStateFunction parsePostCondition(String str) {
         String[] components = str.split(" = ");
-        NodeState nodeState = NodeState.valueOf(StringUtils.substringBetween(components[0], "[", "]"));
+        State nodeState = State.valueOf(StringUtils.substringBetween(components[0], "[", "]"));
         double threshold = Double.parseDouble(StringUtils.substringBetween(components[1], "rand(", ")"));
 
         return (state, i) -> state.set(i, nodeState, RandomUtils.random.nextDouble() < threshold);

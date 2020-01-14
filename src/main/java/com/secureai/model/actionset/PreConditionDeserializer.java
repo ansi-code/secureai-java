@@ -3,7 +3,7 @@ package com.secureai.model.actionset;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import com.secureai.system.NodeState;
+import com.secureai.model.stateset.State;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.IOException;
@@ -49,7 +49,7 @@ public class PreConditionDeserializer extends StdDeserializer<Action.PreNodeStat
 
     private Action.PreNodeStateFunction parsePreCondition(String str) {
         String[] components = str.split(" == ");
-        NodeState nodeState = NodeState.valueOf(StringUtils.substringBetween(components[0], "state[", "]"));
+        State nodeState = State.valueOf(StringUtils.substringBetween(components[0], "state[", "]"));
         boolean check = Boolean.parseBoolean(components[1]);
 
         return (state, i) -> state.get(i, nodeState) == check;

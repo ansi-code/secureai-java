@@ -4,7 +4,7 @@ resources:
   # Classic Api Gateway
   api-gateway-main:
     type: api-gateway
-    replication: 1
+    replication: 3
 
   # Services
   microservice-rest:
@@ -14,7 +14,7 @@ resources:
   # Databases
   database-mysql-core:
     type: database
-    replication: 1
+    replication: 2
 
 connections:
   # First tier

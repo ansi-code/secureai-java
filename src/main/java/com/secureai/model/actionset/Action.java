@@ -24,10 +24,10 @@ public class Action {
     private PostNodeStateFunction postCondition;
 
     public interface PreNodeStateFunction {
-        boolean run(SystemState state, int i);
+        boolean run(SystemState state, String resourceId);
     }
 
     public interface PostNodeStateFunction {
-        void run(SystemState state, int i);
+        void run(SystemState state, String resourceId);
     }
 }

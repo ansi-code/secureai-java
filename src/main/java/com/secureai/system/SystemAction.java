@@ -8,12 +8,12 @@ import lombok.Data;
 @AllArgsConstructor
 public class SystemAction {
 
-    private Integer nodeIndex;
+    private String resourceId;
     private Action action;
 
     public void run(SystemState systemState) {
-        if (this.action.getPreCondition().run(systemState, nodeIndex))
-            this.action.getPostCondition().run(systemState, nodeIndex);
+        if (this.action.getPreCondition().run(systemState, resourceId))
+            this.action.getPostCondition().run(systemState, resourceId);
     }
 
 }

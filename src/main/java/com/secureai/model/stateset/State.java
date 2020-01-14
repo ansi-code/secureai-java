@@ -1,11 +1,11 @@
-package com.secureai.system;
+package com.secureai.model.stateset;
 
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public enum NodeState {
+public enum State {
 
     active(0),
     updated(1),

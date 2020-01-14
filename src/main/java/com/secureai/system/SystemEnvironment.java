@@ -9,7 +9,7 @@ import org.deeplearning4j.rl4j.mdp.MDP;
 import org.deeplearning4j.rl4j.space.DiscreteSpace;
 import org.json.JSONObject;
 
-public class SystemEnvironment implements MDP<SystemState, Integer, DiscreteSpace> { // SystemActionSpace
+public class SystemEnvironment implements MDP<SystemState, Integer, DiscreteSpace> {
 
     @Getter
     private SystemActionSpace actionSpace;
@@ -24,23 +24,20 @@ public class SystemEnvironment implements MDP<SystemState, Integer, DiscreteSpac
     @Getter
     private SystemTerminateFunction systemTerminateFunction;
     @Getter
-    private int step;
-
-    private Topology topology;
     private SystemDefinition systemDefinition;
 
+    @Getter
+    private int step = 0;
+
     public SystemEnvironment(Topology topology, ActionSet actionSet) {
-        this.systemDefinition = new SystemDefinition(topology);
-
-        this.actionSpace = new SystemActionSpace(this.systemDefinition, actionSet);
-        this.observationSpace = new SystemStateSpace(this.systemDefinition);
-        this.systemState = new SystemState(this.systemDefinition);
-        this.systemRewardFunction = new SystemRewardFunction(this.actionSpace, this.observationSpace);
-        this.systemTerminateFunction = new SystemTerminateFunction();
-
-        this.step = 0;
-        this.topology = topology;
         this.actionSet = actionSet;
+
+        this.systemDefinition = new SystemDefinition(topology);
+        this.actionSpace = new SystemActionSpace(this);
+        this.observationSpace = new SystemStateSpace(this);
+        this.systemState = new SystemState(this);
+        this.systemRewardFunction = new SystemRewardFunction(this);
+        this.systemTerminateFunction = new SystemTerminateFunction(this);
     }
 
     public void close() {
@@ -71,7 +68,7 @@ public class SystemEnvironment implements MDP<SystemState, Integer, DiscreteSpac
     }
 
     public SystemEnvironment newInstance() {
-        return new SystemEnvironment(this.topology, this.actionSet);
+        return new SystemEnvironment(this.systemDefinition.getTopology(), this.actionSet);
     }
 
 }
