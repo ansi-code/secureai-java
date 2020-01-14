@@ -38,7 +38,6 @@ public class DynDQNMain {
                 Topology topology = YAML.parse(String.format("data/topologies/topology-%d.yml", RandomUtils.getRandom().nextDouble() >= .5 ? 1 : 2), Topology.class);
                 ActionSet actionSet = YAML.parse(String.format("data/action-sets/action-set-%d.yml", RandomUtils.getRandom().nextDouble() >= .5 ? 1 : 2), ActionSet.class);
 
-
                 QLearning.QLConfiguration qlConfiguration = new QLearning.QLConfiguration(
                         123,    //Random seed
                         200,    //Max step By epoch
@@ -68,8 +67,6 @@ public class DynDQNMain {
             }
         }, 0, 10000); // After 0s and period 10s
 
-        while (true) {
-            queue.take().run();
-        }
+        for (; ; ) queue.take().run();
     }
 }

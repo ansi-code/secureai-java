@@ -26,7 +26,7 @@ public class QNMain {
                 .2    //espilon
         );
 
-        QLearning<SystemState> ql = new QLearning<SystemState>(mdp, qnConfiguration);
+        QLearning<SystemState> ql = new QLearning<>(mdp, qnConfiguration);
         ql.train();
     }
 }

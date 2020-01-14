@@ -36,26 +36,25 @@ public class RLExample {
                     .l2(0.001).updater(new Adam(0.0005)).numHiddenNodes(16).numLayer(3).build();
 
     public static void main(String[] args) throws IOException {
-        cartPole();
-        loadCartpole();
+        trainCartpole();
+        testCartpole();
     }
 
-    public static void cartPole() throws IOException {
-
+    public static void trainCartpole() throws IOException {
         //record the training data in rl4j-data in a new folder (save)
         DataManager manager = new DataManager(true);
 
         //SimpleToy mdp = new SimpleToy(20);
-
         //define the mdp from gym (name, render)
         GymEnv<Box, Integer, DiscreteSpace> mdp = null;
         try {
-            mdp = new GymEnv("CartPole-v0", false, false);
+            mdp = new GymEnv<>("CartPole-v0", false, false);
         } catch (RuntimeException e) {
             System.out.print("To run this example, download and start the gym-http-api repo found at https://github.com/openai/gym-http-api.");
         }
         //define the training
-        QLearningDiscreteDense<Box> dql = new QLearningDiscreteDense(mdp, CARTPOLE_NET, CARTPOLE_QL, manager);
+        assert mdp != null;
+        QLearningDiscreteDense<Box> dql = new QLearningDiscreteDense<>(mdp, CARTPOLE_NET, CARTPOLE_QL, manager);
 
         //train
         dql.train();
@@ -68,31 +67,25 @@ public class RLExample {
 
         //close the mdp (close http)
         mdp.close();
-
-
     }
 
-
-    public static void loadCartpole() throws IOException {
-
+    public static void testCartpole() throws IOException {
         //showcase serialization by using the trained agent on a new similar mdp (but render it this time)
-
         //define the mdp from gym (name, render)
-        GymEnv mdp2 = new GymEnv("CartPole-v0", true, false);
+        GymEnv<Box, Integer, DiscreteSpace> mdp = new GymEnv<>("CartPole-v0", true, false);
 
         //load the previous agent
-        DQNPolicy<Box> pol2 = DQNPolicy.load("/tmp/pol1");
+        DQNPolicy<Box> pol = DQNPolicy.load("/tmp/pol1");
 
         //evaluate the agent
         double rewards = 0;
         for (int i = 0; i < 1000; i++) {
-            mdp2.reset();
-            double reward = pol2.play(mdp2);
+            mdp.reset();
+            double reward = pol.play(mdp);
             rewards += reward;
             Logger.getAnonymousLogger().info("Reward: " + reward);
         }
 
         Logger.getAnonymousLogger().info("average: " + rewards / 1000);
-
     }
 }

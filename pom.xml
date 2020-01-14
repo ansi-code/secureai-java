@@ -104,7 +104,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>com.secureai.Example</mainClass>
+                            <mainClass>com.secureai.MNISTExample</mainClass>
                             <classpathPrefix>dependency-jars/</classpathPrefix>
                         </manifest>
                     </archive>

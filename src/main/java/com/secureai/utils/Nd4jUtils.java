@@ -30,4 +30,13 @@ public class Nd4jUtils {
     public static INDArray hMove(INDArray a, INDArrayIndex from, int index) {
         return Nd4jUtils.hInsert(Nd4jUtils.hDelete(a, from), a.get(from), index);
     }
+
+    public static INDArray remap(INDArray a, INDArrayIndex[] fromIntervals, INDArrayIndex[] toIntervals) {
+        INDArray res = Nd4j.zeros(a.shape());
+        for (int i = 0; i < fromIntervals.length; i++)
+            res.put(new INDArrayIndex[]{toIntervals[i]}, a.get(fromIntervals[i]));
+        return res;
+    }
+
+
 }
