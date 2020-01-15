@@ -13,7 +13,7 @@ public class SystemTerminateFunction implements TerminateFunction<SystemState> {
 
     @Override
     public boolean terminated(SystemState systemState) {
-        for (String resourceId : this.environment.getSystemDefinition().getTopology().getResources().keySet())
+        for (String resourceId : this.environment.getSystemDefinition().getResources().keySet())
             if (!systemState.get(resourceId, State.active) || !systemState.get(resourceId, State.updated) || systemState.get(resourceId, State.vulnerable) || systemState.get(resourceId, State.corrupted))
                 return false;
 

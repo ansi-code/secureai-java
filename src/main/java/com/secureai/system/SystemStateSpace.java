@@ -6,7 +6,7 @@ import com.secureai.rl.abs.ArrayObservationSpace;
 public class SystemStateSpace extends ArrayObservationSpace<SystemState> {
 
     public SystemStateSpace(SystemEnvironment environment) {
-        super(new int[]{environment.getSystemDefinition().getTopology().getResources().size() * State.values().length});
+        super(new int[]{environment.getSystemDefinition().getResources().size() * State.values().length});
     }
 
     public int size() {

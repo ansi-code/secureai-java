@@ -1,6 +1,5 @@
-package com.secureai.nn;
+package com.secureai.utils;
 
-import com.secureai.utils.Decorated;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.indexing.INDArrayIndex;
 import org.nd4j.linalg.indexing.NDArrayIndex;

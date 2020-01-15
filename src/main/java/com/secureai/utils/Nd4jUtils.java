@@ -38,5 +38,4 @@ public class Nd4jUtils {
         return res;
     }
 
-
 }

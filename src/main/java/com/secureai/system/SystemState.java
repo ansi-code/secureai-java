@@ -9,7 +9,7 @@ public class SystemState extends DiscreteState {
     private SystemEnvironment environment;
 
     public SystemState(SystemEnvironment environment) {
-        super(environment.getSystemDefinition().getTopology().getResources().size(), State.values().length);
+        super(environment.getSystemDefinition().getResources().size(), State.values().length);
         this.environment = environment;
     }
 
@@ -17,7 +17,7 @@ public class SystemState extends DiscreteState {
     public void reset() {
         super.reset();
 
-        this.environment.getSystemDefinition().getTopology().getResources().keySet().forEach(resourceId -> {
+        this.environment.getSystemDefinition().getResources().keySet().forEach(resourceId -> {
             this.set(resourceId, State.active, RandomUtils.getRandom().nextDouble() < 0.7);
             this.set(resourceId, State.updated, RandomUtils.getRandom().nextDouble() < 0.5);
             this.set(resourceId, State.corrupted, RandomUtils.getRandom().nextDouble() > 0.6);
@@ -28,7 +28,7 @@ public class SystemState extends DiscreteState {
     public void worst() {
         super.reset();
 
-        this.environment.getSystemDefinition().getTopology().getResources().keySet().forEach(resourceId -> {
+        this.environment.getSystemDefinition().getResources().keySet().forEach(resourceId -> {
             this.set(resourceId, State.active, false);
             this.set(resourceId, State.updated, false);
             this.set(resourceId, State.corrupted, true);

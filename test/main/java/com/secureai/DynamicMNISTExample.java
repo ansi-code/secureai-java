@@ -80,7 +80,7 @@ public class DynamicMNISTExample {
         // NEW MODEL
 
         //MultiLayerNetwork newModel = new DynNNBuilder(model).addOutputs(1).build();
-        MultiLayerNetwork newModel = new DynNNBuilder(model).forLayer(-1).appendOutputBlock().build();
+        MultiLayerNetwork newModel = new DynNNBuilder(model).forLayer(-1).setBlockSize(1).appendOutputBlock().build();
         System.out.println(newModel.summary());
 
         //print the score with every 1 iteration

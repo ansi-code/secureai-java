@@ -1,5 +1,6 @@
 package com.secureai.system;
 
+import com.secureai.model.topology.Resource;
 import com.secureai.model.topology.Topology;
 import com.secureai.utils.BidirectionalMap;
 import com.secureai.utils.IteratorUtils;
@@ -15,12 +16,17 @@ public class SystemDefinition {
     private Topology topology;
     @Getter
     private BidirectionalMap<String, Integer> resourcesMap;
+    @Getter
+    private Map<String, Resource> resources;
 
     public SystemDefinition(Topology topology) {
         this.topology = topology;
-        this.topology.getResources().entrySet().stream().flatMap(entry -> IntStream.range(0, entry.getValue().getReplication()).mapToObj(i -> String.format("%s[%d]", entry.getKey(), i))).forEach(System.out::println);
 
-        this.resourcesMap = StreamUtils.fromIterator(IteratorUtils.zipWithIndex(this.topology.getResources().keySet().iterator())).collect(Collectors.toMap(
+        this.resources = this.topology.getResources().entrySet().stream().flatMap(entry -> IntStream.range(0, entry.getValue().getReplication()).mapToObj(i -> String.format("%s[%d]", entry.getKey(), i))).collect(Collectors.toMap(key -> key, key -> this.topology.getResources().get(key.split("\\[")[0])));
+
+        this.resourcesMap = StreamUtils.fromIterator(IteratorUtils.zipWithIndex(
+                this.topology.getResources().entrySet().stream().flatMap(entry -> IntStream.range(0, entry.getValue().getReplication()).mapToObj(i -> String.format("%s[%d]", entry.getKey(), i))).iterator()
+        )).collect(Collectors.toMap(
                 Map.Entry::getValue,
                 Map.Entry::getKey,
                 (u, v) -> {
@@ -30,11 +36,13 @@ public class SystemDefinition {
     }
 
     public long getInConnectionsCount(String resourceId) {
-        return this.topology.getConnections().values().stream().filter(edge -> edge.getTo().equals(resourceId)).count();
+        String plainResourceId = resourceId.split("\\[")[0];
+        return this.topology.getConnections().values().stream().filter(edge -> edge.getTo().equals(plainResourceId)).count();
     }
 
     public long getOutConnectionsCount(String resourceId) {
-        return this.topology.getConnections().values().stream().filter(edge -> edge.getFrom().equals(resourceId)).count();
+        String plainResourceId = resourceId.split("\\[")[0];
+        return this.topology.getConnections().values().stream().filter(edge -> edge.getFrom().equals(plainResourceId)).count();
     }
 
     public void prettyPrint() {

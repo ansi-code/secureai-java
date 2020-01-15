@@ -18,13 +18,13 @@ public class NNBuilder {
                 .updater(new Nesterovs(0.006, 0.9))
                 .l2(1e-4)
                 .list()
-                .layer(new DenseLayer.Builder() //create the first, input layer with xavier initialization
+                .layer(new DenseLayer.Builder()
                         .nIn(inputs)
                         .nOut(1000)
                         .activation(Activation.RELU)
                         .weightInit(WeightInit.XAVIER)
                         .build())
-                .layer(new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD) //create hidden layer
+                .layer(new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
                         .nIn(1000)
                         .nOut(outputs)
                         .activation(Activation.SOFTMAX)

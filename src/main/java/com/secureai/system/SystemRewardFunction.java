@@ -27,12 +27,12 @@ public class SystemRewardFunction implements RewardFunction<SystemState, SystemA
 
     public double destruction(SystemAction action, SystemState currentState) {
         if (!action.getAction().getDisruptive())
-            return 1d / environment.getSystemDefinition().getTopology().getResources().size();
+            return 1d / environment.getSystemDefinition().getResources().size();
 
-        if (this.environment.getSystemDefinition().getTopology().getResources().get(action.getResourceId()).getReplication() > 1)
-            return 1d / environment.getSystemDefinition().getTopology().getResources().size();
+        if (this.environment.getSystemDefinition().getResources().get(action.getResourceId()).getReplication() > 1)
+            return 1d / environment.getSystemDefinition().getResources().size();
 
-        return ((double) this.environment.getSystemDefinition().getInConnectionsCount(action.getResourceId()) + this.environment.getSystemDefinition().getOutConnectionsCount(action.getResourceId())) / environment.getSystemDefinition().getTopology().getResources().size();
+        return ((double) this.environment.getSystemDefinition().getInConnectionsCount(action.getResourceId()) + this.environment.getSystemDefinition().getOutConnectionsCount(action.getResourceId())) / environment.getSystemDefinition().getResources().size();
     }
 
 }
