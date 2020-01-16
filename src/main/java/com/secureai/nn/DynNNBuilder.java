@@ -41,7 +41,7 @@ public class DynNNBuilder {
     public DynNNBuilder insertOutputBlock(int i, int count) {
         Map<String, INDArray> paramsTable = this.model.getLayer(this.currentLayerIndex).paramTable();
 
-        paramsTable.put("W", Nd4jUtils.hInsert(paramsTable.get("W"), Nd4j.rand(new int[]{paramsTable.get("W").rows(), count * this.currentLayerBlockSize}).mul(-0.0001).add(0.0001), i * this.currentLayerBlockSize));
+        paramsTable.put("W", Nd4jUtils.hInsert(paramsTable.get("W"), Nd4j.rand(paramsTable.get("W").rows(), count * this.currentLayerBlockSize).mul(-0.0001).add(0.0001), i * this.currentLayerBlockSize));
         paramsTable.put("b", Nd4jUtils.hInsert(paramsTable.get("b"), Nd4j.zeros(new int[]{paramsTable.get("b").rows(), count * this.currentLayerBlockSize}), i * this.currentLayerBlockSize));
 
         MultiLayerNetwork newModel = new TransferLearning.Builder(this.model)
@@ -114,7 +114,7 @@ public class DynNNBuilder {
         INDArray[] newWeights = toMap.entrySet().stream().sorted(Map.Entry.comparingByValue()).map(
                 e -> fromMap.containsKey(e.getKey()) ?
                         weights.get(NDArrayIndex.interval(e.getValue() * this.currentLayerBlockSize, (e.getValue() + 1) * this.currentLayerBlockSize)) :
-                        Nd4j.rand(new int[]{weights.rows(), this.currentLayerBlockSize}).mul(-0.0001).add(0.0001)
+                        Nd4j.rand(weights.rows(), this.currentLayerBlockSize).mul(-0.0001).add(0.0001)
         ).toArray(INDArray[]::new);
 
         INDArray biases = paramsTable.get("b");

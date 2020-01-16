@@ -12,7 +12,6 @@ import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.rl4j.learning.sync.qlearning.QLearning;
 import org.deeplearning4j.rl4j.learning.sync.qlearning.discrete.QLearningDiscreteDense;
 import org.deeplearning4j.rl4j.network.dqn.DQN;
-import org.deeplearning4j.rl4j.util.DataManager;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -54,18 +53,16 @@ public class DynDQNMain {
                         true    //double DQN
                 );
 
-                DataManager manager = new DataManager(true);
-
                 SystemEnvironment mdp = new SystemEnvironment(topology, actionSet);
                 MultiLayerNetwork nn = new NNBuilder().build(mdp.getObservationSpace().size(), mdp.getActionSpace().size());
 
                 queue.add(() -> {
-                    dql = new QLearningDiscreteDense<>(mdp, new DQN<>(nn), qlConfiguration, manager);
+                    dql = new QLearningDiscreteDense<>(mdp, new DQN<>(nn), qlConfiguration);
                     dql.train();
                 });
 
             }
-        }, 0, 10000); // After 0s and period 10s
+        }, 0, 30000); // After 0s and period 10s
 
         for (; ; ) queue.take().run();
     }
