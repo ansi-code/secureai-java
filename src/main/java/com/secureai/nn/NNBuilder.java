@@ -38,6 +38,8 @@ public class NNBuilder {
                         .build())
                 .build();
 
-        return new MultiLayerNetwork(conf);
+        MultiLayerNetwork model = new MultiLayerNetwork(conf);
+        model.init();
+        return model;
     }
 }

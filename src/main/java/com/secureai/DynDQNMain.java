@@ -2,6 +2,7 @@ package com.secureai;
 
 import com.secureai.model.actionset.ActionSet;
 import com.secureai.model.topology.Topology;
+import com.secureai.nn.DynNNBuilder;
 import com.secureai.nn.NNBuilder;
 import com.secureai.system.SystemEnvironment;
 import com.secureai.system.SystemState;
@@ -22,6 +23,8 @@ public class DynDQNMain {
 
     public static final BlockingQueue<Runnable> queue = new LinkedBlockingQueue<>();
     static QLearningDiscreteDense<SystemState> dql = null;
+    static MultiLayerNetwork nn = null;
+    static SystemEnvironment mdp = null;
 
     public static void main(String... args) throws InterruptedException {
 
@@ -31,8 +34,10 @@ public class DynDQNMain {
             @Override
             public void run() {
                 System.out.println("FIRED");
-                if (dql != null)
+                if (dql != null) {
                     dql.getConfiguration().setMaxStep(0);
+                    dql = null;
+                }
 
                 Topology topology = YAML.parse(String.format("data/topologies/topology-%d.yml", RandomUtils.getRandom().nextDouble() >= .5 ? 1 : 2), Topology.class);
                 ActionSet actionSet = YAML.parse(String.format("data/action-sets/action-set-%d.yml", RandomUtils.getRandom().nextDouble() >= .5 ? 1 : 2), ActionSet.class);
@@ -53,16 +58,25 @@ public class DynDQNMain {
                         true    //double DQN
                 );
 
-                SystemEnvironment mdp = new SystemEnvironment(topology, actionSet);
-                MultiLayerNetwork nn = new NNBuilder().build(mdp.getObservationSpace().size(), mdp.getActionSpace().size());
+                SystemEnvironment newMdp = new SystemEnvironment(topology, actionSet);
+                if (nn == null)
+                    nn = new NNBuilder().build(newMdp.getObservationSpace().size(), newMdp.getActionSpace().getSize());
+                else
+                    nn = new DynNNBuilder(nn)
+                            .forLayer(0).transferIn(mdp.getObservationSpace().getMap(), newMdp.getObservationSpace().getMap())
+                            .forLayer(-1).transferOut(mdp.getObservationSpace().getMap(), newMdp.getObservationSpace().getMap())
+                            .build();
+                System.out.println(nn);
+                System.out.println(nn.summary());
+                mdp = newMdp;
 
                 queue.add(() -> {
-                    dql = new QLearningDiscreteDense<>(mdp, new DQN<>(nn), qlConfiguration);
+                    dql = new QLearningDiscreteDense<>(mdp, new DQN<>(nn.clone()), qlConfiguration);
                     dql.train();
                 });
 
             }
-        }, 0, 30000); // After 0s and period 10s
+        }, 0, 5000); // After 0s and period 10s
 
         for (; ; ) queue.take().run();
     }

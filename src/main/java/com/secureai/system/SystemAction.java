@@ -9,11 +9,12 @@ import lombok.Data;
 public class SystemAction {
 
     private String resourceId;
-    private Action action;
+    private String actionId;
 
-    public void run(SystemState systemState) {
-        if (this.action.getPreCondition().run(systemState, resourceId))
-            this.action.getPostCondition().run(systemState, resourceId);
+    public void run(SystemEnvironment environment) {
+        Action action = environment.getActionSet().getActions().get(this.actionId);
+        if (action.getPreCondition().run(environment.getSystemState(), this.resourceId))
+            action.getPostCondition().run(environment.getSystemState(), this.resourceId);
     }
 
 }

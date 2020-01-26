@@ -21,18 +21,20 @@ public class SystemRewardFunction implements RewardFunction<SystemState, SystemA
     }
 
     @Override
-    public double reward(SystemState oldState, SystemAction action, SystemState currentState) {
-        return -((action.getAction().getExecutionTime() / this.maxExecutionTime) + (action.getAction().getExecutionCost() / this.maxExecutionCost)) * this.destruction(action, currentState);
+    public double reward(SystemState oldState, SystemAction systemAction, SystemState currentState) {
+        Action action = this.environment.getActionSet().getActions().get(systemAction.getActionId());
+        return -((action.getExecutionTime() / this.maxExecutionTime) + (action.getExecutionCost() / this.maxExecutionCost)) * this.destruction(systemAction, currentState);
     }
 
-    public double destruction(SystemAction action, SystemState currentState) {
-        if (!action.getAction().getDisruptive())
+    public double destruction(SystemAction systemAction, SystemState currentState) {
+        Action action = this.environment.getActionSet().getActions().get(systemAction.getActionId());
+        if (!action.getDisruptive())
             return 1d / environment.getSystemDefinition().getResources().size();
 
-        if (this.environment.getSystemDefinition().getResources().get(action.getResourceId()).getReplication() > 1)
+        if (this.environment.getSystemDefinition().getTask(systemAction.getResourceId()).getReplication() > 1)
             return 1d / environment.getSystemDefinition().getResources().size();
 
-        return ((double) this.environment.getSystemDefinition().getInConnectionsCount(action.getResourceId()) + this.environment.getSystemDefinition().getOutConnectionsCount(action.getResourceId())) / environment.getSystemDefinition().getResources().size();
+        return ((double) this.environment.getSystemDefinition().getInConnectionsCount(systemAction.getResourceId()) + this.environment.getSystemDefinition().getOutConnectionsCount(systemAction.getResourceId())) / environment.getSystemDefinition().getResources().size();
     }
 
 }

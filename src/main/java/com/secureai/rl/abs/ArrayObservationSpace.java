@@ -22,4 +22,8 @@ public class ArrayObservationSpace<O> implements ObservationSpace<O> {
         high = Nd4j.create(1);
     }
 
+    public int size() {
+        return this.getShape()[0];
+    }
+
 }

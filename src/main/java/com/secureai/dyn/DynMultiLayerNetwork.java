@@ -8,10 +8,12 @@ import org.nd4j.linalg.api.ndarray.INDArray;
 
 public class DynMultiLayerNetwork extends FilteredMultiLayerNetwork {
 
-    @Getter @Setter
+    @Getter
+    @Setter
     private BidirectionalMap<?, Integer> inputMap;
 
-    @Getter @Setter
+    @Getter
+    @Setter
     private BidirectionalMap<?, Integer> outputMap;
 
     public DynMultiLayerNetwork(MultiLayerConfiguration conf) {

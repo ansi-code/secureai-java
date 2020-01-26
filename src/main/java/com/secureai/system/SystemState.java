@@ -17,7 +17,7 @@ public class SystemState extends DiscreteState {
     public void reset() {
         super.reset();
 
-        this.environment.getSystemDefinition().getResources().keySet().forEach(resourceId -> {
+        this.environment.getSystemDefinition().getResources().forEach(resourceId -> {
             this.set(resourceId, State.active, RandomUtils.getRandom().nextDouble() < 0.7);
             this.set(resourceId, State.updated, RandomUtils.getRandom().nextDouble() < 0.5);
             this.set(resourceId, State.corrupted, RandomUtils.getRandom().nextDouble() > 0.6);
@@ -28,7 +28,7 @@ public class SystemState extends DiscreteState {
     public void worst() {
         super.reset();
 
-        this.environment.getSystemDefinition().getResources().keySet().forEach(resourceId -> {
+        this.environment.getSystemDefinition().getResources().forEach(resourceId -> {
             this.set(resourceId, State.active, false);
             this.set(resourceId, State.updated, false);
             this.set(resourceId, State.corrupted, true);
@@ -37,11 +37,11 @@ public class SystemState extends DiscreteState {
     }
 
     public boolean get(String resourceId, State state) {
-        return this.get(this.environment.getSystemDefinition().getResourcesMap().get(resourceId), state.getValue()) == 1;
+        return this.get(this.environment.getSystemDefinition().getResources().indexOf(resourceId), state.getValue()) == 1;
     }
 
     public SystemState set(String resourceId, State state, boolean value) {
-        this.set(value ? 1 : 0, this.environment.getSystemDefinition().getResourcesMap().get(resourceId), state.getValue());
+        this.set(value ? 1 : 0, this.environment.getSystemDefinition().getResources().indexOf(resourceId), state.getValue());
         return this;
     }
 

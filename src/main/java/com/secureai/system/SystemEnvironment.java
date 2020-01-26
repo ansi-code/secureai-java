@@ -59,7 +59,7 @@ public class SystemEnvironment implements MDP<SystemState, Integer, DiscreteSpac
 
         SystemState oldState = this.systemState;
         SystemAction action = this.actionSpace.encode(a);
-        action.run(this.systemState);
+        action.run(this);
         SystemState currentState = this.systemState;
 
         double reward = systemRewardFunction.reward(oldState, action, currentState);

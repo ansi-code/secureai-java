@@ -1,6 +1,6 @@
 id: 3-tier-sample-topology-1
 
-resources:
+tasks:
   # Classic Api Gateway
   api-gateway-main:
     type: api-gateway

@@ -11,17 +11,12 @@ import org.deeplearning4j.rl4j.learning.sync.qlearning.QLearning;
 import org.deeplearning4j.rl4j.learning.sync.qlearning.discrete.QLearningDiscreteDense;
 import org.deeplearning4j.rl4j.network.dqn.DQN;
 import org.deeplearning4j.rl4j.policy.DQNPolicy;
-import org.deeplearning4j.rl4j.util.DataManager;
 
 import java.io.IOException;
 
 public class DQNMain {
 
     public static void main(String... args) throws IOException {
-        //System.out.println("Hello World");
-        //System.out.println(YAML.parse("data/topology-1.yml", Topology.class));
-        //YAML.parse("data/topology-1.yml", Topology.class).prettyPrint();
-
         Topology topology = YAML.parse("data/topologies/topology-1.yml", Topology.class);
         ActionSet actionSet = YAML.parse("data/action-sets/action-set-1.yml", ActionSet.class);
 
@@ -41,12 +36,10 @@ public class DQNMain {
                 true    //double DQN
         );
 
-        DataManager manager = new DataManager(true);
-
         SystemEnvironment mdp = new SystemEnvironment(topology, actionSet);
-        MultiLayerNetwork nn = new NNBuilder().build(mdp.getObservationSpace().size(), mdp.getActionSpace().size());
+        MultiLayerNetwork nn = new NNBuilder().build(mdp.getObservationSpace().size(), mdp.getActionSpace().getSize());
 
-        QLearningDiscreteDense<SystemState> dql = new QLearningDiscreteDense<>(mdp, new DQN<>(nn), qlConfiguration, manager);
+        QLearningDiscreteDense<SystemState> dql = new QLearningDiscreteDense<>(mdp, new DQN<>(nn), qlConfiguration);
         dql.train();
 
         DQNPolicy<SystemState> pol = dql.getPolicy();
