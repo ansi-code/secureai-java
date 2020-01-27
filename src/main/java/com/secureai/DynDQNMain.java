@@ -11,6 +11,7 @@ import com.secureai.utils.RandomUtils;
 import com.secureai.utils.YAML;
 import lombok.SneakyThrows;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
+import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.deeplearning4j.rl4j.learning.sync.qlearning.QLearning;
 import org.deeplearning4j.rl4j.learning.sync.qlearning.discrete.QLearningDiscreteDense;
 import org.deeplearning4j.rl4j.network.dqn.DQN;
@@ -71,6 +72,7 @@ public class DynDQNMain {
                             .forLayer(0).transferIn(mdp.getObservationSpace().getMap(), newMdp.getObservationSpace().getMap())
                             .forLayer(-1).transferOut(mdp.getActionSpace().getMap(), newMdp.getActionSpace().getMap())
                             .build();
+                nn.setListeners(new ScoreIterationListener(100));
                 mdp = newMdp;
 
                 queue.add(() -> {
