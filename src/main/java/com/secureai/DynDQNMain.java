@@ -76,7 +76,7 @@ public class DynDQNMain {
                 });
 
             }
-        }, 0, 5000); // After 0s and period 10s
+        }, 0, 15000); // After 0s and period 10s
 
         for (; ; ) queue.take().run();
     }

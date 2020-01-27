@@ -3,6 +3,7 @@ package com.secureai.system;
 import com.secureai.model.stateset.State;
 import com.secureai.rl.abs.DiscreteState;
 import com.secureai.utils.RandomUtils;
+import org.apache.commons.lang3.ArrayUtils;
 
 public class SystemState extends DiscreteState {
 
@@ -43,6 +44,11 @@ public class SystemState extends DiscreteState {
     public SystemState set(String resourceId, State state, boolean value) {
         this.set(value ? 1 : 0, this.environment.getSystemDefinition().getResources().indexOf(resourceId), state.getValue());
         return this;
+    }
+
+    @Override
+    public double[] toArray() {
+        return ArrayUtils.toPrimitive(this.environment.getObservationSpace().decode(this));
     }
 
 }
