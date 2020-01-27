@@ -1,5 +1,6 @@
 package com.secureai;
 
+import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.deeplearning4j.rl4j.learning.sync.qlearning.QLearning;
 import org.deeplearning4j.rl4j.learning.sync.qlearning.discrete.QLearningDiscreteDense;
 import org.deeplearning4j.rl4j.mdp.gym.GymEnv;
@@ -33,14 +34,18 @@ public class RLExample {
 
     public static DQNFactoryStdDense.Configuration CARTPOLE_NET =
             DQNFactoryStdDense.Configuration.builder()
-                    .l2(0.001).updater(new Adam(0.0005)).numHiddenNodes(16).numLayer(3).build();
+                    .l2(0.001).updater(new Adam(0.0005)).numHiddenNodes(16).numLayer(3).listeners(new ScoreIterationListener[]{new ScoreIterationListener(10)}).build();
 
     public static void main(String[] args) throws IOException {
+        // cd gym-http-api
+        // python gym_http_server.py
         trainCartpole();
         testCartpole();
     }
 
     public static void trainCartpole() throws IOException {
+        //CARTPOLE_NET.setListeners(new ScoreIterationListener(10))
+
         //record the training data in rl4j-data in a new folder (save)
         DataManager manager = new DataManager(true);
 

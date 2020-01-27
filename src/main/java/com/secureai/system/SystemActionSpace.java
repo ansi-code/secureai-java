@@ -1,11 +1,14 @@
 package com.secureai.system;
 
 import lombok.Getter;
+import org.apache.commons.lang3.ArrayUtils;
 import org.deeplearning4j.rl4j.space.DiscreteSpace;
+import org.nd4j.linalg.api.ndarray.INDArray;
+import org.nd4j.linalg.factory.Nd4j;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.stream.IntStream;
 
 public class SystemActionSpace extends DiscreteSpace {
 
@@ -23,22 +26,26 @@ public class SystemActionSpace extends DiscreteSpace {
 
     @Override
     public SystemAction encode(Integer a) {
-        String systemActionId = map.get(a);
+        String systemActionId = this.map.get(a);
         String resourceId = systemActionId.substring(0, systemActionId.lastIndexOf('.'));
         String actionId = systemActionId.substring(systemActionId.lastIndexOf('.') + 1);
         return new SystemAction(resourceId, actionId);
     }
 
     public Integer decode(SystemAction systemAction) {
-        return map.indexOf(String.format("%s.%s", systemAction.getResourceId(), systemAction.getActionId()));
+        return this.map.indexOf(String.format("%s.%s", systemAction.getResourceId(), systemAction.getActionId()));
     }
 
-    public Boolean[] actionsFilter(SystemState systemState) {
-        return this.environment.getSystemDefinition().getResources().stream().map(i -> this.actionsFilter(systemState, i)).flatMap(s -> s).toArray(Boolean[]::new);
+    public Double[] actionsMask(SystemState systemState) {
+        return IntStream.range(0, this.map.size()).mapToObj(i -> {
+            SystemAction systemAction = this.encode(i);
+            return this.environment.getActionSet().getActions().get(systemAction.getActionId()).getPreCondition().run(systemState, systemAction.getResourceId()) ? 1d : 0d;
+        }).toArray(Double[]::new);
     }
 
-    public Stream<Boolean> actionsFilter(SystemState systemState, String resourceId) {
-        return this.environment.getActionSet().getActions().values().stream().map(a -> a.getPreCondition().run(systemState, resourceId));
+    public INDArray actionsMask(INDArray input) {
+        INDArray[] labelsMask = IntStream.range(0, input.rows()).mapToObj(i -> Nd4j.create(ArrayUtils.toPrimitive(this.actionsMask(this.environment.getObservationSpace().encode(ArrayUtils.toObject(input.getRow(i).toDoubleVector())))))).toArray(INDArray[]::new);
+        return Nd4j.vstack(labelsMask);
     }
 
 }

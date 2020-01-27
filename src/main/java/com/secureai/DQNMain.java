@@ -2,11 +2,12 @@ package com.secureai;
 
 import com.secureai.model.actionset.ActionSet;
 import com.secureai.model.topology.Topology;
+import com.secureai.nn.FilteredMultiLayerNetwork;
 import com.secureai.nn.NNBuilder;
 import com.secureai.system.SystemEnvironment;
 import com.secureai.system.SystemState;
 import com.secureai.utils.YAML;
-import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
+import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.deeplearning4j.rl4j.learning.sync.qlearning.QLearning;
 import org.deeplearning4j.rl4j.learning.sync.qlearning.discrete.QLearningDiscreteDense;
 import org.deeplearning4j.rl4j.network.dqn.DQN;
@@ -37,7 +38,10 @@ public class DQNMain {
         );
 
         SystemEnvironment mdp = new SystemEnvironment(topology, actionSet);
-        MultiLayerNetwork nn = new NNBuilder().build(mdp.getObservationSpace().size(), mdp.getActionSpace().getSize());
+        FilteredMultiLayerNetwork nn = new NNBuilder().build(mdp.getObservationSpace().size(), mdp.getActionSpace().getSize());
+        nn.setMultiLayerNetworkPredictionFilter(input -> mdp.getActionSpace().actionsMask(input));
+        System.out.println(nn.summary());
+        nn.setListeners(new ScoreIterationListener(100));
 
         QLearningDiscreteDense<SystemState> dql = new QLearningDiscreteDense<>(mdp, new DQN<>(nn), qlConfiguration);
         dql.train();

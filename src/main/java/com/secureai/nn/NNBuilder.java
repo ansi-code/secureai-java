@@ -4,7 +4,6 @@ import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
 import org.deeplearning4j.nn.conf.layers.DenseLayer;
 import org.deeplearning4j.nn.conf.layers.OutputLayer;
-import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.learning.config.Nesterovs;
@@ -12,7 +11,7 @@ import org.nd4j.linalg.lossfunctions.LossFunctions;
 
 public class NNBuilder {
 
-    public MultiLayerNetwork build(int inputs, int outputs) {
+    public FilteredMultiLayerNetwork build(int inputs, int outputs) {
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
                 .seed(12345)
                 .updater(new Nesterovs(0.006, 0.9))
@@ -38,7 +37,7 @@ public class NNBuilder {
                         .build())
                 .build();
 
-        MultiLayerNetwork model = new MultiLayerNetwork(conf);
+        FilteredMultiLayerNetwork model = new FilteredMultiLayerNetwork(conf);
         model.init();
         return model;
     }

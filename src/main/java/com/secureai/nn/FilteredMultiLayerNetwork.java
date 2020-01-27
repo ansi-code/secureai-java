@@ -25,13 +25,11 @@ public class FilteredMultiLayerNetwork extends MultiLayerNetwork {
     }
 
     @Override
-    public int[] predict(INDArray d) {
-        //TODO: Wrong, it should use this or this.output
-        //this.setLayerMaskArrays(null, labelMask)
-        return this.multiLayerNetworkPredictionFilter.run(d, super.predict(d));
+    public INDArray output(INDArray input, boolean train, INDArray featuresMask, INDArray labelsMask) {
+        return super.output(input, train, featuresMask, this.multiLayerNetworkPredictionFilter != null ? this.multiLayerNetworkPredictionFilter.run(input) : labelsMask);
     }
 
     public interface MultiLayerNetworkPredictionFilter {
-        int[] run(INDArray input, int[] output);
+        INDArray run(INDArray input);
     }
 }
