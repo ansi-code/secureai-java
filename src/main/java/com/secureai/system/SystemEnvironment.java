@@ -45,8 +45,10 @@ public class SystemEnvironment implements MDP<SystemState, Integer, DiscreteSpac
     }
 
     public boolean isDone() {
-        if (systemTerminateFunction.terminated(this.systemState))
+        /*
+        if (systemTerminateFunction.terminated(this.systemState) || this.step >= Config.MAX_STEPS)
             System.out.println("EPISODE END");
+         */
         return systemTerminateFunction.terminated(this.systemState) || this.step >= Config.MAX_STEPS;
     }
 
@@ -57,7 +59,7 @@ public class SystemEnvironment implements MDP<SystemState, Integer, DiscreteSpac
     }
 
     public StepReply<SystemState> step(Integer a) {
-        System.out.println("ACTION STEP: " + a);
+        //System.out.println("ACTION STEP: " + a);
         this.step++;
 
         SystemState oldState = this.systemState;

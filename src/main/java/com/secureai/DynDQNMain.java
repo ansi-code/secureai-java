@@ -33,7 +33,7 @@ public class DynDQNMain {
             @SneakyThrows
             @Override
             public void run() {
-                System.out.println("FIRED");
+                System.out.println("TIMER FIRED");
                 if (dql != null) {
                     dql.getConfiguration().setMaxStep(0);
                     dql = null;
