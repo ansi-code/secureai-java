@@ -37,6 +37,7 @@ public class DynDQNMain {
                 if (dql != null) {
                     dql.getConfiguration().setMaxStep(0);
                     dql = null;
+                    queue.clear();
                 }
 
                 Topology topology = YAML.parse(String.format("data/topologies/topology-%d.yml", RandomUtils.getRandom().nextDouble() >= .5 ? 1 : 2), Topology.class);
@@ -55,7 +56,7 @@ public class DynDQNMain {
                         1.0,    //td-error clipping
                         0.1f,   //min epsilon
                         1000,   //num step for eps greedy anneal
-                        true    //double DQN
+                        false    //double DQN
                 );
 
                 SystemEnvironment newMdp = new SystemEnvironment(topology, actionSet);
@@ -64,10 +65,9 @@ public class DynDQNMain {
                 else
                     nn = new DynNNBuilder(nn)
                             .forLayer(0).transferIn(mdp.getObservationSpace().getMap(), newMdp.getObservationSpace().getMap())
-                            .forLayer(-1).transferOut(mdp.getObservationSpace().getMap(), newMdp.getObservationSpace().getMap())
+                            .forLayer(-1).transferOut(mdp.getActionSpace().getMap(), newMdp.getActionSpace().getMap())
                             .build();
-                System.out.println(nn);
-                System.out.println(nn.summary());
+                // System.out.println(nn.summary());
                 mdp = newMdp;
 
                 queue.add(() -> {

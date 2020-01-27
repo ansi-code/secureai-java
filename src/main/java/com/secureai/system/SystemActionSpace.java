@@ -19,7 +19,6 @@ public class SystemActionSpace extends DiscreteSpace {
         super(environment.getSystemDefinition().getResources().size() * environment.getActionSet().getActions().size());
         this.environment = environment;
         this.map = this.environment.getSystemDefinition().getResources().stream().flatMap(resourceId -> environment.getActionSet().getActions().keySet().stream().map(actionId -> String.format("%s.%s", resourceId, actionId))).collect(Collectors.toList());
-        System.out.println(this.map);
     }
 
     @Override

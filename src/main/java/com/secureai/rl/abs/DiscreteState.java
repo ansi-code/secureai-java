@@ -39,6 +39,7 @@ public class DiscreteState implements Encodable {
 
     @Override
     public double[] toArray() {
+        //TODO: It can use the space decode function
         return this.state.ravel().toDoubleVector();
     }
 

@@ -26,8 +26,6 @@ public class DynNNBuilder {
     }
 
     public DynNNBuilder forLayer(int i) {
-        System.out.println(i);
-        System.out.println(this.model.getLayers());
         this.currentLayerIndex = i >= 0 ? i : this.model.getLayers().length + i;
 
         return this;
@@ -151,7 +149,7 @@ public class DynNNBuilder {
         INDArray weights = paramsTable.get("W");
         INDArray[] newWeights = StreamUtils.fromIterator(IteratorUtils.zipWithIndex(newMap.iterator())).map(
                 e -> oldMap.contains(e.getValue()) ?
-                        weights.get(NDArrayIndex.interval(e.getKey() * this.currentLayerBlockSize, (e.getKey() + 1) * this.currentLayerBlockSize)) :
+                        weights.get(NDArrayIndex.interval(oldMap.indexOf(e.getValue()) * this.currentLayerBlockSize, (oldMap.indexOf(e.getValue()) + 1) * this.currentLayerBlockSize)) :
                         Nd4j.rand(this.currentLayerBlockSize, weights.columns()).mul(-0.0001).add(0.0001)
         ).toArray(INDArray[]::new);
 
@@ -166,14 +164,14 @@ public class DynNNBuilder {
         INDArray weights = paramsTable.get("W");
         INDArray[] newWeights = StreamUtils.fromIterator(IteratorUtils.zipWithIndex(newMap.iterator())).map(
                 e -> oldMap.contains(e.getValue()) ?
-                        weights.get(NDArrayIndex.all(), NDArrayIndex.interval(e.getKey() * this.currentLayerBlockSize, (e.getKey() + 1) * this.currentLayerBlockSize)) :
+                        weights.get(NDArrayIndex.all(), NDArrayIndex.interval(oldMap.indexOf(e.getValue()) * this.currentLayerBlockSize, (oldMap.indexOf(e.getValue()) + 1) * this.currentLayerBlockSize)) :
                         Nd4j.rand(weights.rows(), this.currentLayerBlockSize).mul(-0.0001).add(0.0001)
         ).toArray(INDArray[]::new);
 
         INDArray biases = paramsTable.get("b");
         INDArray[] newBiases = StreamUtils.fromIterator(IteratorUtils.zipWithIndex(newMap.iterator())).map(
                 e -> oldMap.contains(e.getValue()) ?
-                        biases.get(NDArrayIndex.all(), NDArrayIndex.interval(e.getKey() * this.currentLayerBlockSize, (e.getKey() + 1) * this.currentLayerBlockSize)) :
+                        biases.get(NDArrayIndex.all(), NDArrayIndex.interval(oldMap.indexOf(e.getValue()) * this.currentLayerBlockSize, (oldMap.indexOf(e.getValue()) + 1) * this.currentLayerBlockSize)) :
                         Nd4j.rand(biases.rows(), this.currentLayerBlockSize).mul(-0.0001).add(0.0001)
         ).toArray(INDArray[]::new);
 
