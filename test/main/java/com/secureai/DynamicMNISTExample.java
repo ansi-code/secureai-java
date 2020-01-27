@@ -1,6 +1,6 @@
 package com.secureai;
 
-import com.secureai.nn.DynNNBuilder;
+import com.secureai.utils.ScoreWriterListener;
 import org.deeplearning4j.datasets.fetchers.MnistDataFetcher;
 import org.deeplearning4j.datasets.iterator.impl.MnistDataSetIterator;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
@@ -8,6 +8,7 @@ import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
 import org.deeplearning4j.nn.conf.layers.DenseLayer;
 import org.deeplearning4j.nn.conf.layers.OutputLayer;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
+import org.deeplearning4j.nn.transferlearning.TransferLearning;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.nd4j.evaluation.classification.Evaluation;
@@ -67,7 +68,7 @@ public class DynamicMNISTExample {
         System.out.println(model.summary());
 
         //print the score with every 1 iteration
-        model.setListeners(new ScoreIterationListener(1));
+        model.setListeners(new ScoreIterationListener(1), new ScoreWriterListener(System.getProperty("user.home") + "/d4j-data" + "/" + "1"));
 
         log.info("Train model....");
         model.fit(mnist9Train, numEpochs);
@@ -80,11 +81,12 @@ public class DynamicMNISTExample {
         // NEW MODEL
 
         //MultiLayerNetwork newModel = new DynNNBuilder(model).addOutputs(1).build();
-        MultiLayerNetwork newModel = new DynNNBuilder(model).forLayer(-1).setBlockSize(1).appendOut(1).build();
+        //MultiLayerNetwork newModel = new DynNNBuilder(model).forLayer(-1).setBlockSize(1).appendOut(1).build();
+        MultiLayerNetwork newModel = new TransferLearning.Builder(model).nOutReplace(model.getLayers().length - 1, 10, WeightInit.XAVIER).build();
         System.out.println(newModel.summary());
 
         //print the score with every 1 iteration
-        newModel.setListeners(new ScoreIterationListener(1));
+        newModel.setListeners(new ScoreIterationListener(1), new ScoreWriterListener(System.getProperty("user.home") + "/d4j-data" + "/" + "2"));
 
         log.info("Train model....");
         newModel.fit(mnistTrain, numEpochs);

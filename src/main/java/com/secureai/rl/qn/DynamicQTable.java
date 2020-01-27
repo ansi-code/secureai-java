@@ -45,6 +45,6 @@ public class DynamicQTable implements QTable {
 
     @Override
     public int argMax(int state) {
-        return ArrayUtils.argmax(this.get(state));
+        return ArrayUtils.argMax(this.get(state));
     }
 }

@@ -1,5 +1,6 @@
 package com.secureai.rl.qn;
 
+import com.secureai.utils.ArrayUtils;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,10 +16,10 @@ public class FilteredDynamicQTable extends DynamicQTable {
 
     @Override
     public double[] get(int state) {
-        return this.dynamicQTableGetFilter.run(state, super.get(state));
+        return ArrayUtils.multiply(super.get(state), this.dynamicQTableGetFilter.run(state));
     }
 
     public interface DynamicQTableGetFilter {
-        double[] run(int state, double[] output);
+        double[] run(int state);
     }
 }

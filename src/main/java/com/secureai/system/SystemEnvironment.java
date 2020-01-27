@@ -28,6 +28,8 @@ public class SystemEnvironment implements MDP<SystemState, Integer, DiscreteSpac
 
     @Getter
     private int step = 0;
+    @Getter
+    private int episodes = 0;
 
     public SystemEnvironment(Topology topology, ActionSet actionSet) {
         this.actionSet = actionSet;
@@ -45,16 +47,13 @@ public class SystemEnvironment implements MDP<SystemState, Integer, DiscreteSpac
     }
 
     public boolean isDone() {
-        /*
-        if (systemTerminateFunction.terminated(this.systemState) || this.step >= Config.MAX_STEPS)
-            System.out.println("EPISODE END");
-         */
         return systemTerminateFunction.terminated(this.systemState) || this.step >= Config.MAX_STEPS;
     }
 
     public SystemState reset() {
         this.systemState.reset();
         this.step = 0;
+        this.episodes++;
         return this.systemState;
     }
 

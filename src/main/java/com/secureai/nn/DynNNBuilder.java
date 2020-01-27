@@ -39,6 +39,10 @@ public class DynNNBuilder {
         return this.model.getLayer(this.currentLayerIndex).getParam("W").columns() / this.currentLayerBlockSize;
     }
 
+    public DynNNBuilder appendOut(int count) {
+        return this.insertOut(this.getBlocksCount(), count);
+    }
+
     public DynNNBuilder insertOut(int i, int count) {
         Map<String, INDArray> paramsTable = this.model.getLayer(this.currentLayerIndex).paramTable();
 
@@ -73,10 +77,6 @@ public class DynNNBuilder {
         paramsTable.put("b", Nd4jUtils.hMove(paramsTable.get("b"), NDArrayIndex.interval(from * this.currentLayerBlockSize, (from + 1) * this.currentLayerBlockSize), to * this.currentLayerBlockSize));
 
         return this.setParamTable(paramsTable);
-    }
-
-    public DynNNBuilder appendOut(int count) {
-        return this.insertOut(this.getBlocksCount(), count);
     }
 
     public DynNNBuilder transferIn(List<String> oldMap, List<String> newMap) {

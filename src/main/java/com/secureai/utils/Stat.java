@@ -29,6 +29,7 @@ public class Stat<T> {
         try {
             File f = new File(filePath);
             if (f.exists()) f.delete();
+            f.getParentFile().mkdirs();
 
             this.fileWriter = new FileWriter(f);
             this.bufferedWriter = new BufferedWriter(this.fileWriter);
@@ -70,6 +71,17 @@ public class Stat<T> {
             try {
                 this.bufferedWriter.close();
                 this.fileWriter.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void flush() {
+        if (this.bufferedWriter != null) {
+            try {
+                this.bufferedWriter.flush();
+                this.fileWriter.flush();
             } catch (IOException e) {
                 e.printStackTrace();
             }
