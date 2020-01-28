@@ -8,6 +8,7 @@ import com.secureai.system.SystemEnvironment;
 import com.secureai.system.SystemState;
 import com.secureai.utils.RLStatTrainingListener;
 import com.secureai.utils.RandomUtils;
+import com.secureai.utils.TrainingEndListener;
 import com.secureai.utils.YAML;
 import lombok.SneakyThrows;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
@@ -41,55 +42,60 @@ public class DynDQNMain {
                 System.out.println("TIMER FIRED");
                 if (dql != null) {
                     dql.getConfiguration().setMaxStep(0);
-                    dql = null;
-                    queue.clear();
-                }
-
-                Topology topology = YAML.parse(String.format("data/topologies/topology-%d.yml", RandomUtils.getRandom().nextDouble() >= .5 ? 1 : 2), Topology.class);
-                ActionSet actionSet = YAML.parse(String.format("data/action-sets/action-set-%d.yml", RandomUtils.getRandom().nextDouble() >= .5 ? 1 : 2), ActionSet.class);
-
-                QLearning.QLConfiguration qlConfiguration = new QLearning.QLConfiguration(
-                        123,    //Random seed
-                        200,    //Max step By epoch
-                        150000, //Max step
-                        150000, //Max size of experience replay
-                        32,     //size of batches
-                        500,    //target update (hard)
-                        10,     //num step noop warmup
-                        0.01,   //reward scaling
-                        0.99,   //gamma
-                        1.0,    //td-error clipping
-                        0.1f,   //min epsilon
-                        1000,   //num step for eps greedy anneal
-                        false    //double DQN
-                );
-
-                SystemEnvironment newMdp = new SystemEnvironment(topology, actionSet);
-                if (nn == null)
-                    nn = new NNBuilder().build(newMdp.getObservationSpace().size(), newMdp.getActionSpace().getSize());
-                else
-                    nn = new DynNNBuilder(nn)
-                            .forLayer(0).transferIn(mdp.getObservationSpace().getMap(), newMdp.getObservationSpace().getMap())
-                            .forLayer(-1).transferOut(mdp.getActionSpace().getMap(), newMdp.getActionSpace().getMap())
-                            .build();
-                nn.setListeners(new ScoreIterationListener(100));
-                mdp = newMdp;
-
-                queue.add(() -> {
-                    dql = new QLearningDiscreteDense<>(mdp, new DQN<>(nn.clone()), qlConfiguration);
-                    try {
-                        DataManager dataManager = new DataManager(true);
-                        dql.addListener(new DataManagerTrainingListener(dataManager));
-                        dql.addListener(new RLStatTrainingListener(dataManager.getInfo().substring(0, dataManager.getInfo().lastIndexOf('/'))));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    dql.train();
-                });
-
+                    dql.addListener(new TrainingEndListener() {
+                        @Override
+                        public void onTrainingEnd() {
+                            queue.add(DynDQNMain::run);
+                        }
+                    });
+                } else
+                    queue.add(DynDQNMain::run);
             }
         }, 0, 15000); // After 0s and period 15s
 
         for (; ; ) queue.take().run();
+    }
+
+    public static void run() {
+        Topology topology = YAML.parse(String.format("data/topologies/topology-%d.yml", RandomUtils.getRandom().nextDouble() >= .5 ? 1 : 2), Topology.class);
+        ActionSet actionSet = YAML.parse(String.format("data/action-sets/action-set-%d.yml", RandomUtils.getRandom().nextDouble() >= .5 ? 1 : 2), ActionSet.class);
+
+        QLearning.QLConfiguration qlConfiguration = new QLearning.QLConfiguration(
+                123,    //Random seed
+                200,    //Max step By epoch
+                150000, //Max step
+                150000, //Max size of experience replay
+                32,     //size of batches
+                500,    //target update (hard)
+                10,     //num step noop warmup
+                0.01,   //reward scaling
+                0.99,   //gamma
+                1.0,    //td-error clipping
+                0.1f,   //min epsilon
+                1000,   //num step for eps greedy anneal
+                false    //double DQN
+        );
+
+        SystemEnvironment newMdp = new SystemEnvironment(topology, actionSet);
+        if (nn == null)
+            nn = new NNBuilder().build(newMdp.getObservationSpace().size(), newMdp.getActionSpace().getSize());
+        else
+            nn = new DynNNBuilder(nn)
+                    .forLayer(0).transferIn(mdp.getObservationSpace().getMap(), newMdp.getObservationSpace().getMap())
+                    .forLayer(-1).transferOut(mdp.getActionSpace().getMap(), newMdp.getActionSpace().getMap())
+                    .build();
+        nn.setListeners(new ScoreIterationListener(100));
+        mdp = newMdp;
+
+        dql = new QLearningDiscreteDense<>(mdp, new DQN<>(nn), qlConfiguration);
+        //dql = new QLearningDiscreteDense<>(mdp, new ParallelDQN<>(nn), qlConfiguration);
+        try {
+            DataManager dataManager = new DataManager(true);
+            dql.addListener(new DataManagerTrainingListener(dataManager));
+            dql.addListener(new RLStatTrainingListener(dataManager.getInfo().substring(0, dataManager.getInfo().lastIndexOf('/'))));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        dql.train();
     }
 }
