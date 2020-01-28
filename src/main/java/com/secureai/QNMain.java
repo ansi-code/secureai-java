@@ -6,12 +6,15 @@ import com.secureai.rl.qn.QLearning;
 import com.secureai.system.SystemEnvironment;
 import com.secureai.system.SystemState;
 import com.secureai.utils.YAML;
+import org.apache.log4j.BasicConfigurator;
 
 import java.io.IOException;
 
 public class QNMain {
 
     public static void main(String... args) throws IOException {
+        BasicConfigurator.configure();
+
         Topology topology = YAML.parse("data/topologies/topology-2.yml", Topology.class);
         ActionSet actionSet = YAML.parse("data/action-sets/action-set-1.yml", ActionSet.class);
 

@@ -11,6 +11,7 @@ import com.secureai.utils.RandomUtils;
 import com.secureai.utils.TrainingEndListener;
 import com.secureai.utils.YAML;
 import lombok.SneakyThrows;
+import org.apache.log4j.BasicConfigurator;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.deeplearning4j.rl4j.learning.sync.qlearning.QLearning;
@@ -33,6 +34,7 @@ public class DynDQNMain {
     static SystemEnvironment mdp = null;
 
     public static void main(String... args) throws InterruptedException {
+        BasicConfigurator.configure();
 
         Timer timer = new Timer(true);
         timer.schedule(new TimerTask() {

@@ -8,6 +8,7 @@ import com.secureai.system.SystemEnvironment;
 import com.secureai.system.SystemState;
 import com.secureai.utils.RLStatTrainingListener;
 import com.secureai.utils.YAML;
+import org.apache.log4j.BasicConfigurator;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.deeplearning4j.rl4j.learning.sync.qlearning.QLearning;
 import org.deeplearning4j.rl4j.learning.sync.qlearning.discrete.QLearningDiscreteDense;
@@ -21,6 +22,8 @@ import java.io.IOException;
 public class DQNMain {
 
     public static void main(String... args) throws IOException {
+        BasicConfigurator.configure();
+
         Topology topology = YAML.parse("data/topologies/topology-1.yml", Topology.class);
         ActionSet actionSet = YAML.parse("data/action-sets/action-set-2.yml", ActionSet.class);
 

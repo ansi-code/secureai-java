@@ -16,6 +16,7 @@ public class SparkDQN<NN extends DQN> extends DQN<NN> {
 
     public SparkDQN(MultiLayerNetwork mln) {
         super(mln);
+        System.setProperty("hadoop.home.dir", "/");
         SparkConf conf = new SparkConf().setAppName("SecureAI").setMaster("local");
         this.spark = new JavaSparkContext(conf);
         ParameterAveragingTrainingMaster trainingMaster = new ParameterAveragingTrainingMaster.Builder(1).build();
