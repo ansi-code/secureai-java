@@ -89,6 +89,7 @@ public class DynDQNMain {
 
         dql = new QLearningDiscreteDense<>(mdp, new DQN<>(nn), qlConfiguration);
         //dql = new QLearningDiscreteDense<>(mdp, new ParallelDQN<>(nn), qlConfiguration);
+        //dql = new QLearningDiscreteDense<>(mdp, new SparkDQN<>(nn), qlConfiguration);
         try {
             DataManager dataManager = new DataManager(true);
             dql.addListener(new DataManagerTrainingListener(dataManager));
