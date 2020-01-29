@@ -9,8 +9,9 @@ public enum State {
 
     active(0),
     updated(1),
-    corrupted(2),
-    vulnerable(3);
+    upgradable(2),
+    corrupted(3),
+    vulnerable(4);
 
     @Getter
     @NonNull

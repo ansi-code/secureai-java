@@ -1,5 +1,6 @@
 package com.secureai.system;
 
+import com.secureai.Config;
 import com.secureai.model.actionset.Action;
 import com.secureai.rl.abs.RewardFunction;
 import lombok.Getter;
@@ -23,18 +24,7 @@ public class SystemRewardFunction implements RewardFunction<SystemState, SystemA
     @Override
     public double reward(SystemState oldState, SystemAction systemAction, SystemState currentState) {
         Action action = this.environment.getActionSet().getActions().get(systemAction.getActionId());
-        return -((action.getExecutionTime() / this.maxExecutionTime) + (action.getExecutionCost() / this.maxExecutionCost)) * this.destruction(systemAction, currentState);
-    }
-
-    public double destruction(SystemAction systemAction, SystemState currentState) {
-        Action action = this.environment.getActionSet().getActions().get(systemAction.getActionId());
-        if (!action.getDisruptive())
-            return 1d / environment.getSystemDefinition().getResources().size();
-
-        if (this.environment.getSystemDefinition().getTask(systemAction.getResourceId()).getReplication() > 1)
-            return 1d / environment.getSystemDefinition().getResources().size();
-
-        return ((double) this.environment.getSystemDefinition().getInConnectionsCount(systemAction.getResourceId()) + this.environment.getSystemDefinition().getOutConnectionsCount(systemAction.getResourceId())) / environment.getSystemDefinition().getResources().size();
+        return -(Config.TIME_WEIGHT * (action.getExecutionTime() / this.maxExecutionTime) + Config.COST_WEIGHT * (action.getExecutionCost() / this.maxExecutionCost));
     }
 
 }

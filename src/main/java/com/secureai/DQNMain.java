@@ -24,8 +24,8 @@ public class DQNMain {
     public static void main(String... args) throws IOException {
         BasicConfigurator.configure();
 
-        Topology topology = YAML.parse("data/topologies/topology-1.yml", Topology.class);
-        ActionSet actionSet = YAML.parse("data/action-sets/action-set-2.yml", ActionSet.class);
+        Topology topology = YAML.parse("data/topologies/topology-paper.yml", Topology.class);
+        ActionSet actionSet = YAML.parse("data/action-sets/action-set-paper.yml", ActionSet.class);
 
         QLearning.QLConfiguration qlConfiguration = new QLearning.QLConfiguration(
                 123,    //Random seed
