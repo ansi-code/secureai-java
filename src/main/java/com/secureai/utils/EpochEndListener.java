@@ -5,14 +5,15 @@ import org.deeplearning4j.rl4j.learning.ILearning;
 import org.deeplearning4j.rl4j.learning.listener.TrainingListener;
 import org.deeplearning4j.rl4j.util.IDataManager.StatEntry;
 
-public abstract class TrainingEndListener implements TrainingListener {
+public abstract class EpochEndListener implements TrainingListener {
     @Override
     public ListenerResponse onTrainingStart() {
         return null;
     }
 
     @Override
-    public abstract void onTrainingEnd();
+    public void onTrainingEnd() {
+    }
 
     @Override
     public ListenerResponse onNewEpoch(IEpochTrainer iEpochTrainer) {
@@ -20,9 +21,7 @@ public abstract class TrainingEndListener implements TrainingListener {
     }
 
     @Override
-    public ListenerResponse onEpochTrainingResult(IEpochTrainer iEpochTrainer, StatEntry statEntry) {
-        return null;
-    }
+    public abstract ListenerResponse onEpochTrainingResult(IEpochTrainer iEpochTrainer, StatEntry statEntry);
 
     @Override
     public ListenerResponse onTrainingProgress(ILearning iLearning) {

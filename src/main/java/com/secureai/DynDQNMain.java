@@ -6,19 +6,18 @@ import com.secureai.nn.DynNNBuilder;
 import com.secureai.nn.NNBuilder;
 import com.secureai.system.SystemEnvironment;
 import com.secureai.system.SystemState;
-import com.secureai.utils.RLStatTrainingListener;
-import com.secureai.utils.RandomUtils;
-import com.secureai.utils.TrainingEndListener;
-import com.secureai.utils.YAML;
+import com.secureai.utils.*;
 import lombok.SneakyThrows;
 import org.apache.log4j.BasicConfigurator;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
+import org.deeplearning4j.rl4j.learning.IEpochTrainer;
 import org.deeplearning4j.rl4j.learning.sync.qlearning.QLearning;
 import org.deeplearning4j.rl4j.learning.sync.qlearning.discrete.QLearningDiscreteDense;
 import org.deeplearning4j.rl4j.network.dqn.DQN;
 import org.deeplearning4j.rl4j.util.DataManager;
 import org.deeplearning4j.rl4j.util.DataManagerTrainingListener;
+import org.deeplearning4j.rl4j.util.IDataManager.StatEntry;
 
 import java.io.IOException;
 import java.util.Timer;
@@ -36,29 +35,70 @@ public class DynDQNMain {
     public static void main(String... args) throws InterruptedException {
         BasicConfigurator.configure();
 
-        Timer timer = new Timer(true);
-        timer.schedule(new TimerTask() {
-            @SneakyThrows
-            @Override
-            public void run() {
-                System.out.println("TIMER FIRED");
-                if (dql != null) {
-                    dql.getConfiguration().setMaxStep(0);
-                    dql.addListener(new TrainingEndListener() {
-                        @Override
-                        public void onTrainingEnd() {
-                            queue.add(DynDQNMain::run);
-                        }
-                    });
-                } else
-                    queue.add(DynDQNMain::run);
-            }
-        }, 0, 15000); // After 0s and period 15s
+        runWithThreshold();
+        //runWithTimer();
 
         for (; ; ) queue.take().run();
     }
 
-    public static void run() {
+    public static void runWithThreshold() {
+        int EPOCH_THRESHOLD = 5; // After 5 epochs
+
+        DynDQNMain.setup();
+
+        dql.addListener(new EpochEndListener() {
+            @Override
+            public ListenerResponse onEpochTrainingResult(IEpochTrainer iEpochTrainer, StatEntry statEntry) {
+                if (iEpochTrainer.getEpochCounter() == EPOCH_THRESHOLD) {
+                    System.out.println("THRESHOLD FIRED");
+                    Timer t = new Timer();
+                    t.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            DynDQNMain.stop(DynDQNMain::runWithThreshold);
+                            t.cancel();
+                        }
+                    }, 5000);
+                }
+                return null;
+            }
+        });
+
+        queue.add(dql::train);
+    }
+
+    public static void runWithTimer() {
+        int TIMER_THRESHOLD = 15000; // After 0s and period 15s
+
+        new Timer(true).schedule(new TimerTask() {
+            @SneakyThrows
+            @Override
+            public void run() {
+                System.out.println("TIMER FIRED");
+                DynDQNMain.stop(() -> {
+                    DynDQNMain.setup();
+                    queue.add(dql::train);
+                });
+            }
+        }, 0, TIMER_THRESHOLD);
+    }
+
+    public static void stop(CallbackUtils.NoArgsCallback callback) {
+        if (dql != null) {
+            dql.addListener(new TrainingEndListener() {
+                @Override
+                public void onTrainingEnd() {
+                    callback.callback();
+                }
+            });
+            dql.getConfiguration().setMaxStep(0);
+            dql.getConfiguration().setMaxEpochStep(0);
+        } else {
+            callback.callback();
+        }
+    }
+
+    public static void setup() {
         Topology topology = YAML.parse(String.format("data/topologies/topology-%d.yml", RandomUtils.getRandom().nextDouble() >= .5 ? 1 : 2), Topology.class);
         ActionSet actionSet = YAML.parse(String.format("data/action-sets/action-set-%d.yml", RandomUtils.getRandom().nextDouble() >= .5 ? 1 : 2), ActionSet.class);
 
@@ -99,6 +139,5 @@ public class DynDQNMain {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        dql.train();
     }
 }
