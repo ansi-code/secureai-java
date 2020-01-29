@@ -18,17 +18,19 @@ public class SystemState extends DiscreteState {
     public void reset() {
         super.reset();
 
+        this.worst();
+    }
+
+    public void random() {
         this.environment.getSystemDefinition().getResources().forEach(resourceId -> {
-            this.set(resourceId, State.active, RandomUtils.getRandom().nextDouble() < 0.7);
-            this.set(resourceId, State.updated, RandomUtils.getRandom().nextDouble() < 0.5);
-            this.set(resourceId, State.corrupted, RandomUtils.getRandom().nextDouble() > 0.6);
-            this.set(resourceId, State.vulnerable, RandomUtils.getRandom().nextDouble() > 0.7);
+            this.set(resourceId, State.active, false);
+            this.set(resourceId, State.updated, false);
+            this.set(resourceId, State.corrupted, true);
+            this.set(resourceId, State.vulnerable, true);
         });
     }
 
     public void worst() {
-        super.reset();
-
         this.environment.getSystemDefinition().getResources().forEach(resourceId -> {
             this.set(resourceId, State.active, false);
             this.set(resourceId, State.updated, false);
