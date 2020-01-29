@@ -2,7 +2,6 @@ package com.secureai.system;
 
 import com.secureai.model.stateset.State;
 import com.secureai.rl.abs.DiscreteState;
-import com.secureai.utils.RandomUtils;
 import org.apache.commons.lang3.ArrayUtils;
 
 public class SystemState extends DiscreteState {
