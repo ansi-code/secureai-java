@@ -4,7 +4,7 @@ tasks:
   # Classic Api Gateway
   api-gateway-main:
     type: api-gateway
-    replication: 3
+    replication: 1
 
   # Services
   microservice-rest:
@@ -14,7 +14,7 @@ tasks:
   # Databases
   database-mysql-core:
     type: database
-    replication: 2
+    replication: 1
 
 connections:
   # First tier

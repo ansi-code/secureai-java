@@ -13,24 +13,24 @@ import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.deeplearning4j.rl4j.learning.sync.qlearning.QLearning;
 import org.deeplearning4j.rl4j.learning.sync.qlearning.discrete.QLearningDiscreteDense;
 import org.deeplearning4j.rl4j.network.dqn.DQN;
-import org.deeplearning4j.rl4j.policy.DQNPolicy;
 import org.deeplearning4j.rl4j.util.DataManager;
 import org.deeplearning4j.rl4j.util.DataManagerTrainingListener;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
 public class DQNMain {
 
     public static void main(String... args) throws IOException {
         BasicConfigurator.configure();
 
-        Topology topology = YAML.parse("data/topologies/topology-paper.yml", Topology.class);
-        ActionSet actionSet = YAML.parse("data/action-sets/action-set-paper.yml", ActionSet.class);
+        Topology topology = YAML.parse("data/topologies/topology-1.yml", Topology.class);
+        ActionSet actionSet = YAML.parse("data/action-sets/action-set-1.yml", ActionSet.class);
 
         QLearning.QLConfiguration qlConfiguration = new QLearning.QLConfiguration(
                 123,    //Random seed
-                200,    //Max step By epoch
-                150000, //Max step
+                50,    //Max step By epoch
+                1000, //Max step
                 150000, //Max size of experience replay
                 32,     //size of batches
                 500,    //target update (hard)
@@ -59,8 +59,14 @@ public class DQNMain {
         dql.addListener(new RLStatTrainingListener(dataManager.getInfo().substring(0, dataManager.getInfo().lastIndexOf('/'))));
         dql.train();
 
-        DQNPolicy<SystemState> pol = dql.getPolicy();
-        pol.save("/tmp/pol1");
-        mdp.close();
+        int EPISODES = 10;
+        double rewards = 0;
+        for (int i = 0; i < EPISODES; i++) {
+            mdp.reset();
+            double reward = dql.getPolicy().play(mdp);
+            rewards += reward;
+            Logger.getAnonymousLogger().info("[Evaluate] Reward: " + reward);
+        }
+        Logger.getAnonymousLogger().info("[Evaluate] Average reward: " + rewards / EPISODES);
     }
 }

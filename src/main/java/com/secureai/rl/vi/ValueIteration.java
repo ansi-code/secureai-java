@@ -51,6 +51,7 @@ public class ValueIteration<O extends DiscreteState> {
             double vDelta = 0;
 
             for (int s = 0; s < Math.pow(this.mdp.getObservationSpace().getShape()[0], 2); s++) {
+                //System.out.println(s);
                 this.mdp.getState().setFromInt(s);
                 double previousV = V.getOrDefault(s, 0d);
                 int bestAction = this.chooseBest(this.mdp.getState());
@@ -59,6 +60,7 @@ public class ValueIteration<O extends DiscreteState> {
                 this.P.put(s, bestAction);
                 vDelta = Math.max(vDelta, Math.abs(previousV - this.V.getOrDefault(s, 0d)));
             }
+            System.out.println(vDelta);
 
             if (vDelta < this.conf.epsilon)
                 break;
