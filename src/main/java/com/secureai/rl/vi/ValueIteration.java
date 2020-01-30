@@ -28,11 +28,11 @@ public class ValueIteration<O extends DiscreteState> {
 
     public int chooseBest(O state) {
         int bestAction = -1;
-        double bestQ = -Double.MAX_VALUE;
+        double bestQ = Double.NEGATIVE_INFINITY;
         for (int a = 0; a < this.mdp.getActionSpace().getSize(); a++) {
             this.mdp.setState(state);
             StepReply<O> step = this.mdp.step(a);
-            double q = step.getReward() + this.conf.gamma * this.V.getOrDefault(state.toInt(), 0d);
+            double q = step.getReward() + this.conf.gamma * this.V.getOrDefault(state.toInt(), .1d);
             if (q > bestQ) {
                 bestQ = q;
                 bestAction = a;
@@ -43,25 +43,21 @@ public class ValueIteration<O extends DiscreteState> {
     }
 
     public int choose(O state) {
-        return this.P.getOrDefault(state.toInt(), 0);
+        return this.P.getOrDefault(state.toInt(), this.mdp.getActionSpace().randomAction());
     }
 
     public void solve() {
         for (int i = 0; i < this.conf.iterations; i++) {
             double vDelta = 0;
-
             for (int s = 0; s < Math.pow(this.mdp.getObservationSpace().getShape()[0], 2); s++) {
-                //System.out.println(s);
                 this.mdp.getState().setFromInt(s);
                 double previousV = V.getOrDefault(s, 0d);
                 int bestAction = this.chooseBest(this.mdp.getState());
                 StepReply<O> step = this.mdp.step(bestAction);
-                this.V.put(s, step.getReward() + this.conf.gamma * this.V.getOrDefault(step.getObservation().toInt(), 0d));
+                this.V.put(s, step.getReward() + this.conf.gamma * this.V.getOrDefault(step.getObservation().toInt(), .1d));
                 this.P.put(s, bestAction);
-                vDelta = Math.max(vDelta, Math.abs(previousV - this.V.getOrDefault(s, 0d)));
+                vDelta = Math.max(vDelta, Math.abs(previousV - this.V.get(s)));
             }
-            System.out.println(vDelta);
-
             if (vDelta < this.conf.epsilon)
                 break;
         }
