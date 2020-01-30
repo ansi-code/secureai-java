@@ -6,6 +6,7 @@ import org.deeplearning4j.nn.conf.layers.DenseLayer;
 import org.deeplearning4j.nn.conf.layers.OutputLayer;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.nd4j.linalg.activations.Activation;
+import org.nd4j.linalg.learning.config.Adam;
 import org.nd4j.linalg.learning.config.Nesterovs;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
 
@@ -14,7 +15,7 @@ public class NNBuilder {
     public FilteredMultiLayerNetwork build(int inputs, int outputs) {
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
                 .seed(12345)
-                .updater(new Nesterovs(0.006, 0.9))
+                .updater(new Adam(0.01))
                 .l2(1e-4)
                 .list()
                 .layer(new DenseLayer.Builder()

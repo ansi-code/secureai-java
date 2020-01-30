@@ -9,6 +9,7 @@ import org.deeplearning4j.gym.StepReply;
 import org.deeplearning4j.rl4j.mdp.MDP;
 import org.deeplearning4j.rl4j.space.DiscreteSpace;
 
+import java.util.HashMap;
 import java.util.logging.Logger;
 
 public class ValueIteration<O extends DiscreteState> {
@@ -18,20 +19,50 @@ public class ValueIteration<O extends DiscreteState> {
     private ValueIteration.VIConfiguration conf;
     private MDP<O, Integer, DiscreteSpace> mdp;
 
+    private HashMap<Integer, Double> V = new HashMap<>(); // State: Utility
+    private HashMap<Integer, Integer> P = new HashMap<>(); // State: Action
+
     public ValueIteration(MDP<O, Integer, DiscreteSpace> mdp, ValueIteration.VIConfiguration conf) {
         this.mdp = mdp;
         this.conf = conf;
     }
 
-    public Integer choose(O state) {
-        if (RandomUtils.getRandom().nextDouble() <= this.conf.epsilon)
-            return this.mdp.getActionSpace().randomAction();
+    public int choose(O state) {
+        int bestAction = -1;
+        double bestQ = -Double.MAX_VALUE;
+        for (int a = 0; a < this.mdp.getActionSpace().getSize(); a++) {
+            //this.mdp.setState(state);
+            StepReply<O> step = this.mdp.step(a);
+            double q = step.getReward() + this.conf.gamma * this.V.get(state.toInt());
+            if (q > bestQ) {
+                bestQ = q;
+                bestAction = a;
+            }
+        }
 
-        return this.mdp.getActionSpace().randomAction();
+        //bestAction = P.get(state); // In test mode
+
+        return bestAction;
     }
 
     public void solve() {
         LOGGER.info("SOLVING");
+        for (int i = 0; i < this.conf.iterations; i++) {
+            double vDelta = 0;
+
+            for (int s = 0; s < this.mdp.getObservationSpace().getShape()[0]; s++) {
+                double previousV = V.get(s);
+                //int bestAction = this.choose(s);
+                //this.mdp.setState(j);
+                //StepReply<O> step = this.mdp.step(bestAction);
+                //this.V.put(s, step.getReward() + this.conf.gamma * this.V.get(step.getObservation()));
+                //this.P.put(s, bestAction);
+                vDelta = Math.max(vDelta, Math.abs(previousV - this.V.get(s)));
+            }
+
+            if (vDelta < this.conf.epsilon)
+                break;
+        }
     }
 
     public double play() {
@@ -65,7 +96,7 @@ public class ValueIteration<O extends DiscreteState> {
     public static class VIConfiguration {
         int seed;
         int iterations;
-        double epsilon;
         double gamma;
+        double epsilon;
     }
 }

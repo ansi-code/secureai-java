@@ -40,7 +40,7 @@ public class DQNMain {
                 1.0,    //td-error clipping
                 0.1f,   //min epsilon
                 1000,   //num step for eps greedy anneal
-                true    //double DQN
+                false    //double DQN
         );
 
         SystemEnvironment mdp = new SystemEnvironment(topology, actionSet);
