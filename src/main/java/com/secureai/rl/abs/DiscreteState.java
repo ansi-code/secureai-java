@@ -1,9 +1,12 @@
 package com.secureai.rl.abs;
 
+import com.secureai.utils.ArrayUtils;
 import lombok.Getter;
 import org.deeplearning4j.rl4j.space.Encodable;
+import org.nd4j.linalg.api.buffer.DataType;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
+import org.nd4j.linalg.indexing.NDArrayIndex;
 
 public class DiscreteState implements Encodable {
 
@@ -12,13 +15,6 @@ public class DiscreteState implements Encodable {
 
     public DiscreteState(int... shape) {
         this.state = Nd4j.zeros(shape);
-    }
-
-    private static int toBase10(int[] values, int base) {
-        int num = 0;
-        for (int i = values.length - 1, power = 1; i >= 0; power *= base)
-            num += values[i--] * power;
-        return num;
     }
 
     public int get(int... indices) {
@@ -39,12 +35,25 @@ public class DiscreteState implements Encodable {
 
     @Override
     public double[] toArray() {
-        //TODO: It can use the space decode function
-        return this.state.ravel().toDoubleVector();
+        return this.state.ravel().toDoubleVector(); // It can use the space decode function
     }
 
     public int toInt() {
-        return toBase10(this.state.ravel().toIntVector(), 2);
+        return ArrayUtils.toBase10(this.state.ravel().toIntVector(), 2);
+    }
+
+    public void setFromInt(int value) {
+        //System.out.println(this.state.toStringFull());
+        //System.out.println(Arrays.toString(this.state.shape()));
+
+        INDArray result = Nd4j.zeros(ArrayUtils.multiply(this.state.shape()));
+        int[] data = ArrayUtils.fromBase10(value, 2);
+        INDArray base2 = Nd4j.create(data, new long[]{data.length}, DataType.INT);
+        result.put(NDArrayIndex.createCoveringShape(base2.shape()), base2);
+        this.state = result.reshape(this.state.shape());
+
+        //System.out.println(this.state.toStringFull());
+        //System.out.println(Arrays.toString(this.state.shape()));
     }
 
 }

@@ -3,13 +3,13 @@ package com.secureai.system;
 import com.secureai.Config;
 import com.secureai.model.actionset.ActionSet;
 import com.secureai.model.topology.Topology;
+import com.secureai.rl.abs.SMDP;
 import lombok.Getter;
 import org.deeplearning4j.gym.StepReply;
-import org.deeplearning4j.rl4j.mdp.MDP;
 import org.deeplearning4j.rl4j.space.DiscreteSpace;
 import org.json.JSONObject;
 
-public class SystemEnvironment implements MDP<SystemState, Integer, DiscreteSpace> {
+public class SystemEnvironment implements SMDP<SystemState, Integer, DiscreteSpace> {
 
     @Getter
     private SystemActionSpace actionSpace;
@@ -75,4 +75,13 @@ public class SystemEnvironment implements MDP<SystemState, Integer, DiscreteSpac
         return new SystemEnvironment(this.systemDefinition.getTopology(), this.actionSet);
     }
 
+    @Override
+    public SystemState getState() {
+        return this.systemState;
+    }
+
+    @Override
+    public void setState(SystemState state) {
+        this.systemState = state;
+    }
 }

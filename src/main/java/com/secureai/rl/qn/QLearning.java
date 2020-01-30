@@ -52,14 +52,15 @@ public class QLearning<O extends DiscreteState> {
         for (int i = 0; i < this.conf.episodes; i++) { // episodes
             O state = this.mdp.reset();
             double rewards = 0;
-            for (int j = 0; j < this.conf.batchSize && !this.mdp.isDone(); j++) { // batches
+            int j = 0;
+            for (; j < this.conf.batchSize && !this.mdp.isDone(); j++) { // batches
                 StepReply<O> step = this.trainStep(state);
                 state = step.getObservation();
 
                 rewards += step.getReward();
                 stat.append(step.getReward());
             }
-            LOGGER.info("[Train] Episode: " + i + "; Reward: " + rewards);
+            LOGGER.info("[Train] Episode: " + i + "; Reward: " + rewards / j);
         }
     }
 
