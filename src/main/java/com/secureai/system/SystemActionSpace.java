@@ -1,6 +1,5 @@
 package com.secureai.system;
 
-import com.secureai.rl.abs.DiscreteState;
 import lombok.Getter;
 import org.apache.commons.lang3.ArrayUtils;
 import org.deeplearning4j.rl4j.space.DiscreteSpace;

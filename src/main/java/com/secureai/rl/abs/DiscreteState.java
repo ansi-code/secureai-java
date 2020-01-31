@@ -1,6 +1,5 @@
 package com.secureai.rl.abs;
 
-import com.secureai.system.SystemState;
 import com.secureai.utils.ArrayUtils;
 import lombok.Getter;
 import org.deeplearning4j.rl4j.space.Encodable;
@@ -17,6 +16,7 @@ public class DiscreteState implements Encodable {
     public DiscreteState(long... shape) {
         this.state = Nd4j.zeros(shape);
     }
+
     public int get(int... indices) {
         return this.state.getInt(indices);
     }

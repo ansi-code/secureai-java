@@ -6,6 +6,7 @@ import com.secureai.rl.vi.ValueIteration;
 import com.secureai.system.SystemEnvironment;
 import com.secureai.system.SystemState;
 import com.secureai.utils.YAML;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.BasicConfigurator;
 
 import java.io.IOException;
@@ -16,7 +17,7 @@ public class VIMain {
         BasicConfigurator.configure();
 
         Topology topology = YAML.parse("data/topologies/topology-1.yml", Topology.class);
-        ActionSet actionSet = YAML.parse("data/action-sets/action-set-1.yml", ActionSet.class);
+        ActionSet actionSet = YAML.parse("data/action-sets/action-set-test.yml", ActionSet.class);
 
         SystemEnvironment mdp = new SystemEnvironment(topology, actionSet);
 
@@ -28,6 +29,8 @@ public class VIMain {
         );
 
         ValueIteration<SystemState> vi = new ValueIteration<>(mdp, viConfiguration);
+        vi.setValueIterationFilter(input -> ArrayUtils.toPrimitive(mdp.getActionSpace().actionsMask(input)));
+
         vi.solve();
 
         vi.evaluate(10);

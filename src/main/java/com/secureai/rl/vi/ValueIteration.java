@@ -2,9 +2,7 @@ package com.secureai.rl.vi;
 
 import com.secureai.rl.abs.DiscreteState;
 import com.secureai.rl.abs.SMDP;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 import org.deeplearning4j.gym.StepReply;
 import org.deeplearning4j.rl4j.space.DiscreteSpace;
 
@@ -21,6 +19,10 @@ public class ValueIteration<O extends DiscreteState> {
     private HashMap<Integer, Double> V = new HashMap<>(); // State: Utility
     private HashMap<Integer, Integer> P = new HashMap<>(); // State: Action
 
+    @Getter
+    @Setter
+    private ValueIterationFilter<O> valueIterationFilter;
+
     public ValueIteration(SMDP<O, Integer, DiscreteSpace> mdp, ValueIteration.VIConfiguration conf) {
         this.mdp = mdp;
         this.conf = conf;
@@ -29,10 +31,12 @@ public class ValueIteration<O extends DiscreteState> {
     public int chooseBest(O state) {
         int bestAction = -1;
         double bestQ = Double.NEGATIVE_INFINITY;
+        double[] actionFilter = this.valueIterationFilter != null ? this.valueIterationFilter.run(state) : null;
         for (int a = 0; a < this.mdp.getActionSpace().getSize(); a++) {
             this.mdp.setState(state);
             StepReply<O> step = this.mdp.step(a);
             double q = step.getReward() + this.conf.gamma * this.V.getOrDefault(state.toInt(), 0d);
+            q *= actionFilter != null ? actionFilter[a] : 1;
             if (q > bestQ) {
                 bestQ = q;
                 bestAction = a;
@@ -88,6 +92,10 @@ public class ValueIteration<O extends DiscreteState> {
 
         LOGGER.info(String.format("[Evaluate] Average: %f", rewards / i));
         return rewards / i;
+    }
+
+    public interface ValueIterationFilter<O extends DiscreteState> {
+        double[] run(O state);
     }
 
     @Data
