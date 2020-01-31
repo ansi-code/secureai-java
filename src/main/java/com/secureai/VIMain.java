@@ -22,7 +22,7 @@ public class VIMain {
 
         ValueIteration.VIConfiguration viConfiguration = new ValueIteration.VIConfiguration(
                 123,    //Random seed
-                100,    //iterations
+                1000000,    //iterations
                 .5,    //gamma
                 1e-4    //epsilon
         );

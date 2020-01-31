@@ -58,7 +58,6 @@ public class SystemEnvironment implements SMDP<SystemState, Integer, DiscreteSpa
     }
 
     public StepReply<SystemState> step(Integer a) {
-        //System.out.println("ACTION STEP: " + a);
         this.step++;
 
         SystemState oldState = this.systemState;
@@ -67,6 +66,7 @@ public class SystemEnvironment implements SMDP<SystemState, Integer, DiscreteSpa
         SystemState currentState = this.systemState;
 
         double reward = systemRewardFunction.reward(oldState, action, currentState);
+        //System.out.println("ACTION STEP: " + a + "; REWARD: " + reward);
 
         return new StepReply<>(currentState, reward, isDone(), new JSONObject("{}"));
     }

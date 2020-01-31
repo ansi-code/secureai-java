@@ -60,7 +60,7 @@ public class QLearning<O extends DiscreteState> {
                 rewards += step.getReward();
                 stat.append(step.getReward());
             }
-            LOGGER.info("[Train] Episode: " + i + "; Reward: " + rewards / j);
+            LOGGER.info(String.format("[Train] Episode: %d; Reward: %f; Average: %f", i, rewards, rewards / j));
         }
     }
 
@@ -73,7 +73,8 @@ public class QLearning<O extends DiscreteState> {
             state = step.getObservation();
             rewards += step.getReward();
         }
-        return rewards / i;
+        LOGGER.info(String.format("[Play] Episode: %d; Reward: %f; Average: %f", i, rewards, rewards / i));
+        return rewards;
     }
 
     public double evaluate(int episodes) {
@@ -82,10 +83,8 @@ public class QLearning<O extends DiscreteState> {
         for (; i < episodes; i++) {
             double reward = this.play();
             rewards += reward;
-            LOGGER.info("[Evaluate] Episode: " + i + "; Reward: " + reward);
         }
-
-        LOGGER.info("[Evaluate] Average reward: " + rewards / i);
+        LOGGER.info(String.format("[Evaluate] Average: %f", rewards / i));
         return rewards / i;
     }
 

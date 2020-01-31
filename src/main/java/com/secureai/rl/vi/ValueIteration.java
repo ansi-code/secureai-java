@@ -47,6 +47,7 @@ public class ValueIteration<O extends DiscreteState> {
     }
 
     public void solve() {
+        LOGGER.info("[Solve] Starting");
         for (int i = 0; i < this.conf.iterations; i++) {
             double vDelta = 0;
             for (int s = 0; s < Math.pow(this.mdp.getObservationSpace().getShape()[0], 2); s++) {
@@ -72,7 +73,8 @@ public class ValueIteration<O extends DiscreteState> {
             state = step.getObservation();
             rewards += step.getReward();
         }
-        return rewards / i;
+        LOGGER.info(String.format("[Play] Episode: %d; Reward: %f; Average: %f", i, rewards, rewards / i));
+        return rewards;
     }
 
     public double evaluate(int episodes) {
@@ -81,10 +83,9 @@ public class ValueIteration<O extends DiscreteState> {
         for (; i < episodes; i++) {
             double reward = this.play();
             rewards += reward;
-            LOGGER.info("[Evaluate] Episode: " + i + "; Reward: " + reward);
         }
 
-        LOGGER.info("[Evaluate] Average reward: " + rewards / i);
+        LOGGER.info(String.format("[Evaluate] Average: %f", rewards / i));
         return rewards / i;
     }
 

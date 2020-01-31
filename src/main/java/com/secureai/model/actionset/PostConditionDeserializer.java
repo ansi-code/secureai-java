@@ -27,7 +27,7 @@ public class PostConditionDeserializer extends StdDeserializer<Action.PostNodeSt
     }
 
     private Action.PostNodeStateFunction parsePostConditions(String str) {
-        if (str == null)
+        if (str == null || str.equals("~") || str.equals("null"))
             return (state, i) -> {
             };
 
