@@ -26,7 +26,6 @@ public class PreConditionDeserializer extends StdDeserializer<Action.PreNodeStat
     }
 
     private Action.PreNodeStateFunction parsePreConditions(String str) {
-        System.out.println(str);
         if (str == null || str.equals("~") || str.equals("null"))
             return (state, i) -> true;
 

@@ -22,9 +22,9 @@ public class VIMain {
 
         ValueIteration.VIConfiguration viConfiguration = new ValueIteration.VIConfiguration(
                 123,    //Random seed
-                1000000,    //iterations
+                2,    //iterations
                 .5,    //gamma
-                1e-4    //epsilon
+                1e-5    //epsilon
         );
 
         ValueIteration<SystemState> vi = new ValueIteration<>(mdp, viConfiguration);

@@ -32,7 +32,7 @@ public class ValueIteration<O extends DiscreteState> {
         for (int a = 0; a < this.mdp.getActionSpace().getSize(); a++) {
             this.mdp.setState(state);
             StepReply<O> step = this.mdp.step(a);
-            double q = step.getReward() + this.conf.gamma * this.V.getOrDefault(state.toInt(), .1d);
+            double q = step.getReward() + this.conf.gamma * this.V.getOrDefault(state.toInt(), 0d);
             if (q > bestQ) {
                 bestQ = q;
                 bestAction = a;
@@ -50,15 +50,16 @@ public class ValueIteration<O extends DiscreteState> {
         LOGGER.info("[Solve] Starting");
         for (int i = 0; i < this.conf.iterations; i++) {
             double vDelta = 0;
-            for (int s = 0; s < Math.pow(this.mdp.getObservationSpace().getShape()[0], 2); s++) {
+            for (int s = 0; s < Math.pow(2, this.mdp.getObservationSpace().getShape()[0]); s++) {
                 this.mdp.getState().setFromInt(s);
                 double previousV = V.getOrDefault(s, 0d);
                 int bestAction = this.chooseBest(this.mdp.getState());
                 StepReply<O> step = this.mdp.step(bestAction);
-                this.V.put(s, step.getReward() + this.conf.gamma * this.V.getOrDefault(step.getObservation().toInt(), .1d));
+                this.V.put(s, step.getReward() + this.conf.gamma * this.V.getOrDefault(step.getObservation().toInt(), 0d));
                 this.P.put(s, bestAction);
                 vDelta = Math.max(vDelta, Math.abs(previousV - this.V.get(s)));
             }
+            LOGGER.info(String.format("[Solve] Episode: %d; Delta: %f", i, vDelta));
             if (vDelta < this.conf.epsilon)
                 break;
         }

@@ -1,0 +1,40 @@
+id: action-set-1
+
+actions:
+
+  start:
+    execution-time: 200
+    execution-cost: 20
+    disruptive: false
+    pre-condition: state[active] == false
+    post-condition: state[active] = rand(0.9)
+  restart:
+    execution-time: 300
+    execution-cost: 50
+    disruptive: true
+    pre-condition: state[active] == true && state[corrupted] == true
+    post-condition: state[corrupted] = rand(0.4)
+  update:
+    execution-time: 1000
+    execution-cost: 150
+    disruptive: false
+    pre-condition: state[active] == true && state[updated] == false
+    post-condition: state[updated] = rand(0.9), state[vulnerable] = rand(0.2)
+  heal:
+    execution-time: 1200
+    execution-cost: 200
+    disruptive: true
+    pre-condition: state[active] == true && state[corrupted] == true
+    post-condition: state[corrupted] = rand(0.1)
+  preferred:
+    execution-time: 10
+    execution-cost: 10
+    disruptive: true
+    pre-condition: ~
+    post-condition: ~
+  fix:
+    execution-time: 700
+    execution-cost: 100
+    disruptive: true
+    pre-condition: state[active] == true && state[vulnerable] == true
+    post-condition: state[vulnerable] = rand(0.1)
