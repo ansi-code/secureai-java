@@ -81,7 +81,7 @@ public class DynamicMNISTExample {
         // NEW MODEL
 
         //MultiLayerNetwork newModel = new DynNNBuilder(model).addOutputs(1).build();
-        MultiLayerNetwork newModel = new DynNNBuilder(model).forLayer(-1).setBlockSize(1).appendOut(1).build();
+        MultiLayerNetwork newModel = new DynNNBuilder(model).forLayer(-1).setBlockSize(1).appendOut(1).build(MultiLayerNetwork.class);
         //MultiLayerNetwork newModel = new TransferLearning.Builder(model).nOutReplace(model.getLayers().length - 1, 10, WeightInit.XAVIER).build();
         System.out.println(newModel.summary());
 

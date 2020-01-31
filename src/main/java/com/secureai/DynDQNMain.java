@@ -3,13 +3,13 @@ package com.secureai;
 import com.secureai.model.actionset.ActionSet;
 import com.secureai.model.topology.Topology;
 import com.secureai.nn.DynNNBuilder;
+import com.secureai.nn.FilteredMultiLayerNetwork;
 import com.secureai.nn.NNBuilder;
 import com.secureai.system.SystemEnvironment;
 import com.secureai.system.SystemState;
 import com.secureai.utils.*;
 import lombok.SneakyThrows;
 import org.apache.log4j.BasicConfigurator;
-import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.deeplearning4j.rl4j.learning.IEpochTrainer;
 import org.deeplearning4j.rl4j.learning.sync.qlearning.QLearning;
@@ -29,7 +29,7 @@ public class DynDQNMain {
 
     public static final BlockingQueue<Runnable> queue = new LinkedBlockingQueue<>();
     static QLearningDiscreteDense<SystemState> dql = null;
-    static MultiLayerNetwork nn = null;
+    static FilteredMultiLayerNetwork nn = null;
     static SystemEnvironment mdp = null;
 
     public static void main(String... args) throws InterruptedException {
@@ -122,10 +122,12 @@ public class DynDQNMain {
         if (nn == null)
             nn = new NNBuilder().build(newMdp.getObservationSpace().size(), newMdp.getActionSpace().getSize());
         else
-            nn = new DynNNBuilder(nn)
+            nn = new DynNNBuilder<>(nn)
                     .forLayer(0).transferIn(mdp.getObservationSpace().getMap(), newMdp.getObservationSpace().getMap())
                     .forLayer(-1).transferOut(mdp.getActionSpace().getMap(), newMdp.getActionSpace().getMap())
-                    .build();
+                    .build(FilteredMultiLayerNetwork.class);
+        nn.setMultiLayerNetworkPredictionFilter(input -> mdp.getActionSpace().actionsMask(input));
+
         nn.setListeners(new ScoreIterationListener(100));
         mdp = newMdp;
 
