@@ -1,5 +1,6 @@
 package com.secureai.system;
 
+import com.secureai.rl.abs.DiscreteState;
 import lombok.Getter;
 import org.apache.commons.lang3.ArrayUtils;
 import org.deeplearning4j.rl4j.space.DiscreteSpace;
@@ -34,6 +35,12 @@ public class SystemActionSpace extends DiscreteSpace {
 
     public Integer decode(SystemAction systemAction) {
         return this.map.indexOf(String.format("%s.%s", systemAction.getResourceId(), systemAction.getActionId()));
+    }
+
+    public Double[] actionsMask(int encodedState) {
+        SystemState result = this.environment.getSystemState().newInstance();
+        result.setFromInt(encodedState);
+        return this.actionsMask(result);
     }
 
     public Double[] actionsMask(SystemState systemState) {

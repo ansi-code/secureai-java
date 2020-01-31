@@ -21,8 +21,11 @@ public class QLearning<O extends DiscreteState> {
     private MDP<O, Integer, DiscreteSpace> mdp;
 
     public QLearning(MDP<O, Integer, DiscreteSpace> mdp, QNConfiguration conf) {
-        //this.qTable = new StaticQTable((int) Math.pow(2, mdp.getObservationSpace().getShape()[0]), mdp.getActionSpace().getSize());
-        this.qTable = new DynamicQTable(mdp.getActionSpace().getSize());
+        this(mdp, conf, new DynamicQTable(mdp.getActionSpace().getSize()));
+    }
+
+    public QLearning(MDP<O, Integer, DiscreteSpace> mdp, QNConfiguration conf, QTable qTable) {
+        this.qTable = qTable;
         this.mdp = mdp;
         this.conf = conf;
     }

@@ -1,5 +1,6 @@
 package com.secureai.rl.abs;
 
+import com.secureai.system.SystemState;
 import com.secureai.utils.ArrayUtils;
 import lombok.Getter;
 import org.deeplearning4j.rl4j.space.Encodable;
@@ -13,10 +14,9 @@ public class DiscreteState implements Encodable {
     @Getter
     private INDArray state;
 
-    public DiscreteState(int... shape) {
+    public DiscreteState(long... shape) {
         this.state = Nd4j.zeros(shape);
     }
-
     public int get(int... indices) {
         return this.state.getInt(indices);
     }
@@ -43,17 +43,19 @@ public class DiscreteState implements Encodable {
     }
 
     public void setFromInt(int value) {
-        //System.out.println(this.state.toStringFull());
-        //System.out.println(Arrays.toString(this.state.shape()));
+        this.state = this.fromInt(value);
+    }
 
+    public DiscreteState newInstance() {
+        return new DiscreteState(this.state.shape());
+    }
+
+    public INDArray fromInt(int value) {
         INDArray result = Nd4j.zeros(ArrayUtils.multiply(this.state.shape()));
         int[] data = ArrayUtils.fromBase10(value, 2);
         INDArray base2 = Nd4j.create(data, new long[]{data.length}, DataType.INT);
         result.put(NDArrayIndex.createCoveringShape(base2.shape()), base2);
-        this.state = result.reshape(this.state.shape());
-
-        //System.out.println(this.state.toStringFull());
-        //System.out.println(Arrays.toString(this.state.shape()));
+        return result.reshape(this.state.shape());
     }
 
 }
