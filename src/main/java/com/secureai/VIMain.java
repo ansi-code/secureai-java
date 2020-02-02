@@ -16,14 +16,14 @@ public class VIMain {
     public static void main(String... args) throws IOException {
         BasicConfigurator.configure();
 
-        Topology topology = YAML.parse("data/topologies/topology-1.yml", Topology.class);
-        ActionSet actionSet = YAML.parse("data/action-sets/action-set-1.yml", ActionSet.class);
+        Topology topology = YAML.parse("data/topologies/topology-paper-4.yml", Topology.class);
+        ActionSet actionSet = YAML.parse("data/action-sets/action-set-paper.yml", ActionSet.class);
 
         SystemEnvironment mdp = new SystemEnvironment(topology, actionSet);
 
         ValueIteration.VIConfiguration viConfiguration = new ValueIteration.VIConfiguration(
                 123,    //Random seed
-                2,    //iterations
+                1,    //iterations
                 .5,    //gamma
                 1e-5    //epsilon
         );
