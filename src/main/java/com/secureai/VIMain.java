@@ -5,6 +5,7 @@ import com.secureai.model.topology.Topology;
 import com.secureai.rl.vi.ValueIteration;
 import com.secureai.system.SystemEnvironment;
 import com.secureai.system.SystemState;
+import com.secureai.utils.ValueWriter;
 import com.secureai.utils.YAML;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.BasicConfigurator;
@@ -33,6 +34,7 @@ public class VIMain {
 
         vi.solve();
 
-        vi.evaluate(10);
+        double result = vi.evaluate(10);
+        ValueWriter.writeValue("output/value_iteration.txt", result);
     }
 }

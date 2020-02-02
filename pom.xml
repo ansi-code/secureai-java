@@ -126,7 +126,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>com.secureai.MNISTExample</mainClass>
+                            <mainClass>com.secureai.DynDQNMain</mainClass>
                             <classpathPrefix>dependency-jars/</classpathPrefix>
                         </manifest>
                     </archive>
