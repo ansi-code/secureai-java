@@ -6,7 +6,6 @@ import lombok.*;
 import org.deeplearning4j.gym.StepReply;
 import org.deeplearning4j.rl4j.space.DiscreteSpace;
 
-import java.util.HashMap;
 import java.util.logging.Logger;
 
 public class ValueIteration<O extends DiscreteState> {
@@ -16,16 +15,23 @@ public class ValueIteration<O extends DiscreteState> {
     private ValueIteration.VIConfiguration conf;
     private SMDP<O, Integer, DiscreteSpace> mdp;
 
-    private HashMap<Integer, Double> V = new HashMap<>(); // State: Utility
-    private HashMap<Integer, Integer> P = new HashMap<>(); // State: Action
+    private IntegerMap<Double> V; // State: Utility
+    private IntegerMap<Integer> P; // State: Action
 
     @Getter
     @Setter
     private ValueIterationFilter<O> valueIterationFilter;
 
     public ValueIteration(SMDP<O, Integer, DiscreteSpace> mdp, ValueIteration.VIConfiguration conf) {
+        //this(mdp, conf, new DynamicIntegerMap<>(), new DynamicIntegerMap<>());
+        this(mdp, conf, new StaticIntegerMap<>((int) Math.pow(2, mdp.getObservationSpace().getShape()[0]), Double.class), new StaticIntegerMap<>((int) Math.pow(2, mdp.getObservationSpace().getShape()[0]), Integer.class));
+    }
+
+    public ValueIteration(SMDP<O, Integer, DiscreteSpace> mdp, ValueIteration.VIConfiguration conf, IntegerMap<Double> V, IntegerMap<Integer> P) {
         this.mdp = mdp;
         this.conf = conf;
+        this.V = V;
+        this.P = P;
     }
 
     public int chooseBest(O state) {
@@ -51,19 +57,23 @@ public class ValueIteration<O extends DiscreteState> {
     }
 
     public void solve() {
-        LOGGER.info("[Solve] Starting");
+        int states = (int) Math.pow(2, this.mdp.getObservationSpace().getShape()[0]);
+        LOGGER.info(String.format("[Solve] Starting iteration for %d states", states));
         for (int i = 0; i < this.conf.iterations; i++) {
             double vDelta = 0;
-            for (int s = 0; s < Math.pow(2, this.mdp.getObservationSpace().getShape()[0]); s++) {
+            for (int s = 0; s < states; s++) {
                 this.mdp.getState().setFromInt(s);
-                double previousV = V.getOrDefault(s, 0d);
+                double previousV = this.V.getOrDefault(s, 0d);
                 int bestAction = this.chooseBest(this.mdp.getState());
                 StepReply<O> step = this.mdp.step(bestAction);
                 this.V.put(s, step.getReward() + this.conf.gamma * this.V.getOrDefault(step.getObservation().toInt(), 0d));
                 this.P.put(s, bestAction);
                 vDelta = Math.max(vDelta, Math.abs(previousV - this.V.get(s)));
+                if ((s + 1) % 10000 == 0 || (s + 1) == states) {
+                    LOGGER.info(String.format("[Solve] State: %d/%d", (s + 1), states));
+                }
             }
-            LOGGER.info(String.format("[Solve] Episode: %d; Delta: %f", i, vDelta));
+            LOGGER.info(String.format("[Solve] Iteration: %d; Delta: %f", i, vDelta));
             if (vDelta < this.conf.epsilon)
                 break;
         }
@@ -78,7 +88,7 @@ public class ValueIteration<O extends DiscreteState> {
             state = step.getObservation();
             rewards += step.getReward();
         }
-        LOGGER.info(String.format("[Play] Episode: %d; Reward: %f; Average: %f", i, rewards, rewards / i));
+        LOGGER.info(String.format("[Play] Reward: %f; Average: %f", rewards, rewards / i));
         return rewards;
     }
 
