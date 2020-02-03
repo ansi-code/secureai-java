@@ -66,7 +66,7 @@ public class SystemEnvironment implements SMDP<SystemState, Integer, DiscreteSpa
         SystemState currentState = this.systemState;
 
         double reward = systemRewardFunction.reward(oldState, action, currentState);
-        //System.out.println("ACTION STEP: " + a + "; REWARD: " + reward);
+        //System.out.println("ACTION STEP: " + a + "; REWARD: " + reward); //nsccf
 
         return new StepReply<>(currentState, reward, isDone(), new JSONObject("{}"));
     }
