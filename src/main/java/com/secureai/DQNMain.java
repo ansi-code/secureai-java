@@ -6,6 +6,7 @@ import com.secureai.nn.FilteredMultiLayerNetwork;
 import com.secureai.nn.NNBuilder;
 import com.secureai.system.SystemEnvironment;
 import com.secureai.system.SystemState;
+import com.secureai.utils.ArgsUtils;
 import com.secureai.utils.RLStatTrainingListener;
 import com.secureai.utils.YAML;
 import org.apache.log4j.BasicConfigurator;
@@ -17,30 +18,32 @@ import org.deeplearning4j.rl4j.util.DataManager;
 import org.deeplearning4j.rl4j.util.DataManagerTrainingListener;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.logging.Logger;
 
 public class DQNMain {
 
     public static void main(String... args) throws IOException {
         BasicConfigurator.configure();
+        Map<String, String> argsMap = ArgsUtils.toMap(args);
 
         Topology topology = YAML.parse("data/topologies/topology-paper-4.yml", Topology.class);
         ActionSet actionSet = YAML.parse("data/action-sets/action-set-paper.yml", ActionSet.class);
 
         QLearning.QLConfiguration qlConfiguration = new QLearning.QLConfiguration(
-                123,    //Random seed
-                50,    //Max step By epoch
-                1000, //Max step
-                150000, //Max size of experience replay
-                32,     //size of batches
-                500,    //target update (hard)
-                10,     //num step noop warmup
-                1.,   //reward scaling
-                0.99,   //gamma
-                1.0,    //td-error clipping
-                0.1f,   //min epsilon
-                1000,   //num step for eps greedy anneal
-                false    //double DQN
+                Integer.parseInt(argsMap.getOrDefault("seed", "123")),                //Random seed
+                Integer.parseInt(argsMap.getOrDefault("maxEpochStep", "100")),        //Max step By epoch
+                Integer.parseInt(argsMap.getOrDefault("maxStep", "100000000")),       //Max step
+                Integer.parseInt(argsMap.getOrDefault("expRepMaxSize", "150000")),    //Max size of experience replay
+                Integer.parseInt(argsMap.getOrDefault("batchSize", "32")),            //size of batches
+                Integer.parseInt(argsMap.getOrDefault("targetDqnUpdateFreq", "500")), //target update (hard)
+                Integer.parseInt(argsMap.getOrDefault("updateStart", "10")),          //num step noop warmup
+                Double.parseDouble(argsMap.getOrDefault("rewardFactor", "1.")),       //reward scaling
+                Double.parseDouble(argsMap.getOrDefault("gamma", "0.99")),            //gamma
+                Double.parseDouble(argsMap.getOrDefault("errorClamp", "1.0")),        //td-error clipping
+                Float.parseFloat(argsMap.getOrDefault("minEpsilon", "0.1f")),         //min epsilon
+                Integer.parseInt(argsMap.getOrDefault("epsilonNbStep", "1000")),      //num step for eps greedy anneal
+                Boolean.parseBoolean(argsMap.getOrDefault("doubleDQN", "false"))      //double DQN
         );
 
         SystemEnvironment mdp = new SystemEnvironment(topology, actionSet);

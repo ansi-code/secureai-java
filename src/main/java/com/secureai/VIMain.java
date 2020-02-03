@@ -5,17 +5,20 @@ import com.secureai.model.topology.Topology;
 import com.secureai.rl.vi.ValueIteration;
 import com.secureai.system.SystemEnvironment;
 import com.secureai.system.SystemState;
+import com.secureai.utils.ArgsUtils;
 import com.secureai.utils.ValueWriter;
 import com.secureai.utils.YAML;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.BasicConfigurator;
 
 import java.io.IOException;
+import java.util.Map;
 
 public class VIMain {
 
     public static void main(String... args) throws IOException {
         BasicConfigurator.configure();
+        Map<String, String> argsMap = ArgsUtils.toMap(args);
 
         Topology topology = YAML.parse("data/topologies/topology-paper-4.yml", Topology.class);
         ActionSet actionSet = YAML.parse("data/action-sets/action-set-paper.yml", ActionSet.class);
@@ -23,10 +26,10 @@ public class VIMain {
         SystemEnvironment mdp = new SystemEnvironment(topology, actionSet);
 
         ValueIteration.VIConfiguration viConfiguration = new ValueIteration.VIConfiguration(
-                123,    //Random seed
-                1,    //iterations
-                .5,    //gamma
-                1e-5    //epsilon
+                Integer.parseInt(argsMap.getOrDefault("seed", "123")),      //Random seed
+                Integer.parseInt(argsMap.getOrDefault("iterations", "1")),  //iterations
+                Double.parseDouble(argsMap.getOrDefault("gamma", ".5")),    //gamma
+                Double.parseDouble(argsMap.getOrDefault("epsilon", "1e-5")) //epsilon
         );
 
         ValueIteration<SystemState> vi = new ValueIteration<>(mdp, viConfiguration);
