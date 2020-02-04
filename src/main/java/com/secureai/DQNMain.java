@@ -27,20 +27,20 @@ public class DQNMain {
         BasicConfigurator.configure();
         Map<String, String> argsMap = ArgsUtils.toMap(args);
 
-        Topology topology = YAML.parse("data/topologies/topology-paper-4.yml", Topology.class);
-        ActionSet actionSet = YAML.parse("data/action-sets/action-set-paper.yml", ActionSet.class);
+        Topology topology = YAML.parse(String.format("data/topologies/topology-%s.yml", argsMap.getOrDefault("topology", "3")), Topology.class);
+        ActionSet actionSet = YAML.parse(String.format("data/action-sets/action-set-%s.yml", argsMap.getOrDefault("actionSet", "3")), ActionSet.class);
 
         QLearning.QLConfiguration qlConfiguration = new QLearning.QLConfiguration(
                 Integer.parseInt(argsMap.getOrDefault("seed", "123")),                //Random seed
                 Integer.parseInt(argsMap.getOrDefault("maxEpochStep", "100")),        //Max step By epoch
                 Integer.parseInt(argsMap.getOrDefault("maxStep", "100000000")),       //Max step
                 Integer.parseInt(argsMap.getOrDefault("expRepMaxSize", "150000")),    //Max size of experience replay
-                Integer.parseInt(argsMap.getOrDefault("batchSize", "32")),            //size of batches
+                Integer.parseInt(argsMap.getOrDefault("batchSize", "64")),            //size of batches
                 Integer.parseInt(argsMap.getOrDefault("targetDqnUpdateFreq", "500")), //target update (hard)
                 Integer.parseInt(argsMap.getOrDefault("updateStart", "10")),          //num step noop warmup
                 Double.parseDouble(argsMap.getOrDefault("rewardFactor", "1.")),       //reward scaling
-                Double.parseDouble(argsMap.getOrDefault("gamma", "0.99")),            //gamma
-                Double.parseDouble(argsMap.getOrDefault("errorClamp", "1.0")),        //td-error clipping
+                Double.parseDouble(argsMap.getOrDefault("gamma", "0.01")),            //gamma
+                Double.parseDouble(argsMap.getOrDefault("errorClamp", ".628")),        //td-error clipping
                 Float.parseFloat(argsMap.getOrDefault("minEpsilon", "0.1f")),         //min epsilon
                 Integer.parseInt(argsMap.getOrDefault("epsilonNbStep", "1000")),      //num step for eps greedy anneal
                 Boolean.parseBoolean(argsMap.getOrDefault("doubleDQN", "false"))      //double DQN

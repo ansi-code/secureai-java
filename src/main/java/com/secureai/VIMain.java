@@ -20,8 +20,8 @@ public class VIMain {
         BasicConfigurator.configure();
         Map<String, String> argsMap = ArgsUtils.toMap(args);
 
-        Topology topology = YAML.parse("data/topologies/topology-paper-4.yml", Topology.class);
-        ActionSet actionSet = YAML.parse("data/action-sets/action-set-paper.yml", ActionSet.class);
+        Topology topology = YAML.parse(String.format("data/topologies/topology-%s.yml", argsMap.getOrDefault("topology", "paper-4")), Topology.class);
+        ActionSet actionSet = YAML.parse(String.format("data/action-sets/action-set-%s.yml", argsMap.getOrDefault("actionSet", "paper")), ActionSet.class);
 
         SystemEnvironment mdp = new SystemEnvironment(topology, actionSet);
 
