@@ -71,9 +71,11 @@ public class ValueIteration<O extends DiscreteState> {
                 vDelta = Math.max(vDelta, Math.abs(previousV - this.V.get(s)));
                 if ((s + 1) % 10000 == 0 || (s + 1) == states) {
                     LOGGER.info(String.format("[Solve] State: %d/%d", (s + 1), states));
+                    //this.play(); //uncomment if you want to see how it is going
                 }
             }
             LOGGER.info(String.format("[Solve] Iteration: %d; Delta: %f", i, vDelta));
+
             if (vDelta < this.conf.epsilon)
                 break;
         }
