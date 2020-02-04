@@ -33,7 +33,7 @@ public class DQNMain {
         QLearning.QLConfiguration qlConfiguration = new QLearning.QLConfiguration(
                 Integer.parseInt(argsMap.getOrDefault("seed", "123")),                //Random seed
                 Integer.parseInt(argsMap.getOrDefault("maxEpochStep", "100")),        //Max step By epoch
-                Integer.parseInt(argsMap.getOrDefault("maxStep", "1000")),           //Max step
+                Integer.parseInt(argsMap.getOrDefault("maxStep", "10000")),           //Max step
                 Integer.parseInt(argsMap.getOrDefault("expRepMaxSize", "15000")),    //Max size of experience replay
                 Integer.parseInt(argsMap.getOrDefault("batchSize", "128")),            //size of batches
                 Integer.parseInt(argsMap.getOrDefault("targetDqnUpdateFreq", "400")), //target update (hard)
@@ -47,7 +47,7 @@ public class DQNMain {
         );
 
         SystemEnvironment mdp = new SystemEnvironment(topology, actionSet);
-        FilteredMultiLayerNetwork nn = new NNBuilder().build(mdp.getObservationSpace().size(), mdp.getActionSpace().getSize(), Integer.parseInt(argsMap.getOrDefault("layers", "1")));
+        FilteredMultiLayerNetwork nn = new NNBuilder().build(mdp.getObservationSpace().size(), mdp.getActionSpace().getSize(), Integer.parseInt(argsMap.getOrDefault("layers", "4")));
 
         nn.setMultiLayerNetworkPredictionFilter(input -> mdp.getActionSpace().actionsMask(input));
         System.out.println(nn.summary());

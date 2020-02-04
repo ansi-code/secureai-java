@@ -27,11 +27,11 @@ public class QNMain {
 
         QLearning.QNConfiguration qnConfiguration = new QLearning.QNConfiguration(
                 Integer.parseInt(argsMap.getOrDefault("seed", "123")),          //Random seed
-                Integer.parseInt(argsMap.getOrDefault("episodes", "5000")),     //episodes
+                Integer.parseInt(argsMap.getOrDefault("episodes", "1000")),     //episodes
                 Integer.parseInt(argsMap.getOrDefault("batchSize", "64")),      //batch
-                Double.parseDouble(argsMap.getOrDefault("errorClamp", ".628")), //rate
-                Double.parseDouble(argsMap.getOrDefault("discountFactor", ".9")),   //discount
-                Double.parseDouble(argsMap.getOrDefault("epsilon", ".2"))    //espilon
+                Double.parseDouble(argsMap.getOrDefault("learningRate", ".628")), //rate
+                Double.parseDouble(argsMap.getOrDefault("discountFactor", "1")), //discount
+                Double.parseDouble(argsMap.getOrDefault("epsilon", ".1"))        //espilon
         );
 
         FilteredDynamicQTable qTable = new FilteredDynamicQTable(mdp.getActionSpace().getSize());

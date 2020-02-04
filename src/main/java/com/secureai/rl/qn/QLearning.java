@@ -46,11 +46,11 @@ public class QLearning<O extends DiscreteState> {
         if (RandomUtils.getRandom().nextDouble() <= this.conf.epsilon)
             return this.mdp.getActionSpace().randomAction();
 
-        return this.qTable.argMax(state.toInt());
+        return Math.max(this.qTable.argMax(state.toInt()), 0);
     }
 
     public void train() {
-        Stat<Double> stat = new Stat<>("output/qlearning.csv");
+        Stat<Double> stat = new Stat<>("output/q_learning.csv");
 
         for (int i = 0; i < this.conf.episodes; i++) { // episodes
             O state = this.mdp.reset();
@@ -66,6 +66,7 @@ public class QLearning<O extends DiscreteState> {
             stat.append(rewards);
             LOGGER.info(String.format("[Train] Episode: %d; Reward: %f; Average: %f", i, rewards, rewards / j));
         }
+        stat.flush();
     }
 
     public double play() {
