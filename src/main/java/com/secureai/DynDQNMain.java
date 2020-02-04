@@ -127,7 +127,7 @@ public class DynDQNMain {
 
         SystemEnvironment newMdp = new SystemEnvironment(topology, actionSet);
         if (nn == null)
-            nn = new NNBuilder().build(newMdp.getObservationSpace().size(), newMdp.getActionSpace().getSize());
+            nn = new NNBuilder().build(newMdp.getObservationSpace().size(), newMdp.getActionSpace().getSize(), Integer.parseInt(argsMap.getOrDefault("layers", "1")));
         else
             nn = new DynNNBuilder<>(nn)
                     .forLayer(0).transferIn(mdp.getObservationSpace().getMap(), newMdp.getObservationSpace().getMap())

@@ -11,32 +11,31 @@ import org.nd4j.linalg.lossfunctions.LossFunctions;
 
 public class NNBuilder {
 
-    public FilteredMultiLayerNetwork build(int inputs, int outputs) {
-        MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
+    public FilteredMultiLayerNetwork build(int inputs, int outputs, int size) {
+        int HIDDEN_SIZE = 64;
+        NeuralNetConfiguration.ListBuilder builder = new NeuralNetConfiguration.Builder()
                 .seed(12345)
-                .updater(new Adam(0.01))
+                .updater(new Adam(0.001))
+                .l1(1e-4)
                 .l2(1e-4)
                 .list()
                 .layer(new DenseLayer.Builder()
                         .nIn(inputs)
-                        .nOut(256)
+                        .nOut(HIDDEN_SIZE)
                         .activation(Activation.IDENTITY)
                         .weightInit(WeightInit.XAVIER)
-                        .build())
-                .layer(new DenseLayer.Builder()
-                        .nIn(256)
-                        .nOut(256)
-                        .activation(Activation.RELU)
-                        .weightInit(WeightInit.XAVIER)
-                        .build())
-                .layer(new DenseLayer.Builder()
-                        .nIn(256)
-                        .nOut(256)
-                        .activation(Activation.IDENTITY)
-                        .weightInit(WeightInit.XAVIER)
-                        .build())
+                        .build());
+        for (int i = 0; i < size; i++) {
+            builder = builder.layer(new DenseLayer.Builder()
+                    .nIn(HIDDEN_SIZE)
+                    .nOut(HIDDEN_SIZE)
+                    .activation(Activation.RELU)
+                    .weightInit(WeightInit.XAVIER)
+                    .build());
+        }
+        MultiLayerConfiguration conf = builder
                 .layer(new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
-                        .nIn(256)
+                        .nIn(HIDDEN_SIZE)
                         .nOut(outputs)
                         .activation(Activation.SOFTMAX)
                         .weightInit(WeightInit.XAVIER)

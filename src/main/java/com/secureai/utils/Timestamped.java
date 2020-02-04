@@ -2,8 +2,6 @@ package com.secureai.utils;
 
 import lombok.Getter;
 
-import java.time.Instant;
-
 public class Timestamped<T> {
     @Getter
     private long timestamp;
