@@ -2,6 +2,7 @@ package com.secureai.system;
 
 import com.secureai.model.stateset.State;
 import com.secureai.rl.abs.DiscreteState;
+import com.secureai.utils.RandomUtils;
 import org.apache.commons.lang3.ArrayUtils;
 
 public class SystemState extends DiscreteState {
@@ -23,10 +24,11 @@ public class SystemState extends DiscreteState {
 
     public void random() {
         this.environment.getSystemDefinition().getResources().forEach(resourceId -> {
-            this.set(resourceId, State.active, false);
-            this.set(resourceId, State.updated, false);
-            this.set(resourceId, State.corrupted, true);
-            this.set(resourceId, State.vulnerable, true);
+            this.set(resourceId, State.active, RandomUtils.getRandom().nextDouble() < 0.7);
+            this.set(resourceId, State.updated, RandomUtils.getRandom().nextDouble() < 0.5);
+            this.set(resourceId, State.updated, RandomUtils.getRandom().nextDouble() > 0.5);
+            this.set(resourceId, State.corrupted, RandomUtils.getRandom().nextDouble() > 0.6);
+            this.set(resourceId, State.vulnerable, RandomUtils.getRandom().nextDouble() > 0.7);
         });
     }
 
@@ -34,6 +36,7 @@ public class SystemState extends DiscreteState {
         this.environment.getSystemDefinition().getResources().forEach(resourceId -> {
             this.set(resourceId, State.active, false);
             this.set(resourceId, State.updated, false);
+            this.set(resourceId, State.upgradable, true);
             this.set(resourceId, State.corrupted, true);
             this.set(resourceId, State.vulnerable, true);
         });

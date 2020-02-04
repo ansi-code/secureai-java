@@ -12,10 +12,9 @@ import org.nd4j.linalg.lossfunctions.LossFunctions;
 public class NNBuilder {
 
     public FilteredMultiLayerNetwork build(int inputs, int outputs, int size) {
-        int HIDDEN_SIZE = 64;
+        int HIDDEN_SIZE = 128;
         NeuralNetConfiguration.ListBuilder builder = new NeuralNetConfiguration.Builder()
-                .seed(12345)
-                .updater(new Adam(1))
+                .updater(new Adam(1e-3))
                 .l1(1e-4)
                 .l2(1e-4)
                 .list()
