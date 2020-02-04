@@ -4,6 +4,8 @@ import com.secureai.model.actionset.ActionSet;
 import com.secureai.model.topology.Topology;
 import com.secureai.nn.FilteredMultiLayerNetwork;
 import com.secureai.nn.NNBuilder;
+import com.secureai.rl.abs.ParallelDQN;
+import com.secureai.rl.abs.SparkDQN;
 import com.secureai.system.SystemEnvironment;
 import com.secureai.system.SystemState;
 import com.secureai.utils.ArgsUtils;
@@ -53,9 +55,8 @@ public class DQNMain {
         System.out.println(nn.summary());
         nn.setListeners(new ScoreIterationListener(100));
 
-        QLearningDiscreteDense<SystemState> dql = new QLearningDiscreteDense<>(mdp, new DQN<>(nn), qlConfiguration);
-        //QLearningDiscreteDense<SystemState> dql = new QLearningDiscreteDense<>(mdp, new ParallelDQN<>(nn), qlConfiguration);
-        //QLearningDiscreteDense<SystemState> dql = new QLearningDiscreteDense<>(mdp, new SparkDQN<>(nn), qlConfiguration);
+        String dqnType = argsMap.getOrDefault("dqn", "standard");
+        QLearningDiscreteDense<SystemState> dql = new QLearningDiscreteDense<>(mdp, dqnType.equals("parallel") ? new ParallelDQN<>(nn) : dqnType.equals("spark") ? new SparkDQN<>(nn) : new DQN<>(nn), qlConfiguration);
         DataManager dataManager = new DataManager(true);
         dql.addListener(new DataManagerTrainingListener(dataManager));
         dql.addListener(new RLStatTrainingListener(dataManager.getInfo().substring(0, dataManager.getInfo().lastIndexOf('/'))));

@@ -5,6 +5,8 @@ import com.secureai.model.topology.Topology;
 import com.secureai.nn.DynNNBuilder;
 import com.secureai.nn.FilteredMultiLayerNetwork;
 import com.secureai.nn.NNBuilder;
+import com.secureai.rl.abs.ParallelDQN;
+import com.secureai.rl.abs.SparkDQN;
 import com.secureai.system.SystemEnvironment;
 import com.secureai.system.SystemState;
 import com.secureai.utils.*;
@@ -138,9 +140,8 @@ public class DynDQNMain {
         nn.setListeners(new ScoreIterationListener(100));
         mdp = newMdp;
 
-        dql = new QLearningDiscreteDense<>(mdp, new DQN<>(nn), qlConfiguration);
-        //dql = new QLearningDiscreteDense<>(mdp, new ParallelDQN<>(nn), qlConfiguration);
-        //dql = new QLearningDiscreteDense<>(mdp, new SparkDQN<>(nn), qlConfiguration);
+        String dqnType = argsMap.getOrDefault("dqn", "standard");
+        dql = new QLearningDiscreteDense<>(mdp, dqnType.equals("parallel") ? new ParallelDQN<>(nn) : dqnType.equals("spark") ? new SparkDQN<>(nn) : new DQN<>(nn), qlConfiguration);
         try {
             DataManager dataManager = new DataManager(true);
             dql.addListener(new DataManagerTrainingListener(dataManager));

@@ -28,9 +28,9 @@ public class QNMain {
         QLearning.QNConfiguration qnConfiguration = new QLearning.QNConfiguration(
                 Integer.parseInt(argsMap.getOrDefault("seed", "123")),          //Random seed
                 Integer.parseInt(argsMap.getOrDefault("episodes", "100000")),     //episodes
-                Integer.parseInt(argsMap.getOrDefault("batchSize", "64")),      //batch
-                Double.parseDouble(argsMap.getOrDefault("learningRate", ".628")), //rate
-                Double.parseDouble(argsMap.getOrDefault("discountFactor", "1")), //discount
+                Integer.parseInt(argsMap.getOrDefault("batchSize", "128")),      //batch
+                Double.parseDouble(argsMap.getOrDefault("learningRate", "0.9")), //alpha
+                Double.parseDouble(argsMap.getOrDefault("discountFactor", "0.75")), //gamma
                 Double.parseDouble(argsMap.getOrDefault("epsilon", ".1"))        //espilon
         );
 
