@@ -21,25 +21,27 @@ public class SeqMain {
          */
 
         // THIS IS THE TEST FOR DQN GAMMA
-        DQNMain.main("--layers", "2", "--topolgy", "paper-4", "--gamma", "5");
-        DQNMain.main("--layers", "2", "--topolgy", "paper-4", "--gamma", "10");
-        DQNMain.main("--layers", "2", "--topolgy", "paper-4", "--gamma", "20");
-        DQNMain.main("--layers", "2", "--topolgy", "paper-4", "--gamma", "40");
+        DQNMain.main("--layers", "3", "--topolgy", "paper-4", "--gamma", "5");
+        DQNMain.main("--layers", "3", "--topolgy", "paper-4", "--gamma", "10");
+        DQNMain.main("--layers", "3", "--topolgy", "paper-4", "--gamma", "20");
+        DQNMain.main("--layers", "3", "--topolgy", "paper-4", "--gamma", "40");
 
         // THIS IS THE TEST FOR DDQN
-        DQNMain.main("--layers", "2", "--topolgy", "paper-4", "--gamma", "5", "--doubleDQN", "true");
-
-        // THIS IS THE TEST FOR VI/QN/DQN
-        VIMain.main("--topolgy", "paper-4");
-        QNMain.main("--topolgy", "paper-4");
-        DQNMain.main("--layers", "2", "--topolgy", "paper-4");
-
-        // THIS IS THE TEST FOR STANDARD/PARALLEL/SPARK
-        DQNMain.main("--layers", "2", "--topolgy", "paper-4", "--dqn", "standard");
-        DQNMain.main("--layers", "2", "--topolgy", "paper-4", "--dqn", "parallel");
-        DQNMain.main("--layers", "2", "--topolgy", "paper-4", "--dqn", "spark");
+        DQNMain.main("--layers", "3", "--topolgy", "paper-4", "--gamma", "5", "--doubleDQN", "true");
 
         // THIS IS THE TEST FOR DynDDQN
-        DQNMain.main("--layers", "2", "--gamma", "5");
+        DynDQNMain.main("--layers", "3", "--gamma", "5");
+
+        /*
+        // THIS IS THE TEST FOR STANDARD/PARALLEL/SPARK
+        DQNMain.main("--layers", "3", "--topolgy", "paper-4", "--dqn", "standard");
+        DQNMain.main("--layers", "3", "--topolgy", "paper-4", "--dqn", "parallel");
+        DQNMain.main("--layers", "3", "--topolgy", "paper-4", "--dqn", "spark");
+         */
+
+        // THIS IS THE TEST FOR VI/QN/DQN
+        QNMain.main("--topolgy", "paper-4");
+        DQNMain.main("--layers", "3", "--topolgy", "paper-4");
+        VIMain.main("--topolgy", "paper-4");
     }
 }

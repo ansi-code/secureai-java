@@ -35,6 +35,7 @@ public class DynDQNMain {
     static FilteredMultiLayerNetwork nn = null;
     static SystemEnvironment mdp = null;
     static Map<String, String> argsMap;
+    static int switches = 0;
 
     public static void main(String... args) throws InterruptedException {
         BasicConfigurator.configure();
@@ -104,6 +105,7 @@ public class DynDQNMain {
     }
 
     public static void setup() {
+        if (switches++ >= 10) System.exit(0);
         String topologyId = RandomUtils.getRandom(new String[]{"1", "2", "3"});
         String actionSetId = RandomUtils.getRandom(new String[]{"1", "2", "3"});
         System.out.println(String.format("[Dyn] Choosing topology '%s' with action set '%s'", topologyId, actionSetId));
