@@ -1,0 +1,21 @@
+id: action-set-3
+
+actions:
+  start:
+    execution-time: 200
+    execution-cost: 20
+    disruptive: false
+    pre-condition: state[active] == false
+    post-condition: state[active] = rand(0.9)
+  preferred:
+    execution-time: 10
+    execution-cost: 10
+    disruptive: true
+    pre-condition: ~
+    post-condition: ~
+  fix:
+    execution-time: 700
+    execution-cost: 100
+    disruptive: true
+    pre-condition: state[active] == true && state[vulnerable] == true
+    post-condition: state[vulnerable] = rand(0.1)

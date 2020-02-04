@@ -14,7 +14,8 @@ public class NNBuilder {
     public FilteredMultiLayerNetwork build(int inputs, int outputs, int size) {
         int HIDDEN_SIZE = 64;
         NeuralNetConfiguration.ListBuilder builder = new NeuralNetConfiguration.Builder()
-                .updater(new Adam(0.001))
+                .seed(12345)
+                .updater(new Adam(1))
                 .l1(1e-4)
                 .l2(1e-4)
                 .list()

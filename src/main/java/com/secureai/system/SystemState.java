@@ -18,6 +18,7 @@ public class SystemState extends DiscreteState {
         super.reset();
 
         this.worst();
+        //this.random();
     }
 
     public void random() {
