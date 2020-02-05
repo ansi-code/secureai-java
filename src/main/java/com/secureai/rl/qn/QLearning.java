@@ -70,7 +70,7 @@ public class QLearning<O extends DiscreteState> {
                 state = step.getObservation();
 
                 rewards += step.getReward();
-
+                this.stepCounter++;
             }
             stat.append(rewards);
             LOGGER.info(String.format("[Train] Episode: %d; Reward: %f; Average: %f", i, rewards, rewards / j));

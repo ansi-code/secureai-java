@@ -32,7 +32,7 @@ public class QNMain {
                 Double.parseDouble(argsMap.getOrDefault("learningRate", "0.9")),    //alpha
                 Double.parseDouble(argsMap.getOrDefault("discountFactor", "0.75")), //gamma
                 Float.parseFloat(argsMap.getOrDefault("minEpsilon", "0.1f")),       //min epsilon
-                Integer.parseInt(argsMap.getOrDefault("epsilonNbStep", "1000"))     //num step for eps greedy anneal
+                Integer.parseInt(argsMap.getOrDefault("epsilonNbStep", "10000"))     //num step for eps greedy anneal
         );
 
         FilteredDynamicQTable qTable = new FilteredDynamicQTable(mdp.getActionSpace().getSize());
