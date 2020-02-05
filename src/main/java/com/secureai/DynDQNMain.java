@@ -48,7 +48,7 @@ public class DynDQNMain {
     }
 
     public static void runWithThreshold() {
-        int EPOCH_THRESHOLD = 5; // After 5 epochs
+        int EPOCH_THRESHOLD = 20; // After 20 epochs
 
         DynDQNMain.setup();
 
@@ -105,7 +105,7 @@ public class DynDQNMain {
     }
 
     public static void setup() {
-        if (switches++ >= 10) System.exit(0);
+        if (switches++ >= 5) System.exit(0);
         String topologyId = RandomUtils.getRandom(new String[]{"1", "2", "3"});
         String actionSetId = RandomUtils.getRandom(new String[]{"1", "2", "3"});
         System.out.println(String.format("[Dyn] Choosing topology '%s' with action set '%s'", topologyId, actionSetId));
@@ -116,14 +116,14 @@ public class DynDQNMain {
         QLearning.QLConfiguration qlConfiguration = new QLearning.QLConfiguration(
                 Integer.parseInt(argsMap.getOrDefault("seed", "123")),                //Random seed
                 Integer.parseInt(argsMap.getOrDefault("maxEpochStep", "100")),        //Max step By epoch
-                Integer.parseInt(argsMap.getOrDefault("maxStep", "100000000")),       //Max step
-                Integer.parseInt(argsMap.getOrDefault("expRepMaxSize", "150000")),    //Max size of experience replay
-                Integer.parseInt(argsMap.getOrDefault("batchSize", "32")),            //size of batches
-                Integer.parseInt(argsMap.getOrDefault("targetDqnUpdateFreq", "500")), //target update (hard)
-                Integer.parseInt(argsMap.getOrDefault("updateStart", "10")),          //num step noop warmup
-                Double.parseDouble(argsMap.getOrDefault("rewardFactor", "1.")),       //reward scaling
-                Double.parseDouble(argsMap.getOrDefault("gamma", "0.99")),            //gamma
-                Double.parseDouble(argsMap.getOrDefault("errorClamp", "1.0")),        //td-error clipping
+                Integer.parseInt(argsMap.getOrDefault("maxStep", "10000")),           //Max step
+                Integer.parseInt(argsMap.getOrDefault("expRepMaxSize", "15000")),     //Max size of experience replay
+                Integer.parseInt(argsMap.getOrDefault("batchSize", "128")),           //size of batches
+                Integer.parseInt(argsMap.getOrDefault("targetDqnUpdateFreq", "400")), //target update (hard)
+                Integer.parseInt(argsMap.getOrDefault("updateStart", "100")),         //num step noop warmup
+                Double.parseDouble(argsMap.getOrDefault("rewardFactor", "1")),        //reward scaling
+                Double.parseDouble(argsMap.getOrDefault("gamma", "5")),               //gamma
+                Double.parseDouble(argsMap.getOrDefault("errorClamp", ".8")),         //td-error clipping
                 Float.parseFloat(argsMap.getOrDefault("minEpsilon", "0.1f")),         //min epsilon
                 Integer.parseInt(argsMap.getOrDefault("epsilonNbStep", "1000")),      //num step for eps greedy anneal
                 Boolean.parseBoolean(argsMap.getOrDefault("doubleDQN", "false"))      //double DQN
@@ -131,7 +131,7 @@ public class DynDQNMain {
 
         SystemEnvironment newMdp = new SystemEnvironment(topology, actionSet);
         if (nn == null)
-            nn = new NNBuilder().build(newMdp.getObservationSpace().size(), newMdp.getActionSpace().getSize(), Integer.parseInt(argsMap.getOrDefault("layers", "1")));
+            nn = new NNBuilder().build(newMdp.getObservationSpace().size(), newMdp.getActionSpace().getSize(), Integer.parseInt(argsMap.getOrDefault("layers", "3")));
         else
             nn = new DynNNBuilder<>(nn)
                     .forLayer(0).transferIn(mdp.getObservationSpace().getMap(), newMdp.getObservationSpace().getMap())

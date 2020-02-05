@@ -36,16 +36,16 @@ public class DQNMain {
                 Integer.parseInt(argsMap.getOrDefault("seed", "123")),                //Random seed
                 Integer.parseInt(argsMap.getOrDefault("maxEpochStep", "100")),        //Max step By epoch
                 Integer.parseInt(argsMap.getOrDefault("maxStep", "10000")),           //Max step
-                Integer.parseInt(argsMap.getOrDefault("expRepMaxSize", "15000")),    //Max size of experience replay
-                Integer.parseInt(argsMap.getOrDefault("batchSize", "128")),            //size of batches
+                Integer.parseInt(argsMap.getOrDefault("expRepMaxSize", "15000")),     //Max size of experience replay
+                Integer.parseInt(argsMap.getOrDefault("batchSize", "128")),           //size of batches
                 Integer.parseInt(argsMap.getOrDefault("targetDqnUpdateFreq", "400")), //target update (hard)
-                Integer.parseInt(argsMap.getOrDefault("updateStart", "100")),          //num step noop warmup
-                Double.parseDouble(argsMap.getOrDefault("rewardFactor", "1")),       //reward scaling
-                Double.parseDouble(argsMap.getOrDefault("gamma", "5")),            //gamma
-                Double.parseDouble(argsMap.getOrDefault("errorClamp", ".8")),       //td-error clipping
+                Integer.parseInt(argsMap.getOrDefault("updateStart", "100")),         //num step noop warmup
+                Double.parseDouble(argsMap.getOrDefault("rewardFactor", "1")),        //reward scaling
+                Double.parseDouble(argsMap.getOrDefault("gamma", "5")),               //gamma
+                Double.parseDouble(argsMap.getOrDefault("errorClamp", ".8")),         //td-error clipping
                 Float.parseFloat(argsMap.getOrDefault("minEpsilon", "0.1f")),         //min epsilon
                 Integer.parseInt(argsMap.getOrDefault("epsilonNbStep", "1000")),      //num step for eps greedy anneal
-                Boolean.parseBoolean(argsMap.getOrDefault("doubleDQN", "false"))       //double DQN
+                Boolean.parseBoolean(argsMap.getOrDefault("doubleDQN", "false"))      //double DQN
         );
 
         SystemEnvironment mdp = new SystemEnvironment(topology, actionSet);

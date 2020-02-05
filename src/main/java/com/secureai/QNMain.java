@@ -26,12 +26,12 @@ public class QNMain {
         SystemEnvironment mdp = new SystemEnvironment(topology, actionSet);
 
         QLearning.QNConfiguration qnConfiguration = new QLearning.QNConfiguration(
-                Integer.parseInt(argsMap.getOrDefault("seed", "123")),          //Random seed
-                Integer.parseInt(argsMap.getOrDefault("episodes", "100000")),     //episodes
-                Integer.parseInt(argsMap.getOrDefault("batchSize", "128")),      //batch
-                Double.parseDouble(argsMap.getOrDefault("learningRate", "0.9")), //alpha
+                Integer.parseInt(argsMap.getOrDefault("seed", "123")),              //Random seed
+                Integer.parseInt(argsMap.getOrDefault("episodes", "100000")),       //episodes
+                Integer.parseInt(argsMap.getOrDefault("batchSize", "128")),         //batch
+                Double.parseDouble(argsMap.getOrDefault("learningRate", "0.9")),    //alpha
                 Double.parseDouble(argsMap.getOrDefault("discountFactor", "0.75")), //gamma
-                Double.parseDouble(argsMap.getOrDefault("epsilon", ".1"))        //espilon
+                Double.parseDouble(argsMap.getOrDefault("epsilon", ".1"))           //espilon
         );
 
         FilteredDynamicQTable qTable = new FilteredDynamicQTable(mdp.getActionSpace().getSize());
