@@ -6,6 +6,7 @@ import com.secureai.utils.Stat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import org.deeplearning4j.gym.StepReply;
 import org.deeplearning4j.rl4j.mdp.MDP;
 import org.deeplearning4j.rl4j.space.DiscreteSpace;
@@ -19,6 +20,9 @@ public class QLearning<O extends DiscreteState> {
     private QTable qTable;
     private QNConfiguration conf;
     private MDP<O, Integer, DiscreteSpace> mdp;
+
+    @Getter
+    private int stepCounter = 0;
 
     public QLearning(MDP<O, Integer, DiscreteSpace> mdp, QNConfiguration conf) {
         this(mdp, conf, new DynamicQTable(mdp.getActionSpace().getSize()));
@@ -42,11 +46,16 @@ public class QLearning<O extends DiscreteState> {
         return step;
     }
 
-    public Integer choose(O state) {
-        if (RandomUtils.getRandom().nextDouble() <= this.conf.epsilon)
-            return this.mdp.getActionSpace().randomAction();
-
+    public Integer choosePolicy(O state) {
         return Math.max(this.qTable.argMax(state.toInt()), 0);
+    }
+
+    public Integer choose(O state) {
+        return RandomUtils.getRandom().nextFloat() > this.getEpsilon() ? this.choosePolicy(state) : this.mdp.getActionSpace().randomAction();
+    }
+
+    public float getEpsilon() {
+        return Math.min(1.0F, Math.max(this.conf.minEpsilon, 1.0F - (float) (this.getStepCounter()/* - this.updateStart*/) * 1.0F / (float) this.conf.epsilonNbStep));
     }
 
     public void train() {
@@ -56,7 +65,7 @@ public class QLearning<O extends DiscreteState> {
             O state = this.mdp.reset();
             double rewards = 0;
             int j = 0;
-            for (; j < this.conf.batchSize && !this.mdp.isDone(); j++) { // batches
+            for (; j < this.conf.maxEpochStep && !this.mdp.isDone(); j++) { // batches
                 StepReply<O> step = this.trainStep(state);
                 state = step.getObservation();
 
@@ -74,7 +83,7 @@ public class QLearning<O extends DiscreteState> {
         double rewards = 0;
         int i = 0;
         for (; !this.mdp.isDone(); i++) {
-            StepReply<O> step = this.mdp.step(this.choose(state));
+            StepReply<O> step = this.mdp.step(this.choosePolicy(state));
             state = step.getObservation();
             rewards += step.getReward();
         }
@@ -99,9 +108,10 @@ public class QLearning<O extends DiscreteState> {
     public static class QNConfiguration {
         int seed;
         int episodes;
-        int batchSize;
+        int maxEpochStep;
         double learningRate;
         double discountFactor;
-        double epsilon;
+        float minEpsilon;
+        int epsilonNbStep;
     }
 }
