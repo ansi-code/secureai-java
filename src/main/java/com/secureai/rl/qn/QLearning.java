@@ -47,7 +47,7 @@ public class QLearning<O extends DiscreteState> {
     }
 
     public Integer choosePolicy(O state) {
-        return Math.max(this.qTable.argMax(state.toInt()), 0);
+        return this.qTable.argMax(state.toInt());
     }
 
     public Integer choose(O state) {

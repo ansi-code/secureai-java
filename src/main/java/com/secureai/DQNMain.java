@@ -45,7 +45,7 @@ public class DQNMain {
                 Double.parseDouble(argsMap.getOrDefault("gamma", "0.99")),               //gamma
                 Double.parseDouble(argsMap.getOrDefault("errorClamp", "1.0")),         //td-error clipping
                 Float.parseFloat(argsMap.getOrDefault("minEpsilon", "0.1f")),         //min epsilon
-                Integer.parseInt(argsMap.getOrDefault("epsilonNbStep", "1000")),      //num step for eps greedy anneal
+                Integer.parseInt(argsMap.getOrDefault("epsilonNbStep", "5000")),      //num step for eps greedy anneal
                 Boolean.parseBoolean(argsMap.getOrDefault("doubleDQN", "false"))      //double DQN
         );
 
@@ -53,7 +53,7 @@ public class DQNMain {
         FilteredMultiLayerNetwork nn = new NNBuilder().build(mdp.getObservationSpace().size(), mdp.getActionSpace().getSize(), Integer.parseInt(argsMap.getOrDefault("layers", "3")));
         nn.setMultiLayerNetworkPredictionFilter(input -> mdp.getActionSpace().actionsMask(input));
         nn.setListeners(new ScoreIterationListener(100));
-        nn.setListeners(new PerformanceListener(1, true, true));
+        //nn.setListeners(new PerformanceListener(1, true, true));
         System.out.println(nn.summary());
 
         String dqnType = argsMap.getOrDefault("dqn", "standard");

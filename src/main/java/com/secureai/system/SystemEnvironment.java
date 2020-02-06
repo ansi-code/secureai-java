@@ -31,6 +31,8 @@ public class SystemEnvironment implements SMDP<SystemState, Integer, DiscreteSpa
     private int step = 0;
     @Getter
     private int episodes = 0;
+    @Getter
+    private double cumulativeReward = 0;
 
     private MapCounter<String> actionCounter = new MapCounter<>();
 
@@ -59,6 +61,7 @@ public class SystemEnvironment implements SMDP<SystemState, Integer, DiscreteSpa
         this.step = 0;
         this.episodes++;
         this.actionCounter = new MapCounter<>();
+        this.cumulativeReward = 0;
         return this.systemState;
     }
 
@@ -73,7 +76,8 @@ public class SystemEnvironment implements SMDP<SystemState, Integer, DiscreteSpa
         double reward = systemRewardFunction.reward(oldState, action, currentState);
         boolean done = this.isDone();
         this.actionCounter.increment(String.format("%s-%s", action.getResourceId(), action.getActionId()));
-        if (done) System.out.println(String.format("[%s] %s", this.step, this.actionCounter));
+        this.cumulativeReward += reward;
+        //if (done) System.out.println(String.format("[Steps: %s] [Cumulative Reward: %s] [Action bins %s]", this.step, this.cumulativeReward, this.actionCounter));
         //System.out.println("ACTION STEP: " + a + "; REWARD: " + reward); //nsccf
 
         return new StepReply<>(currentState, reward, isDone(), new JSONObject("{}"));
