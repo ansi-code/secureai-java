@@ -77,8 +77,10 @@ public class SystemEnvironment implements SMDP<SystemState, Integer, DiscreteSpa
         boolean done = this.isDone();
         this.actionCounter.increment(String.format("%s-%s", action.getResourceId(), action.getActionId()));
         this.cumulativeReward += reward;
-        //if (done) System.out.println(String.format("[Steps: %s] [Cumulative Reward: %s] [Action bins %s]", this.step, this.cumulativeReward, this.actionCounter));
+        if (done)
+            System.out.println(String.format("[Episode %d][Steps: %d][Cumulative Reward: %f][Action bins %s]", this.episodes, this.step, this.cumulativeReward, this.actionCounter));
         //System.out.println("ACTION STEP: " + a + "; REWARD: " + reward); //nsccf
+        //System.out.println(this.systemState.get("microservice-rest-0", State.active));
 
         return new StepReply<>(currentState, reward, isDone(), new JSONObject("{}"));
     }

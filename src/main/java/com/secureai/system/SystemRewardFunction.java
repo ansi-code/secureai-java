@@ -23,6 +23,7 @@ public class SystemRewardFunction implements RewardFunction<SystemState, SystemA
 
     @Override
     public double reward(SystemState oldState, SystemAction systemAction, SystemState currentState) {
+        if (oldState.equals(currentState)) return -2;
         Action action = this.environment.getActionSet().getActions().get(systemAction.getActionId());
         return -(Config.TIME_WEIGHT * (action.getExecutionTime() / this.maxExecutionTime) + Config.COST_WEIGHT * (action.getExecutionCost() / this.maxExecutionCost));
     }

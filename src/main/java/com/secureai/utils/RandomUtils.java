@@ -9,7 +9,11 @@ public class RandomUtils {
     public static Random random = new Random(12345);
 
     public static <T> T getRandom(T[] array) {
-        int rnd = new Random().nextInt(array.length);
+        int rnd = random.nextInt(array.length);
         return array[rnd];
+    }
+
+    public static int getRandom(int min, int max) {
+        return random.nextInt((max - min) + 1) + min;
     }
 }

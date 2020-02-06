@@ -20,14 +20,14 @@ public class VIMain {
         BasicConfigurator.configure();
         Map<String, String> argsMap = ArgsUtils.toMap(args);
 
-        Topology topology = YAML.parse(String.format("data/topologies/topology-%s.yml", argsMap.getOrDefault("topology", "paper-4")), Topology.class);
+        Topology topology = YAML.parse(String.format("data/topologies/topology-%s.yml", argsMap.getOrDefault("topology", "0")), Topology.class);
         ActionSet actionSet = YAML.parse(String.format("data/action-sets/action-set-%s.yml", argsMap.getOrDefault("actionSet", "paper")), ActionSet.class);
 
         SystemEnvironment mdp = new SystemEnvironment(topology, actionSet);
 
         ValueIteration.VIConfiguration viConfiguration = new ValueIteration.VIConfiguration(
                 Integer.parseInt(argsMap.getOrDefault("seed", "123")),      //Random seed
-                Integer.parseInt(argsMap.getOrDefault("iterations", "1")),  //iterations
+                Integer.parseInt(argsMap.getOrDefault("iterations", "10")),  //iterations
                 Double.parseDouble(argsMap.getOrDefault("gamma", ".5")),    //gamma
                 Double.parseDouble(argsMap.getOrDefault("epsilon", "1e-5")) //epsilon
         );
