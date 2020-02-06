@@ -28,8 +28,9 @@ public class Stat<T> {
 
         try {
             File f = new File(filePath);
-            if (f.exists()) f.delete();
-            f.getParentFile().mkdirs();
+            if (f.isDirectory()) f = new File(FileUtils.firstAvailableFolder(filePath, "out") + "/stat.csv");
+            else if (f.exists()) f.delete();
+            (f.isDirectory() ? f : f.getParentFile()).mkdirs();
 
             this.fileWriter = new FileWriter(f);
             this.bufferedWriter = new BufferedWriter(this.fileWriter);

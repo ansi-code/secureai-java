@@ -5,6 +5,7 @@ import com.secureai.model.actionset.ActionSet;
 import com.secureai.model.topology.Topology;
 import com.secureai.rl.abs.SMDP;
 import com.secureai.utils.MapCounter;
+import com.secureai.utils.Stat;
 import lombok.Getter;
 import org.deeplearning4j.gym.StepReply;
 import org.deeplearning4j.rl4j.space.DiscreteSpace;
@@ -34,7 +35,8 @@ public class SystemEnvironment implements SMDP<SystemState, Integer, DiscreteSpa
     @Getter
     private double cumulativeReward = 0;
 
-    private MapCounter<String> actionCounter = new MapCounter<>();
+    private MapCounter<String> actionCounter;
+    private Stat<Double> stat;
 
     public SystemEnvironment(Topology topology, ActionSet actionSet) {
         this.actionSet = actionSet;
@@ -46,10 +48,11 @@ public class SystemEnvironment implements SMDP<SystemState, Integer, DiscreteSpa
         this.systemRewardFunction = new SystemRewardFunction(this);
         this.systemTerminateFunction = new SystemTerminateFunction(this);
         this.actionCounter = new MapCounter<>();
+        this.stat = new Stat<>("output/mdp");
     }
 
     public void close() {
-
+        this.stat.flush();
     }
 
     public boolean isDone() {
@@ -62,6 +65,7 @@ public class SystemEnvironment implements SMDP<SystemState, Integer, DiscreteSpa
         this.episodes++;
         this.actionCounter = new MapCounter<>();
         this.cumulativeReward = 0;
+        this.stat.flush();
         return this.systemState;
     }
 
@@ -77,10 +81,11 @@ public class SystemEnvironment implements SMDP<SystemState, Integer, DiscreteSpa
         boolean done = this.isDone();
         this.actionCounter.increment(String.format("%s-%s", action.getResourceId(), action.getActionId()));
         this.cumulativeReward += reward;
-        if (done)
+        if (done) {
+            this.stat.append(this.cumulativeReward);
             System.out.println(String.format("[Episode %d][Steps: %d][Cumulative Reward: %f][Action bins %s]", this.episodes, this.step, this.cumulativeReward, this.actionCounter));
+        }
         //System.out.println("ACTION STEP: " + a + "; REWARD: " + reward); //nsccf
-        //System.out.println(this.systemState.get("microservice-rest-0", State.active));
 
         return new StepReply<>(currentState, reward, isDone(), new JSONObject("{}"));
     }

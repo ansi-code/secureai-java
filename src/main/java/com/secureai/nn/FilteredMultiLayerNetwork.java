@@ -33,32 +33,12 @@ public class FilteredMultiLayerNetwork extends MultiLayerNetwork {
 
     @Override
     public INDArray output(INDArray input, boolean train, INDArray featuresMask, INDArray labelsMask) {
-        /*
-        INDArray output = super.output(input, train, featuresMask, labelsMask);
-        INDArray mask = this.multiLayerNetworkPredictionFilter != null ? this.multiLayerNetworkPredictionFilter.run(input) : labelsMask;
-        INDArray maskOutput = output.muli(mask);
-        //INDArray maskOutput = super.output(input, train, featuresMask, mask);
-        for (int i = 0; i < input.rows(); i++) {
-            System.out.println("input: " + input.getRow(i));
-            System.out.println("output: " + output.getRow(i));
-            System.out.println("mask: " + mask.getRow(i));
-            System.out.println("maskOutput: " + maskOutput.getRow(i));
-        }
-        */
-
-
-        //return super.output(input, train, featuresMask, this.multiLayerNetworkPredictionFilter != null ? this.multiLayerNetworkPredictionFilter.run(input) : labelsMask);
-        //return super.output(input, train, featuresMask, labelsMask);
-        //System.out.println(super.output(input, train, featuresMask, labelsMask));
-        //System.out.println(this.multiLayerNetworkPredictionFilter != null ? super.output(input, train, featuresMask, labelsMask).muli(this.multiLayerNetworkPredictionFilter.run(input)) : super.output(input, train, featuresMask, labelsMask));
-        //return this.multiLayerNetworkPredictionFilter != null ? super.output(input, train, featuresMask, labelsMask).muli(this.multiLayerNetworkPredictionFilter.run(input)) : super.output(input, train, featuresMask, labelsMask);
-        INDArray res = this.multiLayerNetworkPredictionFilter != null ? super.output(input, train, featuresMask, labelsMask).muli(this.multiLayerNetworkPredictionFilter.run(input)) : super.output(input, train, featuresMask, labelsMask);
-        for (int i = 0; i < res.rows(); i++) {
-            if (res.getRow(i).maxNumber().equals(0d))
-                res.put(i, RandomUtils.getRandom(0, res.columns() - 1), .5);
-        }
-        //System.out.println(res);
-        return res;
+        INDArray result = this.multiLayerNetworkPredictionFilter != null ? super.output(input, train, featuresMask, labelsMask).muli(this.multiLayerNetworkPredictionFilter.run(input)) : super.output(input, train, featuresMask, labelsMask);
+        // This is needed to add some salt when we are masking too many actions
+        for (int i = 0; i < result.rows(); i++)
+            if (result.getRow(i).maxNumber().equals(0d))
+                result.put(i, RandomUtils.getRandom(0, result.columns() - 1), .5);
+        return result;
     }
 
     public interface MultiLayerNetworkPredictionFilter {

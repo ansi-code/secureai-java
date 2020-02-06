@@ -41,7 +41,7 @@ public class ValueIteration<O extends DiscreteState> {
         for (int a = 0; a < this.mdp.getActionSpace().getSize(); a++) {
             this.mdp.setState(state);
             StepReply<O> step = this.mdp.step(a);
-            double q = step.getReward() + this.conf.gamma * this.V.getOrDefault(state.toInt(), 0d);
+            double q = step.getReward() + this.conf.gamma * this.V.getOrDefault(state.toInt(), -1d);
             q *= actionFilter != null ? actionFilter[a] : 1;
             if (q > bestQ) {
                 bestQ = q;
@@ -66,12 +66,12 @@ public class ValueIteration<O extends DiscreteState> {
                 double previousV = this.V.getOrDefault(s, 0d);
                 int bestAction = this.chooseBest(this.mdp.getState());
                 StepReply<O> step = this.mdp.step(bestAction);
-                this.V.put(s, step.getReward() + this.conf.gamma * this.V.getOrDefault(step.getObservation().toInt(), 0d));
+                this.V.put(s, step.getReward() + this.conf.gamma * this.V.getOrDefault(step.getObservation().toInt(), -1d));
                 this.P.put(s, bestAction);
                 vDelta = Math.max(vDelta, Math.abs(previousV - this.V.get(s)));
                 if ((s + 1) % 10000 == 0 || (s + 1) == states) {
                     LOGGER.info(String.format("[Solve] State: %d/%d", (s + 1), states));
-                    //this.play(); //uncomment if you want to see how it is going
+                    this.play(); //uncomment if you want to see how it is going
                 }
             }
             LOGGER.info(String.format("[Solve] Iteration: %d; Delta: %f", i, vDelta));
