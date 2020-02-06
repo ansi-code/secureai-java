@@ -12,6 +12,8 @@ import com.secureai.utils.ArgsUtils;
 import com.secureai.utils.RLStatTrainingListener;
 import com.secureai.utils.YAML;
 import org.apache.log4j.BasicConfigurator;
+import org.deeplearning4j.optimize.listeners.PerformanceListener;
+import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.deeplearning4j.rl4j.learning.sync.qlearning.QLearning;
 import org.deeplearning4j.rl4j.learning.sync.qlearning.discrete.QLearningDiscreteDense;
 import org.deeplearning4j.rl4j.network.dqn.DQN;
@@ -32,26 +34,26 @@ public class DQNMain {
         ActionSet actionSet = YAML.parse(String.format("data/action-sets/action-set-%s.yml", argsMap.getOrDefault("actionSet", "paper")), ActionSet.class);
 
         QLearning.QLConfiguration qlConfiguration = new QLearning.QLConfiguration(
-                Integer.parseInt(argsMap.getOrDefault("seed", "123")),                //Random seed
+                Integer.parseInt(argsMap.getOrDefault("seed", "123")),                 //Random seed
                 Integer.parseInt(argsMap.getOrDefault("maxEpochStep", "1000")),        //Max step By epoch
-                Integer.parseInt(argsMap.getOrDefault("maxStep", "4000")),           //Max step
-                Integer.parseInt(argsMap.getOrDefault("expRepMaxSize", "15000")),     //Max size of experience replay
-                Integer.parseInt(argsMap.getOrDefault("batchSize", "64")),           //size of batches
+                Integer.parseInt(argsMap.getOrDefault("maxStep", "40000")),             //Max step
+                Integer.parseInt(argsMap.getOrDefault("expRepMaxSize", "15000")),      //Max size of experience replay
+                Integer.parseInt(argsMap.getOrDefault("batchSize", "64")),             //size of batches
                 Integer.parseInt(argsMap.getOrDefault("targetDqnUpdateFreq", "2000")), //target update (hard)
-                Integer.parseInt(argsMap.getOrDefault("updateStart", "10")),         //num step noop warmup
-                Double.parseDouble(argsMap.getOrDefault("rewardFactor", "1")),        //reward scaling
-                Double.parseDouble(argsMap.getOrDefault("gamma", "0.75")),               //gamma
+                Integer.parseInt(argsMap.getOrDefault("updateStart", "10")),           //num step noop warmup
+                Double.parseDouble(argsMap.getOrDefault("rewardFactor", "1")),         //reward scaling
+                Double.parseDouble(argsMap.getOrDefault("gamma", "0.75")),             //gamma
                 Double.parseDouble(argsMap.getOrDefault("errorClamp", "0.9")),         //td-error clipping
-                Float.parseFloat(argsMap.getOrDefault("minEpsilon", "0.1f")),         //min epsilon
-                Integer.parseInt(argsMap.getOrDefault("epsilonNbStep", "1000")),      //num step for eps greedy anneal
-                Boolean.parseBoolean(argsMap.getOrDefault("doubleDQN", "false"))      //double DQN
+                Float.parseFloat(argsMap.getOrDefault("minEpsilon", "0.1")),           //min epsilon
+                Integer.parseInt(argsMap.getOrDefault("epsilonNbStep", "15000")),      //num step for eps greedy anneal
+                Boolean.parseBoolean(argsMap.getOrDefault("doubleDQN", "false"))       //double DQN
         );
 
         SystemEnvironment mdp = new SystemEnvironment(topology, actionSet);
         FilteredMultiLayerNetwork nn = new NNBuilder().build(mdp.getObservationSpace().size(), mdp.getActionSpace().getSize(), Integer.parseInt(argsMap.getOrDefault("layers", "3")));
         nn.setMultiLayerNetworkPredictionFilter(input -> mdp.getActionSpace().actionsMask(input));
-        //nn.setListeners(new ScoreIterationListener(100));
-        //nn.setListeners(new PerformanceListener(1, true, true));
+        nn.setListeners(new ScoreIterationListener(100));
+        nn.setListeners(new PerformanceListener(1, true, true));
         System.out.println(nn.summary());
 
         String dqnType = argsMap.getOrDefault("dqn", "standard");

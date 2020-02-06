@@ -65,7 +65,7 @@ public class QLearning<O extends DiscreteState> {
             O state = this.mdp.reset();
             double rewards = 0;
             int j = 0;
-            for (; j < this.conf.maxEpochStep && !this.mdp.isDone(); j++) { // batches
+            for (; j < this.conf.maxEpisodeStep && !this.mdp.isDone(); j++) { // batches
                 StepReply<O> step = this.trainStep(state);
                 state = step.getObservation();
 
@@ -108,7 +108,7 @@ public class QLearning<O extends DiscreteState> {
     public static class QNConfiguration {
         int seed;
         int episodes;
-        int maxEpochStep;
+        int maxEpisodeStep;
         double learningRate;
         double discountFactor;
         float minEpsilon;

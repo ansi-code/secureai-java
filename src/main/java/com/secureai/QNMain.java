@@ -27,12 +27,12 @@ public class QNMain {
 
         QLearning.QNConfiguration qnConfiguration = new QLearning.QNConfiguration(
                 Integer.parseInt(argsMap.getOrDefault("seed", "123")),              //Random seed
-                Integer.parseInt(argsMap.getOrDefault("episodes", "80000")),       //episodes
-                Integer.parseInt(argsMap.getOrDefault("maxEpochStep", "128")),      //max step
+                Integer.parseInt(argsMap.getOrDefault("episodes", "40000")),        //episodes
+                Integer.parseInt(argsMap.getOrDefault("maxEpisodeStep", "400")),    //max step
                 Double.parseDouble(argsMap.getOrDefault("learningRate", "0.9")),    //alpha
                 Double.parseDouble(argsMap.getOrDefault("discountFactor", "0.75")), //gamma
-                Float.parseFloat(argsMap.getOrDefault("minEpsilon", "0.1f")),       //min epsilon
-                Integer.parseInt(argsMap.getOrDefault("epsilonNbStep", "50000"))     //num step for eps greedy anneal
+                Float.parseFloat(argsMap.getOrDefault("minEpsilon", "0.1")),        //min epsilon
+                Integer.parseInt(argsMap.getOrDefault("epsilonNbStep", "15000"))    //num step for eps greedy anneal
         );
 
         FilteredDynamicQTable qTable = new FilteredDynamicQTable(mdp.getActionSpace().getSize());
