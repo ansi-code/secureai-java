@@ -19,8 +19,8 @@ public class FilteredDynamicQTable extends DynamicQTable {
 
     @Override
     public double[] get(int state) {
-        double[] result = ArrayUtils.multiply(super.get(state), this.dynamicQTableGetFilter.run(state));
-        if (Arrays.stream(result).max().orElse(0d) == 0d)
+        double[] result = this.dynamicQTableGetFilter != null ? ArrayUtils.multiply(super.get(state), this.dynamicQTableGetFilter.run(state)) : super.get(state);
+        if (Arrays.stream(result).max().orElse(Double.NEGATIVE_INFINITY) == Double.NEGATIVE_INFINITY)
             result[RandomUtils.getRandom(0, result.length - 1)] = .5;
         return result;
     }

@@ -6,6 +6,13 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class ArrayUtils {
+    public static double max(double[] elems) {
+        double max = Double.NEGATIVE_INFINITY;
+        for (double elem : elems)
+            max = Math.max(max, elem);
+        return max;
+    }
+
     public static int argMax(double[] elems) {
         int bestIdx = -1;
         double max = Double.NEGATIVE_INFINITY;

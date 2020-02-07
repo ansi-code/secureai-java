@@ -2,10 +2,13 @@ package com.secureai.rl.vi;
 
 import com.secureai.rl.abs.DiscreteState;
 import com.secureai.rl.abs.SMDP;
+import com.secureai.utils.ArrayUtils;
+import com.secureai.utils.RandomUtils;
 import lombok.*;
 import org.deeplearning4j.gym.StepReply;
 import org.deeplearning4j.rl4j.space.DiscreteSpace;
 
+import java.util.Arrays;
 import java.util.logging.Logger;
 
 public class ValueIteration<O extends DiscreteState> {
@@ -34,49 +37,53 @@ public class ValueIteration<O extends DiscreteState> {
         this.P = P;
     }
 
-    public int chooseBest(O state) {
-        int bestAction = -1;
-        double bestQ = Double.NEGATIVE_INFINITY;
-        double[] actionFilter = this.valueIterationFilter != null ? this.valueIterationFilter.run(state) : null;
-        for (int a = 0; a < this.mdp.getActionSpace().getSize(); a++) {
-            this.mdp.setState(state);
-            StepReply<O> step = this.mdp.step(a);
-            double q = step.getReward() + this.conf.gamma * this.V.getOrDefault(state.toInt(), -1d);
-            q *= actionFilter != null ? actionFilter[a] : 1;
-            if (q > bestQ) {
-                bestQ = q;
-                bestAction = a;
-            }
-        }
-
-        return bestAction;
-    }
-
     public int choose(O state) {
         return this.P.getOrDefault(state.toInt(), this.mdp.getActionSpace().randomAction());
     }
 
+    public double[] stepLookahead(int s) {
+        double[] A = new double[this.mdp.getActionSpace().getSize()];
+        for (int a = 0; a < this.mdp.getActionSpace().getSize(); a++) {
+            this.mdp.getState().setFromInt(s);
+            StepReply<O> step = this.mdp.step(a);
+            A[a] = step.getReward() + this.conf.gamma * this.V.getOrDefault(step.getObservation().toInt(), 0d);
+        }
+        this.mdp.getState().setFromInt(s);
+        double[] result = this.valueIterationFilter != null ? ArrayUtils.multiply(A, this.valueIterationFilter.run(this.mdp.getState())) : A;
+        if (Arrays.stream(result).max().orElse(Double.NEGATIVE_INFINITY) == Double.NEGATIVE_INFINITY)
+            result[RandomUtils.getRandom(0, result.length - 1)] = .5;
+
+        //System.out.println(Arrays.toString(this.valueIterationFilter.run(this.mdp.getState())));
+        //System.out.println(Arrays.toString(A));
+        //System.out.println(Arrays.toString(result));
+        return result;
+        //System.out.println(Arrays.toString(A));
+        //System.out.println(Arrays.toString(this.valueIterationFilter.run(state)));
+        //return this.valueIterationFilter != null ? ArrayUtils.multiply(A, this.valueIterationFilter.run(state)) : A;
+    }
+
+    // https://github.com/dennybritz/reinforcement-learning/blob/master/DP/Value%20Iteration%20Solution.ipynb
     public void solve() {
         int states = (int) Math.pow(2, this.mdp.getObservationSpace().getShape()[0]);
-        LOGGER.info(String.format("[Solve] Starting iteration for %d states", states));
+        LOGGER.info(String.format("[Solve] Starting iterations for %d states", states));
         for (int i = 0; i < this.conf.iterations; i++) {
-            double vDelta = 0;
+            double delta = 0;
+            this.mdp.reset();
             for (int s = 0; s < states; s++) {
-                this.mdp.getState().setFromInt(s);
-                double previousV = this.V.getOrDefault(s, 0d);
-                int bestAction = this.chooseBest(this.mdp.getState());
-                StepReply<O> step = this.mdp.step(bestAction);
-                this.V.put(s, step.getReward() + this.conf.gamma * this.V.getOrDefault(step.getObservation().toInt(), -1d));
+                double[] A = this.stepLookahead(s);
+                int bestAction = ArrayUtils.argMax(A);
+                double bestActionValue = A[bestAction];
+                delta = Math.max(delta, Math.abs(bestActionValue - this.V.getOrDefault(s, 0d)));
+                this.V.put(s, bestActionValue);
                 this.P.put(s, bestAction);
-                vDelta = Math.max(vDelta, Math.abs(previousV - this.V.get(s)));
                 if ((s + 1) % 10000 == 0 || (s + 1) == states) {
                     LOGGER.info(String.format("[Solve] State: %d/%d", (s + 1), states));
-                    this.play(); //uncomment if you want to see how it is going
+                    //this.play(); //uncomment if you want to see how it is going
                 }
             }
-            LOGGER.info(String.format("[Solve] Iteration: %d; Delta: %f", i, vDelta));
+            LOGGER.info(String.format("[Solve] Iteration: %d; Delta: %f", i, delta));
 
-            if (vDelta < this.conf.epsilon)
+            if (delta < this.conf.epsilon)
                 break;
         }
     }

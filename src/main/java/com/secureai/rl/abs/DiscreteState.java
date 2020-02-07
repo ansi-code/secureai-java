@@ -2,6 +2,7 @@ package com.secureai.rl.abs;
 
 import com.secureai.utils.ArrayUtils;
 import lombok.Getter;
+import lombok.Setter;
 import org.deeplearning4j.rl4j.space.Encodable;
 import org.nd4j.linalg.api.buffer.DataType;
 import org.nd4j.linalg.api.ndarray.INDArray;
@@ -11,7 +12,12 @@ import org.nd4j.linalg.indexing.NDArrayIndex;
 public class DiscreteState implements Encodable {
 
     @Getter
+    @Setter
     private INDArray state;
+
+    public DiscreteState(INDArray state) {
+        this.state = state;
+    }
 
     public DiscreteState(long... shape) {
         this.state = Nd4j.zeros(shape);
@@ -42,8 +48,9 @@ public class DiscreteState implements Encodable {
         return ArrayUtils.toBase10(this.state.ravel().toIntVector(), 2);
     }
 
-    public void setFromInt(int value) {
+    public DiscreteState setFromInt(int value) {
         this.state = this.fromInt(value);
+        return this;
     }
 
     public DiscreteState newInstance() {
@@ -61,5 +68,9 @@ public class DiscreteState implements Encodable {
     @Override
     public boolean equals(Object obj) {
         return this.state.equalsWithEps(obj, 1);
+    }
+
+    public INDArray cloneState() {
+        return this.state.add(0);
     }
 }

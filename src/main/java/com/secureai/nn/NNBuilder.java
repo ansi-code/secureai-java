@@ -35,10 +35,10 @@ public class NNBuilder {
                     .build());
         }
         MultiLayerConfiguration conf = builder
-                .layer(new OutputLayer.Builder(LossFunction.XENT)
+                .layer(new OutputLayer.Builder(LossFunction.MSE)
                         .nIn(HIDDEN_SIZE)
                         .nOut(outputs)
-                        .activation(Activation.SIGMOID)
+                        .activation(Activation.RELU)
                         .build())
                 .build();
 

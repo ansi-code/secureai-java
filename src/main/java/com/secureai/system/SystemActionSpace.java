@@ -45,7 +45,7 @@ public class SystemActionSpace extends DiscreteSpace {
     public Double[] actionsMask(SystemState systemState) {
         return IntStream.range(0, this.map.size()).mapToObj(i -> {
             SystemAction systemAction = this.encode(i);
-            return this.environment.getActionSet().getActions().get(systemAction.getActionId()).getPreCondition().run(systemState, systemAction.getResourceId()) ? .99d : 0d; //.99d : 0d for soft or 1d : 0d for hard filter
+            return this.environment.getActionSet().getActions().get(systemAction.getActionId()).getPreCondition().run(systemState, systemAction.getResourceId()) ? 1d : -Double.MAX_VALUE; //.99d : .01d for soft or 1d : 0d for hard filter
         }).toArray(Double[]::new);
     }
 
