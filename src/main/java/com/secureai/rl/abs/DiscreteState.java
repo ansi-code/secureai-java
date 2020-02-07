@@ -57,6 +57,12 @@ public class DiscreteState implements Encodable {
         return new DiscreteState(this.state.shape());
     }
 
+    public DiscreteState newInstance(int value) {
+        DiscreteState result = new DiscreteState(this.state.shape());
+        result.setFromInt(value);
+        return result;
+    }
+
     public INDArray fromInt(int value) {
         INDArray result = Nd4j.zeros(ArrayUtils.multiply(this.state.shape()));
         int[] data = ArrayUtils.fromBase10(value, 2);

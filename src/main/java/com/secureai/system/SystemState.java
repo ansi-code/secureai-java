@@ -26,7 +26,7 @@ public class SystemState extends DiscreteState {
         this.environment.getSystemDefinition().getResources().forEach(resourceId -> {
             this.set(resourceId, State.active, RandomUtils.getRandom().nextDouble() < 0.7);
             this.set(resourceId, State.updated, RandomUtils.getRandom().nextDouble() < 0.5);
-            this.set(resourceId, State.updated, RandomUtils.getRandom().nextDouble() > 0.5);
+            this.set(resourceId, State.upgradable, RandomUtils.getRandom().nextDouble() > 0.5);
             this.set(resourceId, State.corrupted, RandomUtils.getRandom().nextDouble() > 0.6);
             this.set(resourceId, State.vulnerable, RandomUtils.getRandom().nextDouble() > 0.7);
         });

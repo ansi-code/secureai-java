@@ -11,6 +11,7 @@ import org.deeplearning4j.gym.StepReply;
 import org.deeplearning4j.rl4j.mdp.MDP;
 import org.deeplearning4j.rl4j.space.DiscreteSpace;
 
+import java.util.Arrays;
 import java.util.logging.Logger;
 
 public class QLearning<O extends DiscreteState> {
