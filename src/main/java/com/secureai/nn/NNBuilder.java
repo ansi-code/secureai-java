@@ -38,7 +38,7 @@ public class NNBuilder {
                 .layer(new OutputLayer.Builder(LossFunction.MSE)
                         .nIn(HIDDEN_SIZE)
                         .nOut(outputs)
-                        .activation(Activation.RELU)
+                        .activation(Activation.IDENTITY)
                         .build())
                 .build();
 
