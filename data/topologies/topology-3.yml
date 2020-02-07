@@ -4,29 +4,29 @@ tasks:
   # Classic Api Gateway
   api-gateway-main:
     type: api-gateway
-    replication: 1
+    replication: 140
 
   # Services
   microservice-rest:
     type: image
-    replication: 100
+    replication: 140
   microservice-log:
     type: image
-    replication: 50
+    replication: 140
   microservice-batch-processing:
     type: image
-    replication: 50
+    replication: 140
   microservice-stream-processing:
     type: image
-    replication: 50
+    replication: 140
 
   # Databases
   database-mysql-core:
     type: database
-    replication: 1
+    replication: 150
   database-mongo-analytics:
     type: database
-    replication: 1
+    replication: 150
 
 connections:
   # First tier

@@ -39,6 +39,8 @@ public class DynDQNMain {
     static int switches = 0;
 
     public static void main(String... args) throws InterruptedException {
+        System.setProperty("org.bytedeco.javacpp.maxphysicalbytes", "0");
+        System.setProperty("org.bytedeco.javacpp.maxbytes", "0");
         BasicConfigurator.configure();
         argsMap = ArgsUtils.toMap(args);
 

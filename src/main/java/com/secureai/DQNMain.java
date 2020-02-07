@@ -27,10 +27,12 @@ import java.util.logging.Logger;
 public class DQNMain {
 
     public static void main(String... args) throws IOException {
+        System.setProperty("org.bytedeco.javacpp.maxphysicalbytes", "0");
+        System.setProperty("org.bytedeco.javacpp.maxbytes", "0");
         BasicConfigurator.configure();
         Map<String, String> argsMap = ArgsUtils.toMap(args);
 
-        Topology topology = YAML.parse(String.format("data/topologies/topology-%s.yml", argsMap.getOrDefault("topology", "paper-4")), Topology.class);
+        Topology topology = YAML.parse(String.format("data/topologies/topology-%s.yml", argsMap.getOrDefault("topology", "3")), Topology.class);
         ActionSet actionSet = YAML.parse(String.format("data/action-sets/action-set-%s.yml", argsMap.getOrDefault("actionSet", "paper")), ActionSet.class);
 
         QLearning.QLConfiguration qlConfiguration = new QLearning.QLConfiguration(
@@ -38,7 +40,7 @@ public class DQNMain {
                 Integer.parseInt(argsMap.getOrDefault("maxEpochStep", "1000")),        //Max step By epoch
                 Integer.parseInt(argsMap.getOrDefault("maxStep", "40000")),             //Max step
                 Integer.parseInt(argsMap.getOrDefault("expRepMaxSize", "15000")),      //Max size of experience replay
-                Integer.parseInt(argsMap.getOrDefault("batchSize", "64")),             //size of batches
+                Integer.parseInt(argsMap.getOrDefault("batchSize", "256")),             //size of batches
                 Integer.parseInt(argsMap.getOrDefault("targetDqnUpdateFreq", "2000")), //target update (hard)
                 Integer.parseInt(argsMap.getOrDefault("updateStart", "10")),           //num step noop warmup
                 Double.parseDouble(argsMap.getOrDefault("rewardFactor", "1")),         //reward scaling
@@ -49,8 +51,9 @@ public class DQNMain {
                 Boolean.parseBoolean(argsMap.getOrDefault("doubleDQN", "false"))       //double DQN
         );
 
+
         SystemEnvironment mdp = new SystemEnvironment(topology, actionSet);
-        FilteredMultiLayerNetwork nn = new NNBuilder().build(mdp.getObservationSpace().size(), mdp.getActionSpace().getSize(), Integer.parseInt(argsMap.getOrDefault("layers", "3")));
+        FilteredMultiLayerNetwork nn = new NNBuilder().build(mdp.getObservationSpace().size(), mdp.getActionSpace().getSize(), Integer.parseInt(argsMap.getOrDefault("layers", "40")));
         nn.setMultiLayerNetworkPredictionFilter(input -> mdp.getActionSpace().actionsMask(input));
         nn.setListeners(new ScoreIterationListener(100));
         nn.setListeners(new PerformanceListener(1, true, true));

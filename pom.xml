@@ -23,7 +23,7 @@
         <dependency>
             <groupId>org.nd4j</groupId>
             <!-- Use nd4j-native-platform for CPU and nd4j-cuda-10.0-platform for GPU -->
-            <artifactId>nd4j-native-platform</artifactId>
+            <artifactId>nd4j-cuda-10.0-platform</artifactId>
             <version>${dl4j.version}</version>
         </dependency>
         <dependency>

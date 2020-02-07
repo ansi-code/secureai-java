@@ -17,6 +17,8 @@ import java.util.Map;
 public class QNMain {
 
     public static void main(String... args) throws IOException {
+        System.setProperty("org.bytedeco.javacpp.maxphysicalbytes", "0");
+        System.setProperty("org.bytedeco.javacpp.maxbytes", "0");
         BasicConfigurator.configure();
         Map<String, String> argsMap = ArgsUtils.toMap(args);
 

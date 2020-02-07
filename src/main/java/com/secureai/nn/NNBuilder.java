@@ -13,7 +13,7 @@ import org.nd4j.linalg.lossfunctions.LossFunctions.LossFunction;
 public class NNBuilder {
 
     public FilteredMultiLayerNetwork build(int inputs, int outputs, int size) {
-        int HIDDEN_SIZE = 64;
+        int HIDDEN_SIZE = 1024;
         NeuralNetConfiguration.ListBuilder builder = new NeuralNetConfiguration.Builder()
                 .seed(12345)
                 .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
@@ -35,10 +35,10 @@ public class NNBuilder {
                     .build());
         }
         MultiLayerConfiguration conf = builder
-                .layer(new OutputLayer.Builder(LossFunction.NEGATIVELOGLIKELIHOOD)
+                .layer(new OutputLayer.Builder(LossFunction.XENT)
                         .nIn(HIDDEN_SIZE)
                         .nOut(outputs)
-                        .activation(Activation.SOFTMAX)
+                        .activation(Activation.SIGMOID)
                         .build())
                 .build();
 
