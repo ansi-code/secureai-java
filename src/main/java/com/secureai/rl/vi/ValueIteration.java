@@ -50,7 +50,7 @@ public class ValueIteration<O extends DiscreteState> {
         }
         this.mdp.getState().setFromInt(s);
         double[] result = this.valueIterationFilter != null ? ArrayUtils.multiply(A, this.valueIterationFilter.run(this.mdp.getState())) : A;
-        if (Arrays.stream(result).max().orElse(Double.NEGATIVE_INFINITY) == Double.NEGATIVE_INFINITY)
+        if (!Double.isFinite(Arrays.stream(result).max().orElse(Double.NEGATIVE_INFINITY)))
             result[RandomUtils.getRandom(0, result.length - 1)] = .5;
 
         //System.out.println(Arrays.toString(this.valueIterationFilter.run(this.mdp.getState())));

@@ -38,7 +38,7 @@ public class QNMain {
         FilteredDynamicQTable qTable = new FilteredDynamicQTable(mdp.getActionSpace().getSize());
         qTable.setDynamicQTableGetFilter(input -> ArrayUtils.toPrimitive(mdp.getActionSpace().actionsMask(input)));
 
-        QLearning<SystemState> ql = new QLearning<>(mdp, qnConfiguration);
+        QLearning<SystemState> ql = new QLearning<>(mdp, qnConfiguration, qTable);
         ql.train();
 
         ql.evaluate(10);
