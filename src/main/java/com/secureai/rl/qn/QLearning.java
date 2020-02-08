@@ -79,6 +79,8 @@ public class QLearning<O extends DiscreteState> {
     }
 
     public double play() {
+        LOGGER.info("[Play] Starting experiment");
+
         O state = this.mdp.reset();
         double rewards = 0;
         int i = 0;

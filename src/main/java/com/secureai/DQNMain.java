@@ -64,7 +64,8 @@ public class DQNMain {
         dql.addListener(new RLStatTrainingListener(dataManager.getInfo().substring(0, dataManager.getInfo().lastIndexOf('/'))));
         dql.train();
 
-        int EPISODES = 10;
+        System.out.println("[Play] Starting experiment");
+        int EPISODES = 5;
         double rewards = 0;
         for (int i = 0; i < EPISODES; i++) {
             mdp.reset();
