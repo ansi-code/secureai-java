@@ -38,8 +38,8 @@ public class DQNMain {
                 Integer.parseInt(argsMap.getOrDefault("seed", "123")),                 //Random seed
                 Integer.parseInt(argsMap.getOrDefault("maxEpochStep", "1000")),        //Max step By epoch
                 Integer.parseInt(argsMap.getOrDefault("maxStep", "4000")),             //Max step
-                Integer.parseInt(argsMap.getOrDefault("expRepMaxSize", "15000")),      //Max size of experience replay
-                Integer.parseInt(argsMap.getOrDefault("batchSize", "256")),             //size of batches
+                Integer.parseInt(argsMap.getOrDefault("expRepMaxSize", "1000")),      //Max size of experience replay
+                Integer.parseInt(argsMap.getOrDefault("batchSize", "32")),             //size of batches
                 Integer.parseInt(argsMap.getOrDefault("targetDqnUpdateFreq", "2000")), //target update (hard)
                 Integer.parseInt(argsMap.getOrDefault("updateStart", "10")),           //num step noop warmup
                 Double.parseDouble(argsMap.getOrDefault("rewardFactor", "1")),         //reward scaling

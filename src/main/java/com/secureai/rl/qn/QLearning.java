@@ -11,7 +11,6 @@ import org.deeplearning4j.gym.StepReply;
 import org.deeplearning4j.rl4j.mdp.MDP;
 import org.deeplearning4j.rl4j.space.DiscreteSpace;
 
-import java.util.Arrays;
 import java.util.logging.Logger;
 
 public class QLearning<O extends DiscreteState> {
@@ -62,11 +61,11 @@ public class QLearning<O extends DiscreteState> {
     public void train() {
         Stat<Double> stat = new Stat<>("output/q_learning.csv");
 
-        for (int i = 0; i < this.conf.episodes; i++) { // episodes
+        for (int i = 0; i < this.conf.episodes; i++) {
             O state = this.mdp.reset();
             double rewards = 0;
             int j = 0;
-            for (; j < this.conf.maxEpisodeStep && !this.mdp.isDone(); j++) { // batches
+            for (; j < this.conf.maxEpisodeStep && !this.mdp.isDone(); j++) {
                 StepReply<O> step = this.trainStep(state);
                 state = step.getObservation();
 

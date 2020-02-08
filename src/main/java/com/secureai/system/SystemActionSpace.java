@@ -37,9 +37,7 @@ public class SystemActionSpace extends DiscreteSpace {
     }
 
     public Double[] actionsMask(int encodedState) {
-        SystemState result = this.environment.getSystemState().newInstance();
-        result.setFromInt(encodedState);
-        return this.actionsMask(result);
+        return this.actionsMask(this.environment.getSystemState().newInstance(encodedState));
     }
 
     public Double[] actionsMask(SystemState systemState) {

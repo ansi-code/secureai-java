@@ -55,6 +55,12 @@ public class SystemState extends DiscreteState {
         return new SystemState(this.environment);
     }
 
+    public SystemState newInstance(int value) {
+        SystemState result = this.newInstance();
+        result.setFromInt(value);
+        return result;
+    }
+
     @Override
     public double[] toArray() {
         return ArrayUtils.toPrimitive(this.environment.getObservationSpace().decode(this));

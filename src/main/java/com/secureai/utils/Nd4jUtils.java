@@ -5,14 +5,16 @@ import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.indexing.INDArrayIndex;
 import org.nd4j.linalg.indexing.NDArrayIndex;
 
+import static org.nd4j.linalg.indexing.NDArrayIndex.interval;
+
 public class Nd4jUtils {
     public static INDArray hInsert(INDArray a, INDArray b, int index) {
         if (index == 0)
-            return Nd4j.hstack(b, a.get(NDArrayIndex.all(), NDArrayIndex.interval(index, 1, a.columns())));
+            return Nd4j.hstack(b, a.get(NDArrayIndex.all(), interval(index, 1, a.columns())));
         else if (index == a.columns())
-            return Nd4j.hstack(a.get(NDArrayIndex.all(), NDArrayIndex.interval(0, 1, index)), b);
+            return Nd4j.hstack(a.get(NDArrayIndex.all(), interval(0, 1, index)), b);
 
-        return Nd4j.hstack(a.get(NDArrayIndex.all(), NDArrayIndex.interval(0, 1, index)), b, a.get(NDArrayIndex.all(), NDArrayIndex.interval(index, 1, a.columns())));
+        return Nd4j.hstack(a.get(NDArrayIndex.all(), interval(0, 1, index)), b, a.get(NDArrayIndex.all(), interval(index, 1, a.columns())));
     }
 
     public static INDArray hSwitch(INDArray a, INDArrayIndex from, INDArrayIndex to) {
@@ -24,7 +26,7 @@ public class Nd4jUtils {
     }
 
     public static INDArray hDelete(INDArray a, INDArrayIndex indices) {
-        return a.get(NDArrayIndex.interval(0, 1, indices.offset()), NDArrayIndex.interval(indices.end(), 1, a.columns()));
+        return a.get(interval(0, 1, indices.offset()), interval(indices.end(), 1, a.columns()));
     }
 
     public static INDArray hMove(INDArray a, INDArrayIndex from, int index) {
@@ -36,6 +38,17 @@ public class Nd4jUtils {
         for (int i = 0; i < fromIntervals.length; i++)
             res.put(new INDArrayIndex[]{toIntervals[i]}, a.get(fromIntervals[i]));
         return res;
+    }
+
+    public static INDArrayIndex[] createRightCoveringShape(long[] shapeA, long[] shapeB) {
+        INDArrayIndex[] ret = new INDArrayIndex[shapeA.length];
+
+        for (int i = 0; i < ret.length; ++i) {
+            long delta = shapeB[i] - shapeA[i];
+            ret[i] = interval(delta, shapeA[i] + delta);
+        }
+
+        return ret;
     }
 
 }

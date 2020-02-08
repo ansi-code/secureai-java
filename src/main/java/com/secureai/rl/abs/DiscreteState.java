@@ -1,13 +1,13 @@
 package com.secureai.rl.abs;
 
 import com.secureai.utils.ArrayUtils;
+import com.secureai.utils.Nd4jUtils;
 import lombok.Getter;
 import lombok.Setter;
 import org.deeplearning4j.rl4j.space.Encodable;
 import org.nd4j.linalg.api.buffer.DataType;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
-import org.nd4j.linalg.indexing.NDArrayIndex;
 
 public class DiscreteState implements Encodable {
 
@@ -67,7 +67,7 @@ public class DiscreteState implements Encodable {
         INDArray result = Nd4j.zeros(ArrayUtils.multiply(this.state.shape()));
         int[] data = ArrayUtils.fromBase10(value, 2);
         INDArray base2 = Nd4j.create(data, new long[]{data.length}, DataType.INT);
-        result.put(NDArrayIndex.createCoveringShape(base2.shape()), base2);
+        result.put(Nd4jUtils.createRightCoveringShape(base2.shape(), result.shape()), base2);
         return result.reshape(this.state.shape());
     }
 

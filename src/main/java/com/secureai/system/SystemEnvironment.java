@@ -77,6 +77,9 @@ public class SystemEnvironment implements SMDP<SystemState, Integer, DiscreteSpa
         action.run(this);
         SystemState currentState = this.systemState;
 
+        //System.out.println("Orig:" + Arrays.toString(this.systemState.toArray()));
+        //System.out.println("New:" + Arrays.toString(this.systemState.newInstance(this.systemState.toInt()).toArray()));
+
         double reward = systemRewardFunction.reward(oldState, action, currentState);
         boolean done = this.isDone();
         this.actionCounter.increment(String.format("%s-%s", action.getResourceId(), action.getActionId()));
@@ -93,6 +96,7 @@ public class SystemEnvironment implements SMDP<SystemState, Integer, DiscreteSpa
     public SystemEnvironment newInstance() {
         return new SystemEnvironment(this.systemDefinition.getTopology(), this.actionSet);
     }
+
 
     @Override
     public SystemState getState() {
