@@ -5,9 +5,7 @@ import com.secureai.model.topology.Topology;
 import com.secureai.rl.vi.ValueIteration;
 import com.secureai.system.SystemEnvironment;
 import com.secureai.system.SystemState;
-import com.secureai.utils.ArgsUtils;
-import com.secureai.utils.ValueWriter;
-import com.secureai.utils.YAML;
+import com.secureai.utils.*;
 import org.apache.log4j.BasicConfigurator;
 
 import java.io.IOException;
@@ -17,6 +15,9 @@ public class VIMain {
 
     public static void main(String... args) throws IOException {
         BasicConfigurator.configure();
+        TimeUtils.setupStartMillis();
+        System.out.println(TimeUtils.getStartMillis());
+
         Map<String, String> argsMap = ArgsUtils.toMap(args);
 
         Topology topology = YAML.parse(String.format("data/topologies/topology-%s.yml", argsMap.getOrDefault("topology", "paper-4")), Topology.class);
@@ -37,6 +38,6 @@ public class VIMain {
         vi.solve();
 
         double result = vi.evaluate(5);
-        ValueWriter.writeValue("output/value_iteration.txt", result);
+        ValueWriter.writeValue("output/value_iteration.txt", new Timestamped<>(result));
     }
 }

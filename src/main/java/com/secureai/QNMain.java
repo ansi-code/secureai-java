@@ -7,6 +7,7 @@ import com.secureai.rl.qn.QLearning;
 import com.secureai.system.SystemEnvironment;
 import com.secureai.system.SystemState;
 import com.secureai.utils.ArgsUtils;
+import com.secureai.utils.TimeUtils;
 import com.secureai.utils.YAML;
 import org.apache.log4j.BasicConfigurator;
 
@@ -17,6 +18,8 @@ public class QNMain {
 
     public static void main(String... args) throws IOException {
         BasicConfigurator.configure();
+        TimeUtils.setupStartMillis();
+
         Map<String, String> argsMap = ArgsUtils.toMap(args);
 
         Topology topology = YAML.parse(String.format("data/topologies/topology-%s.yml", argsMap.getOrDefault("topology", "paper-4")), Topology.class);

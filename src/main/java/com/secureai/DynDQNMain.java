@@ -41,6 +41,8 @@ public class DynDQNMain {
         System.setProperty("org.bytedeco.javacpp.maxphysicalbytes", "0");
         System.setProperty("org.bytedeco.javacpp.maxbytes", "0");
         BasicConfigurator.configure();
+        TimeUtils.setupStartMillis();
+
         argsMap = ArgsUtils.toMap(args);
 
         runWithThreshold();

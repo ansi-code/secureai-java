@@ -6,4 +6,8 @@ public class TimeUtils {
     public static long getStartMillis() {
         return start;
     }
+
+    public static void setupStartMillis() {
+        start = System.currentTimeMillis();
+    }
 }

@@ -12,4 +12,9 @@ public class Timestamped<T> {
         this.timestamp = System.currentTimeMillis() - TimeUtils.getStartMillis();
         this.value = value;
     }
+
+    @Override
+    public String toString() {
+        return timestamp + ", " + value;
+    }
 }

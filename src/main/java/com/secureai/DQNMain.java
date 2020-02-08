@@ -10,6 +10,7 @@ import com.secureai.system.SystemEnvironment;
 import com.secureai.system.SystemState;
 import com.secureai.utils.ArgsUtils;
 import com.secureai.utils.RLStatTrainingListener;
+import com.secureai.utils.TimeUtils;
 import com.secureai.utils.YAML;
 import org.apache.log4j.BasicConfigurator;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
@@ -29,6 +30,8 @@ public class DQNMain {
         System.setProperty("org.bytedeco.javacpp.maxphysicalbytes", "0");
         System.setProperty("org.bytedeco.javacpp.maxbytes", "0");
         BasicConfigurator.configure();
+        TimeUtils.setupStartMillis();
+
         Map<String, String> argsMap = ArgsUtils.toMap(args);
 
         Topology topology = YAML.parse(String.format("data/topologies/topology-%s.yml", argsMap.getOrDefault("topology", "paper-4")), Topology.class);
