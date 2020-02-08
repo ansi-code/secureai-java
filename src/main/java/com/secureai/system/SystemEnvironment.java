@@ -72,13 +72,10 @@ public class SystemEnvironment implements SMDP<SystemState, Integer, DiscreteSpa
     public StepReply<SystemState> step(Integer a) {
         this.step++;
 
-        SystemState oldState = this.systemState;
+        SystemState oldState = this.systemState.copy();
         SystemAction action = this.actionSpace.encode(a);
         action.run(this);
-        SystemState currentState = this.systemState;
-
-        //System.out.println("Orig:" + Arrays.toString(this.systemState.toArray()));
-        //System.out.println("New:" + Arrays.toString(this.systemState.newInstance(this.systemState.toInt()).toArray()));
+        SystemState currentState = this.systemState.copy();
 
         double reward = systemRewardFunction.reward(oldState, action, currentState);
         boolean done = this.isDone();

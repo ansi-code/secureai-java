@@ -19,19 +19,19 @@ public class QNMain {
         BasicConfigurator.configure();
         Map<String, String> argsMap = ArgsUtils.toMap(args);
 
-        Topology topology = YAML.parse(String.format("data/topologies/topology-%s.yml", argsMap.getOrDefault("topology", "0")), Topology.class);
+        Topology topology = YAML.parse(String.format("data/topologies/topology-%s.yml", argsMap.getOrDefault("topology", "paper-4")), Topology.class);
         ActionSet actionSet = YAML.parse(String.format("data/action-sets/action-set-%s.yml", argsMap.getOrDefault("actionSet", "paper")), ActionSet.class);
 
         SystemEnvironment mdp = new SystemEnvironment(topology, actionSet);
 
         QLearning.QNConfiguration qnConfiguration = new QLearning.QNConfiguration(
                 Integer.parseInt(argsMap.getOrDefault("seed", "123")),              //Random seed
-                Integer.parseInt(argsMap.getOrDefault("episodes", "4000")),        //episodes
+                Integer.parseInt(argsMap.getOrDefault("episodes", "40000")),        //episodes
                 Integer.parseInt(argsMap.getOrDefault("maxEpisodeStep", "400")),    //max step
                 Double.parseDouble(argsMap.getOrDefault("learningRate", "0.9")),    //alpha
                 Double.parseDouble(argsMap.getOrDefault("discountFactor", "5")), //gamma
                 Float.parseFloat(argsMap.getOrDefault("minEpsilon", "0.1")),        //min epsilon
-                Integer.parseInt(argsMap.getOrDefault("epsilonNbStep", "1500"))    //num step for eps greedy anneal
+                Integer.parseInt(argsMap.getOrDefault("epsilonNbStep", "15000"))    //num step for eps greedy anneal
         );
 
         FilteredDynamicQTable qTable = new FilteredDynamicQTable(mdp.getActionSpace().getSize());
@@ -40,6 +40,6 @@ public class QNMain {
         QLearning<SystemState> ql = new QLearning<>(mdp, qnConfiguration, qTable);
         ql.train();
 
-        ql.evaluate(10);
+        ql.evaluate(5);
     }
 }

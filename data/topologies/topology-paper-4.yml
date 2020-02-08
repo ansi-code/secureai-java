@@ -10,9 +10,6 @@ tasks:
   microservice-log:
     type: image
     replication: 1
-  microservice-batch-processing:
-    type: image
-    replication: 1
   microservice-stream-processing:
     type: image
     replication: 1

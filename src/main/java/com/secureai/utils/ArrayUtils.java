@@ -84,4 +84,8 @@ public class ArrayUtils {
                 array[i] = value;
         return array;
     }
+
+    public void copyOn(Object[] from, Object[] to) {
+        System.arraycopy(from, 0, to, 0, from.length);
+    }
 }
