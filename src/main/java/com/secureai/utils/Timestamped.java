@@ -9,7 +9,7 @@ public class Timestamped<T> {
     private T value;
 
     public Timestamped(T value) {
-        this.timestamp = System.currentTimeMillis();
+        this.timestamp = System.currentTimeMillis() - TimeUtils.getStartMillis();
         this.value = value;
     }
 }
