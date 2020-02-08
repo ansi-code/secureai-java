@@ -19,17 +19,17 @@ public class SeqMain {
         DQNMain.main("--layers", "4", "--topolgy", "3");
 
         // THIS IS THE TEST FOR DQN GAMMA
-        DQNMain.main("--layers", "3", "--topolgy", "paper-4", "--gamma", "5");
-        DQNMain.main("--layers", "3", "--topolgy", "paper-4", "--gamma", "10");
-        DQNMain.main("--layers", "3", "--topolgy", "paper-4", "--gamma", "20");
-        DQNMain.main("--layers", "3", "--topolgy", "paper-4", "--gamma", "40");
+        DQNMain.main("--layers", "3", "--topolgy", "paper-4", "--gamma", "0.25");
+        DQNMain.main("--layers", "3", "--topolgy", "paper-4", "--gamma", "0.75");
+        DQNMain.main("--layers", "3", "--topolgy", "paper-4", "--gamma", "1.5");
+        DQNMain.main("--layers", "3", "--topolgy", "paper-4", "--gamma", "2");
 
         // THIS IS THE TEST FOR DDQN
-        DQNMain.main("--layers", "3", "--topolgy", "paper-4", "--gamma", "5", "--doubleDQN", "true");
+        DQNMain.main("--layers", "3", "--topolgy", "paper-4", "--gamma", "0.75", "--doubleDQN", "true");
 
         // THIS IS THE TEST FOR DynDDQN
-        DynDQNMain.main("--layers", "3", "--gamma", "5");
-        DynDQNMain.main("--layers", "3", "--gamma", "5", "--doubleDQN", "true");
+        //DynDQNMain.main("--layers", "3", "--gamma", "0.75");
+        //DynDQNMain.main("--layers", "3", "--gamma", "0.75", "--doubleDQN", "true");
 
         // THIS IS THE TEST FOR STANDARD/PARALLEL/SPARK
         DQNMain.main("--layers", "3", "--topolgy", "paper-4", "--dqn", "standard");

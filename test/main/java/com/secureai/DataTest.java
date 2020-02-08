@@ -30,6 +30,6 @@ public class DataTest {
         systemState.set("api-gateway-main.0", State.active, true);
         System.out.println(systemState.equals(newSystemState));
         systemState.setFromInt(newSystemState.toInt());
-        System.out.println(systemState.equals(newSystemState));;
+        System.out.println(systemState.equals(newSystemState));
     }
 }
