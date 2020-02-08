@@ -8,7 +8,6 @@ import com.secureai.system.SystemEnvironment;
 import com.secureai.system.SystemState;
 import com.secureai.utils.ArgsUtils;
 import com.secureai.utils.YAML;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.BasicConfigurator;
 
 import java.io.IOException;
@@ -20,7 +19,7 @@ public class QNMain {
         BasicConfigurator.configure();
         Map<String, String> argsMap = ArgsUtils.toMap(args);
 
-        Topology topology = YAML.parse(String.format("data/topologies/topology-%s.yml", argsMap.getOrDefault("topology", "paper-4")), Topology.class);
+        Topology topology = YAML.parse(String.format("data/topologies/topology-%s.yml", argsMap.getOrDefault("topology", "0")), Topology.class);
         ActionSet actionSet = YAML.parse(String.format("data/action-sets/action-set-%s.yml", argsMap.getOrDefault("actionSet", "paper")), ActionSet.class);
 
         SystemEnvironment mdp = new SystemEnvironment(topology, actionSet);
@@ -30,13 +29,13 @@ public class QNMain {
                 Integer.parseInt(argsMap.getOrDefault("episodes", "4000")),        //episodes
                 Integer.parseInt(argsMap.getOrDefault("maxEpisodeStep", "400")),    //max step
                 Double.parseDouble(argsMap.getOrDefault("learningRate", "0.9")),    //alpha
-                Double.parseDouble(argsMap.getOrDefault("discountFactor", "0.75")), //gamma
+                Double.parseDouble(argsMap.getOrDefault("discountFactor", "5")), //gamma
                 Float.parseFloat(argsMap.getOrDefault("minEpsilon", "0.1")),        //min epsilon
                 Integer.parseInt(argsMap.getOrDefault("epsilonNbStep", "1500"))    //num step for eps greedy anneal
         );
 
         FilteredDynamicQTable qTable = new FilteredDynamicQTable(mdp.getActionSpace().getSize());
-        qTable.setDynamicQTableGetFilter(input -> ArrayUtils.toPrimitive(mdp.getActionSpace().actionsMask(input)));
+        //qTable.setDynamicQTableGetFilter(input -> ArrayUtils.toPrimitive(mdp.getActionSpace().actionsMask(input)));
 
         QLearning<SystemState> ql = new QLearning<>(mdp, qnConfiguration, qTable);
         ql.train();

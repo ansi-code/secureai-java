@@ -24,10 +24,12 @@ public class DataTest {
 
         SystemState systemState = new SystemState(new SystemEnvironment(topology, actionSet));
         systemState.reset();
+        SystemState newSystemState = systemState.newInstance(systemState.toInt());
         System.out.println(Arrays.toString(systemState.toArray()));
-        System.out.println(systemState.get("api-gateway-main.0", State.active));
+        System.out.println(systemState.equals(newSystemState));
         systemState.set("api-gateway-main.0", State.active, true);
-        System.out.println(systemState.get("api-gateway-main.0", State.active));
-        System.out.println(Arrays.toString(systemState.newInstance(systemState.toInt()).toArray()));
+        System.out.println(systemState.equals(newSystemState));
+        systemState.setFromInt(newSystemState.toInt());
+        System.out.println(systemState.equals(newSystemState));;
     }
 }

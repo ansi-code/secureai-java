@@ -141,7 +141,7 @@ public class DynDQNMain {
                     .forLayer(-1).transferOut(mdp.getActionSpace().getMap(), newMdp.getActionSpace().getMap())
                     .build(FilteredMultiLayerNetwork.class);
 
-        nn.setMultiLayerNetworkPredictionFilter(input -> mdp.getActionSpace().actionsMask(input));
+        //nn.setMultiLayerNetworkPredictionFilter(input -> mdp.getActionSpace().actionsMask(input));
         nn.setListeners(new ScoreIterationListener(100));
         nn.setListeners(new PerformanceListener(1, true, true));
         System.out.println(nn.summary());

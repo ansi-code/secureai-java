@@ -70,6 +70,7 @@ public class ValueIteration<O extends DiscreteState> {
                 delta = Math.max(delta, Math.abs(bestActionValue - this.V.getOrDefault(s, 0d)));
                 this.V.put(s, bestActionValue);
                 this.P.put(s, bestAction);
+                System.out.println(this.V);
                 if ((s + 1) % 10000 == 0 || (s + 1) == states) {
                     LOGGER.info(String.format("[Solve] State: %d/%d", (s + 1), states));
                     //this.play(); //uncomment if you want to see how it is going

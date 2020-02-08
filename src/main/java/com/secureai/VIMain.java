@@ -8,7 +8,6 @@ import com.secureai.system.SystemState;
 import com.secureai.utils.ArgsUtils;
 import com.secureai.utils.ValueWriter;
 import com.secureai.utils.YAML;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.BasicConfigurator;
 
 import java.io.IOException;
@@ -27,13 +26,13 @@ public class VIMain {
 
         ValueIteration.VIConfiguration viConfiguration = new ValueIteration.VIConfiguration(
                 Integer.parseInt(argsMap.getOrDefault("seed", "123")),      //Random seed
-                Integer.parseInt(argsMap.getOrDefault("iterations", "100")), //iterations
-                Double.parseDouble(argsMap.getOrDefault("gamma", "0.75")),   //gamma
-                Double.parseDouble(argsMap.getOrDefault("epsilon", "1e-5")) //epsilon
+                Integer.parseInt(argsMap.getOrDefault("iterations", "1000")), //iterations
+                Double.parseDouble(argsMap.getOrDefault("gamma", ".75")),   //gamma
+                Double.parseDouble(argsMap.getOrDefault("epsilon", "1e-8")) //epsilon
         );
 
         ValueIteration<SystemState> vi = new ValueIteration<>(mdp, viConfiguration);
-        vi.setValueIterationFilter(input -> ArrayUtils.toPrimitive(mdp.getActionSpace().actionsMask(input)));
+        //vi.setValueIterationFilter(input -> ArrayUtils.toPrimitive(mdp.getActionSpace().actionsMask(input)));
 
         vi.solve();
 

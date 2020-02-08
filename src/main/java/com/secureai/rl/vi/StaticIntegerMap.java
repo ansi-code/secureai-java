@@ -1,6 +1,7 @@
 package com.secureai.rl.vi;
 
 import java.lang.reflect.Array;
+import java.util.Arrays;
 
 public class StaticIntegerMap<V extends Number> implements IntegerMap<V> {
     private V[] array;
@@ -24,5 +25,12 @@ public class StaticIntegerMap<V extends Number> implements IntegerMap<V> {
     @Override
     public V get(int key) {
         return this.array[key];
+    }
+
+    @Override
+    public String toString() {
+        return "StaticIntegerMap{" +
+                "array=" + Arrays.toString(array) +
+                '}';
     }
 }

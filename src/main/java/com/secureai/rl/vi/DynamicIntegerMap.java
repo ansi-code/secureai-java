@@ -1,5 +1,7 @@
 package com.secureai.rl.vi;
 
+import com.secureai.utils.JSONUtils;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,5 +25,12 @@ public class DynamicIntegerMap<V extends Number> implements IntegerMap<V> {
     @Override
     public V get(int key) {
         return this.map.get(key);
+    }
+
+    @Override
+    public String toString() {
+        return "DynamicIntegerMap{" +
+                "map=" + JSONUtils.toJSON(this.map) +
+                '}';
     }
 }

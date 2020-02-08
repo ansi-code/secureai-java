@@ -2,6 +2,7 @@ package com.secureai.rl.qn;
 
 
 import com.secureai.utils.ArrayUtils;
+import com.secureai.utils.JSONUtils;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -46,5 +47,13 @@ public class DynamicQTable implements QTable {
     @Override
     public int argMax(int state) {
         return ArrayUtils.argMax(this.get(state));
+    }
+
+    @Override
+    public String toString() {
+        return "DynamicQTable{" +
+                "actionSpaceSize=" + this.actionSpaceSize +
+                ", map=" + JSONUtils.toJSON(this.map) +
+                '}';
     }
 }

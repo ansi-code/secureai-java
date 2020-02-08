@@ -38,7 +38,7 @@ public class FilteredMultiLayerNetwork extends MultiLayerNetwork {
         // This is needed to add some salt when we are masking too many actions
         for (int i = 0; i < result.rows(); i++)
             if (!NumberUtils.hasValue(result.getRow(i).maxNumber().doubleValue()))
-                result.put(i, RandomUtils.getRandom(0, result.columns() - 1), .5);
+                result.put(i, RandomUtils.getRandom(0, result.columns() - 1), 0);
         return result;
     }
 
