@@ -55,13 +55,13 @@ public class QLearning<O extends DiscreteState> {
     }
 
     public float getEpsilon() {
-        return Math.min(1.0F, Math.max(this.conf.minEpsilon, 1.0F - (float) (this.getStepCounter()/* - this.updateStart*/) * 1.0F / (float) this.conf.epsilonNbStep));
+        return Math.min(1.0F, Math.max(this.conf.minEpsilon, 1.0F - (float) this.getStepCounter() * 1.0F / (float) this.conf.epsilonNbStep));
     }
 
     public void train() {
         Stat<Double> stat = new Stat<>("output/q_learning.csv");
 
-        for (int i = 0; i < this.conf.episodes; i++) {
+        for (int i = 0; this.stepCounter < this.conf.maxStep; i++) {
             O state = this.mdp.reset();
             double rewards = 0;
             int j = 0;
@@ -109,7 +109,7 @@ public class QLearning<O extends DiscreteState> {
     @Builder
     public static class QNConfiguration {
         int seed;
-        int episodes;
+        int maxStep;
         int maxEpisodeStep;
         double learningRate;
         double discountFactor;
