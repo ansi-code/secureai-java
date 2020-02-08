@@ -1,5 +1,6 @@
 package com.secureai.nn;
 
+import com.secureai.utils.NumberUtils;
 import com.secureai.utils.RandomUtils;
 import lombok.Getter;
 import lombok.Setter;
@@ -36,7 +37,7 @@ public class FilteredMultiLayerNetwork extends MultiLayerNetwork {
         INDArray result = this.multiLayerNetworkPredictionFilter != null ? super.output(input, train, featuresMask, labelsMask).muli(this.multiLayerNetworkPredictionFilter.run(input)) : super.output(input, train, featuresMask, labelsMask);
         // This is needed to add some salt when we are masking too many actions
         for (int i = 0; i < result.rows(); i++)
-            if (!Double.isFinite(result.getRow(i).maxNumber().doubleValue()))
+            if (!NumberUtils.hasValue(result.getRow(i).maxNumber().doubleValue()))
                 result.put(i, RandomUtils.getRandom(0, result.columns() - 1), .5);
         return result;
     }

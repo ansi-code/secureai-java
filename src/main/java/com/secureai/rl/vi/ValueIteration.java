@@ -3,12 +3,12 @@ package com.secureai.rl.vi;
 import com.secureai.rl.abs.DiscreteState;
 import com.secureai.rl.abs.SMDP;
 import com.secureai.utils.ArrayUtils;
+import com.secureai.utils.NumberUtils;
 import com.secureai.utils.RandomUtils;
 import lombok.*;
 import org.deeplearning4j.gym.StepReply;
 import org.deeplearning4j.rl4j.space.DiscreteSpace;
 
-import java.util.Arrays;
 import java.util.logging.Logger;
 
 public class ValueIteration<O extends DiscreteState> {
@@ -49,17 +49,11 @@ public class ValueIteration<O extends DiscreteState> {
             A[a] = step.getReward() + this.conf.gamma * this.V.getOrDefault(step.getObservation().toInt(), 0d);
         }
         this.mdp.getState().setFromInt(s);
-        double[] result = this.valueIterationFilter != null ? ArrayUtils.multiply(A, this.valueIterationFilter.run(this.mdp.getState())) : A;
-        if (!Double.isFinite(Arrays.stream(result).max().orElse(Double.NEGATIVE_INFINITY)))
-            result[RandomUtils.getRandom(0, result.length - 1)] = .5;
 
-        //System.out.println(Arrays.toString(this.valueIterationFilter.run(this.mdp.getState())));
-        //System.out.println(Arrays.toString(A));
-        //System.out.println(Arrays.toString(result));
+        double[] result = this.valueIterationFilter != null ? ArrayUtils.replaceNaN(ArrayUtils.multiply(A, this.valueIterationFilter.run(this.mdp.getState())), Double.NEGATIVE_INFINITY) : A;
+        if (!NumberUtils.hasValue(ArrayUtils.max(result)))
+            result[RandomUtils.getRandom(0, result.length - 1)] = 0;
         return result;
-        //System.out.println(Arrays.toString(A));
-        //System.out.println(Arrays.toString(this.valueIterationFilter.run(state)));
-        //return this.valueIterationFilter != null ? ArrayUtils.multiply(A, this.valueIterationFilter.run(state)) : A;
     }
 
     // https://github.com/dennybritz/reinforcement-learning/blob/master/DP/Value%20Iteration%20Solution.ipynb

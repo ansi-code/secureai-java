@@ -1,51 +1,49 @@
 package com.secureai.rl.abs;
 
 import com.secureai.utils.ArrayUtils;
-import com.secureai.utils.Nd4jUtils;
 import lombok.Getter;
 import lombok.Setter;
 import org.deeplearning4j.rl4j.space.Encodable;
-import org.nd4j.linalg.api.buffer.DataType;
-import org.nd4j.linalg.api.ndarray.INDArray;
-import org.nd4j.linalg.factory.Nd4j;
+
+import java.util.Arrays;
 
 public class DiscreteState implements Encodable {
 
     @Getter
     @Setter
-    private INDArray state;
+    private double[] state;
 
-    public DiscreteState(INDArray state) {
+    public DiscreteState(double[] state) {
         this.state = state;
     }
 
-    public DiscreteState(long... shape) {
-        this.state = Nd4j.zeros(shape);
+    public DiscreteState(int size) {
+        this.state = new double[size];
     }
 
-    public int get(int... indices) {
-        return this.state.getInt(indices);
+    public double get(int index) {
+        return this.state[index];
     }
 
-    public int[] getRow(int... indices) {
-        return this.state.getRows(indices).toIntVector();
-    }
-
-    public void set(int v, int... indices) {
-        this.state.putScalar(indices, v);
+    public void set(int v, int index) {
+        this.state[index] = v;
     }
 
     public void reset() {
-        this.state = Nd4j.zeros(this.state.shape());
+        this.state = new double[this.state.length];
     }
 
     @Override
     public double[] toArray() {
-        return this.state.ravel().toDoubleVector(); // It can use the space decode function
+        return this.state;
+    }
+
+    public int[] toIntArray() {
+        return Arrays.stream(this.state).mapToInt(v -> (int) v).toArray();
     }
 
     public int toInt() {
-        return ArrayUtils.toBase10(this.state.ravel().toIntVector(), 2);
+        return ArrayUtils.toBase10(this.toIntArray(), 2);
     }
 
     public DiscreteState setFromInt(int value) {
@@ -54,29 +52,25 @@ public class DiscreteState implements Encodable {
     }
 
     public DiscreteState newInstance() {
-        return new DiscreteState(this.state.shape());
+        return new DiscreteState(this.state.length);
     }
 
     public DiscreteState newInstance(int value) {
-        DiscreteState result = new DiscreteState(this.state.shape());
+        DiscreteState result = new DiscreteState(this.state.length);
         result.setFromInt(value);
         return result;
     }
 
-    public INDArray fromInt(int value) {
-        INDArray result = Nd4j.zeros(ArrayUtils.multiply(this.state.shape()));
+    public double[] fromInt(int value) {
         int[] data = ArrayUtils.fromBase10(value, 2);
-        INDArray base2 = Nd4j.create(data, new long[]{data.length}, DataType.INT);
-        result.put(Nd4jUtils.createRightCoveringShape(base2.shape(), result.shape()), base2);
-        return result.reshape(this.state.shape());
+        double[] result = new double[this.state.length];
+        for (int i = 0; i < data.length; i++)
+            result[result.length - i - 1] = data[data.length - i - 1];
+        return result;
     }
 
     @Override
     public boolean equals(Object obj) {
-        return this.state.equalsWithEps(obj, 1);
-    }
-
-    public INDArray cloneState() {
-        return this.state.add(0);
+        return this.state.equals(obj);
     }
 }

@@ -77,4 +77,11 @@ public class ArrayUtils {
         }
         return result.size() == 0 ? new int[]{0} : org.apache.commons.lang3.ArrayUtils.toPrimitive(result.toArray(new Integer[0]));
     }
+
+    public static double[] replaceNaN(double[] array, double value) {
+        for (int i = 0; i < array.length; i++)
+            if (Double.isNaN(array[i]))
+                array[i] = value;
+        return array;
+    }
 }

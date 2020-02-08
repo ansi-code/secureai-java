@@ -1,11 +1,10 @@
 package com.secureai.rl.qn;
 
 import com.secureai.utils.ArrayUtils;
+import com.secureai.utils.NumberUtils;
 import com.secureai.utils.RandomUtils;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.Arrays;
 
 public class FilteredDynamicQTable extends DynamicQTable {
 
@@ -19,9 +18,9 @@ public class FilteredDynamicQTable extends DynamicQTable {
 
     @Override
     public double[] get(int state) {
-        double[] result = this.dynamicQTableGetFilter != null ? ArrayUtils.multiply(super.get(state), this.dynamicQTableGetFilter.run(state)) : super.get(state);
-        if (!Double.isFinite(Arrays.stream(result).max().orElse(Double.NEGATIVE_INFINITY)))
-            result[RandomUtils.getRandom(0, result.length - 1)] = .5;
+        double[] result = this.dynamicQTableGetFilter != null ? ArrayUtils.replaceNaN(ArrayUtils.multiply(super.get(state), this.dynamicQTableGetFilter.run(state)), Double.NEGATIVE_INFINITY) : super.get(state);
+        if (!NumberUtils.hasValue(ArrayUtils.max(result)))
+            result[RandomUtils.getRandom(0, result.length - 1)] = 0;
         return result;
     }
 

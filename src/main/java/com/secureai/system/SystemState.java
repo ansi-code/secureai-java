@@ -10,7 +10,7 @@ public class SystemState extends DiscreteState {
     private SystemEnvironment environment;
 
     public SystemState(SystemEnvironment environment) {
-        super(environment.getSystemDefinition().getResources().size(), State.values().length);
+        super(environment.getSystemDefinition().getResources().size() * State.values().length);
         this.environment = environment;
     }
 
@@ -43,11 +43,11 @@ public class SystemState extends DiscreteState {
     }
 
     public boolean get(String resourceId, State state) {
-        return this.get(this.environment.getSystemDefinition().getResources().indexOf(resourceId), state.getValue()) == 1;
+        return this.get(this.environment.getObservationSpace().getMap().indexOf(String.format("%s.%s", resourceId, state))) == 1;
     }
 
     public SystemState set(String resourceId, State state, boolean value) {
-        this.set(value ? 1 : 0, this.environment.getSystemDefinition().getResources().indexOf(resourceId), state.getValue());
+        this.set(value ? 1 : 0, this.environment.getObservationSpace().getMap().indexOf(String.format("%s.%s", resourceId, state)));
         return this;
     }
 
