@@ -26,8 +26,8 @@ public class VIMain {
 
         ValueIteration.VIConfiguration viConfiguration = new ValueIteration.VIConfiguration(
                 Integer.parseInt(argsMap.getOrDefault("seed", "123")),      //Random seed
-                Integer.parseInt(argsMap.getOrDefault("iterations", "1")), //iterations
-                Double.parseDouble(argsMap.getOrDefault("gamma", "0.75")),   //gamma
+                Integer.parseInt(argsMap.getOrDefault("iterations", "1")),  //iterations
+                Double.parseDouble(argsMap.getOrDefault("gamma", "0.75")),  //gamma
                 Double.parseDouble(argsMap.getOrDefault("epsilon", "1e-8")) //epsilon
         );
 
