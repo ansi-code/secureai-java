@@ -23,11 +23,12 @@ public class Stat<T> {
         this.history = new ArrayList<>();
     }
 
-    public Stat(String filePath) {
+    public Stat(String filePath, boolean directory) {
         this();
 
         try {
             File f = new File(filePath);
+            if (directory) f.mkdir();
             if (f.isDirectory()) f = new File(FileUtils.firstAvailableFolder(filePath, "out") + "/stat.csv");
             else if (f.exists()) f.delete();
             (f.isDirectory() ? f : f.getParentFile()).mkdirs();
@@ -38,6 +39,10 @@ public class Stat<T> {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public Stat(String filePath) {
+        this(filePath, false);
     }
 
     public Stat<T> append(T value) {

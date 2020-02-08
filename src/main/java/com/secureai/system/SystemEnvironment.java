@@ -1,6 +1,5 @@
 package com.secureai.system;
 
-import com.secureai.Config;
 import com.secureai.model.actionset.ActionSet;
 import com.secureai.model.topology.Topology;
 import com.secureai.rl.abs.SMDP;
@@ -48,7 +47,7 @@ public class SystemEnvironment implements SMDP<SystemState, Integer, DiscreteSpa
         this.systemRewardFunction = new SystemRewardFunction(this);
         this.systemTerminateFunction = new SystemTerminateFunction(this);
         this.actionCounter = new MapCounter<>();
-        this.stat = new Stat<>("output/mdp");
+        this.stat = new Stat<>("output/mdp", true);
     }
 
     public void close() {
@@ -56,7 +55,7 @@ public class SystemEnvironment implements SMDP<SystemState, Integer, DiscreteSpa
     }
 
     public boolean isDone() {
-        return systemTerminateFunction.terminated(this.systemState) || this.step >= Config.MAX_STEPS;
+        return systemTerminateFunction.terminated(this.systemState);
     }
 
     public SystemState reset() {
