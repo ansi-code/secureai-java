@@ -110,8 +110,9 @@ public class DynDQNMain {
 
     public static void setup() {
         if (switches++ > 2) System.exit(0);
-        String topologyId = switches == 1 ? "0" : "0"; // RandomUtils.getRandom(new String[]{"paper-4", "paper-7"});
+        String topologyId = switches == 1 ? "1" : "1"; // RandomUtils.getRandom(new String[]{"paper-4", "paper-7"});
         String actionSetId = switches == 1 ? "paper-5" : "paper-6"; // RandomUtils.getRandom(new String[]{"paper-5", "paper-6"});
+        argsMap.put("epsilonNbStep", switches == 1 ? "2000" : "0");
         System.out.println(String.format("[Dyn] Choosing topology '%s' with action set '%s'", topologyId, actionSetId));
 
         Topology topology = YAML.parse(String.format("data/topologies/topology-%s.yml", topologyId), Topology.class);
@@ -124,12 +125,12 @@ public class DynDQNMain {
                 Integer.parseInt(argsMap.getOrDefault("expRepMaxSize", "5000")),      //Max size of experience replay
                 Integer.parseInt(argsMap.getOrDefault("batchSize", "128")),           //size of batches
                 Integer.parseInt(argsMap.getOrDefault("targetDqnUpdateFreq", "500")), //target update (hard)
-                Integer.parseInt(argsMap.getOrDefault("updateStart", "100")),         //num step noop warmup
+                Integer.parseInt(argsMap.getOrDefault("updateStart", "0")),           //num step noop warmup
                 Double.parseDouble(argsMap.getOrDefault("rewardFactor", "1")),        //reward scaling
                 Double.parseDouble(argsMap.getOrDefault("gamma", "0.25")),            //gamma
                 Double.parseDouble(argsMap.getOrDefault("errorClamp", "0.5")),        //td-error clipping
-                Float.parseFloat(argsMap.getOrDefault("minEpsilon", "0.01")),         //min epsilon
-                Integer.parseInt(argsMap.getOrDefault("epsilonNbStep", "1000")),     //num step for eps greedy anneal
+                Float.parseFloat(argsMap.getOrDefault("minEpsilon", "0.00")),         //min epsilon
+                Integer.parseInt(argsMap.getOrDefault("epsilonNbStep", "2000")),      //num step for eps greedy anneal
                 Boolean.parseBoolean(argsMap.getOrDefault("doubleDQN", "false"))      //double DQN
         );
 

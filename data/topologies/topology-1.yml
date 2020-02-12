@@ -1,11 +1,6 @@
 id: topology-1
 
 tasks:
-  # Classic Api Gateway
-  api-gateway-main:
-    type: api-gateway
-    replication: 1
-
   # Services
   microservice-rest:
     type: image
@@ -17,13 +12,6 @@ tasks:
     replication: 1
 
 connections:
-  # First tier
-  api-gateway-main-to-microservice-rest:
-    type: http
-    direction: bidirectional
-    from: api-gateway-main
-    to: microservice-rest
-
   # Second tier
   microservice-rest-to-database-mysql-core:
     type: proprietary
