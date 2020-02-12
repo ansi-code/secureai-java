@@ -111,7 +111,7 @@ public class DynDQNMain {
     public static void setup() {
         if (switches++ > 2) System.exit(0);
         String topologyId = switches == 1 ? "1" : "1"; // RandomUtils.getRandom(new String[]{"paper-4", "paper-7"});
-        String actionSetId = switches == 1 ? "paper-5" : "paper-6"; // RandomUtils.getRandom(new String[]{"paper-5", "paper-6"});
+        String actionSetId = switches == 1 ? "paper-6" : "paper-7"; // RandomUtils.getRandom(new String[]{"paper-6", "paper-7"});
         argsMap.put("epsilonNbStep", switches == 1 ? "2000" : "0");
         System.out.println(String.format("[Dyn] Choosing topology '%s' with action set '%s'", topologyId, actionSetId));
 

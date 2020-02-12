@@ -17,8 +17,8 @@ actions:
   start-firewall:
     execution-time: 100
     execution-cost: 5
-    disruptive: true
-    pre-condition: state[firewall_active] == true
+    disruptive: false
+    pre-condition: state[firewall_active] == false
     post-condition: state[firewall_active] = rand(1)
   update:
     execution-time: 1000
@@ -38,10 +38,3 @@ actions:
     disruptive: true
     pre-condition: state[active] == true && state[vulnerable] == true
     post-condition: state[vulnerable] = rand(0)
-
-  start-faster:
-    execution-time: 100
-    execution-cost: 10
-    disruptive: false
-    pre-condition: state[active] == false
-    post-condition: state[active] = rand(1)
