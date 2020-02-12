@@ -3,7 +3,6 @@ package com.secureai;
 import com.secureai.model.actionset.ActionSet;
 import com.secureai.model.topology.Topology;
 import com.secureai.nn.DynNNBuilder;
-import com.secureai.nn.FilteredMultiLayerNetwork;
 import com.secureai.nn.NNBuilder;
 import com.secureai.rl.abs.ParallelDQN;
 import com.secureai.rl.abs.SparkDQN;
@@ -12,6 +11,7 @@ import com.secureai.system.SystemState;
 import com.secureai.utils.*;
 import lombok.SneakyThrows;
 import org.apache.log4j.BasicConfigurator;
+import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.deeplearning4j.rl4j.learning.IEpochTrainer;
 import org.deeplearning4j.rl4j.learning.sync.qlearning.QLearning;
@@ -32,7 +32,7 @@ public class DynDQNMain {
 
     public static final BlockingQueue<Runnable> queue = new LinkedBlockingQueue<>();
     static QLearningDiscreteDense<SystemState> dql = null;
-    static FilteredMultiLayerNetwork nn = null;
+    static MultiLayerNetwork nn = null;
     static SystemEnvironment mdp = null;
     static Map<String, String> argsMap;
     static int switches = 0;
@@ -52,7 +52,7 @@ public class DynDQNMain {
     }
 
     public static void runWithThreshold() {
-        int EPOCH_THRESHOLD = 20; // After 20 epochs
+        int EPOCH_THRESHOLD = 500; // After 500 epochs
 
         DynDQNMain.setup();
 
@@ -109,9 +109,9 @@ public class DynDQNMain {
     }
 
     public static void setup() {
-        if (switches++ >= 5) System.exit(0);
-        String topologyId = RandomUtils.getRandom(new String[]{"1", "2", "3"});
-        String actionSetId = RandomUtils.getRandom(new String[]{"1", "2", "3"});
+        if (switches++ > 2) System.exit(0);
+        String topologyId = switches == 1 ? "0" : "0"; // RandomUtils.getRandom(new String[]{"paper-4", "paper-7"});
+        String actionSetId = switches == 1 ? "paper-5" : "paper-6"; // RandomUtils.getRandom(new String[]{"paper-5", "paper-6"});
         System.out.println(String.format("[Dyn] Choosing topology '%s' with action set '%s'", topologyId, actionSetId));
 
         Topology topology = YAML.parse(String.format("data/topologies/topology-%s.yml", topologyId), Topology.class);
@@ -120,16 +120,16 @@ public class DynDQNMain {
         QLearning.QLConfiguration qlConfiguration = new QLearning.QLConfiguration(
                 Integer.parseInt(argsMap.getOrDefault("seed", "123")),                //Random seed
                 Integer.parseInt(argsMap.getOrDefault("maxEpochStep", "1000")),       //Max step By epoch
-                Integer.parseInt(argsMap.getOrDefault("maxStep", "150000")),          //Max step
+                Integer.parseInt(argsMap.getOrDefault("maxStep", "20000")),           //Max step
                 Integer.parseInt(argsMap.getOrDefault("expRepMaxSize", "5000")),      //Max size of experience replay
                 Integer.parseInt(argsMap.getOrDefault("batchSize", "128")),           //size of batches
                 Integer.parseInt(argsMap.getOrDefault("targetDqnUpdateFreq", "500")), //target update (hard)
                 Integer.parseInt(argsMap.getOrDefault("updateStart", "100")),         //num step noop warmup
                 Double.parseDouble(argsMap.getOrDefault("rewardFactor", "1")),        //reward scaling
-                Double.parseDouble(argsMap.getOrDefault("gamma", "0.75")),            //gamma
+                Double.parseDouble(argsMap.getOrDefault("gamma", "0.25")),            //gamma
                 Double.parseDouble(argsMap.getOrDefault("errorClamp", "0.5")),        //td-error clipping
                 Float.parseFloat(argsMap.getOrDefault("minEpsilon", "0.01")),         //min epsilon
-                Integer.parseInt(argsMap.getOrDefault("epsilonNbStep", "20000")),     //num step for eps greedy anneal
+                Integer.parseInt(argsMap.getOrDefault("epsilonNbStep", "1000")),     //num step for eps greedy anneal
                 Boolean.parseBoolean(argsMap.getOrDefault("doubleDQN", "false"))      //double DQN
         );
 
@@ -137,10 +137,10 @@ public class DynDQNMain {
         if (nn == null)
             nn = new NNBuilder().build(newMdp.getObservationSpace().size(), newMdp.getActionSpace().getSize(), Integer.parseInt(argsMap.getOrDefault("layers", "3")));
         else
-            nn = new DynNNBuilder<>(nn)
+            nn = new DynNNBuilder<>((MultiLayerNetwork) dql.getNeuralNet().getNeuralNetworks()[0])
                     .forLayer(0).transferIn(mdp.getObservationSpace().getMap(), newMdp.getObservationSpace().getMap())
                     .forLayer(-1).transferOut(mdp.getActionSpace().getMap(), newMdp.getActionSpace().getMap())
-                    .build(FilteredMultiLayerNetwork.class);
+                    .build();
 
         //nn.setMultiLayerNetworkPredictionFilter(input -> mdp.getActionSpace().actionsMask(input));
         nn.setListeners(new ScoreIterationListener(100));

@@ -23,7 +23,7 @@ public class QNMain {
         Map<String, String> argsMap = ArgsUtils.toMap(args);
 
         Topology topology = YAML.parse(String.format("data/topologies/topology-%s.yml", argsMap.getOrDefault("topology", "paper-4")), Topology.class);
-        ActionSet actionSet = YAML.parse(String.format("data/action-sets/action-set-%s.yml", argsMap.getOrDefault("actionSet", "paper")), ActionSet.class);
+        ActionSet actionSet = YAML.parse(String.format("data/action-sets/action-set-%s.yml", argsMap.getOrDefault("actionSet", "paper-6")), ActionSet.class);
 
         SystemEnvironment mdp = new SystemEnvironment(topology, actionSet);
 

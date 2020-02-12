@@ -2,6 +2,7 @@ package com.secureai;
 
 import com.secureai.nn.DynNNBuilder;
 import com.secureai.utils.ScoreWriterListener;
+import org.apache.log4j.BasicConfigurator;
 import org.deeplearning4j.datasets.fetchers.MnistDataFetcher;
 import org.deeplearning4j.datasets.iterator.impl.MnistDataSetIterator;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
@@ -21,11 +22,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 public class DynamicMNISTExample {
     private static Logger log = LoggerFactory.getLogger(DynamicMNISTExample.class);
 
     public static void main(String[] args) throws Exception {
+        BasicConfigurator.configure();
         //number of rows and columns in the input pictures
         final int numRows = 28;
         final int numColumns = 28;
@@ -80,8 +83,8 @@ public class DynamicMNISTExample {
 
         // NEW MODEL
 
-        //MultiLayerNetwork newModel = new DynNNBuilder(model).addOutputs(1).build();
-        MultiLayerNetwork newModel = new DynNNBuilder(model).forLayer(-1).setBlockSize(1).appendOut(1).build(MultiLayerNetwork.class);
+        MultiLayerNetwork newModel = new DynNNBuilder<>(model).forLayer(-1).transferOut(Arrays.asList("0", "1", "2", "3", "4", "5", "6", "7", "8"), Arrays.asList("0", "1", "2", "3", "4", "5", "6", "7", "8", "9")).build();
+        //MultiLayerNetwork newModel = new DynNNBuilder<>(model).forLayer(-1).setBlockSize(1).appendOut(1).build();
         //MultiLayerNetwork newModel = new TransferLearning.Builder(model).nOutReplace(model.getLayers().length - 1, 10, WeightInit.XAVIER).build();
         System.out.println(newModel.summary());
 

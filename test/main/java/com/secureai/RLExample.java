@@ -1,5 +1,6 @@
 package com.secureai;
 
+import org.apache.log4j.BasicConfigurator;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.deeplearning4j.rl4j.learning.sync.qlearning.QLearning;
 import org.deeplearning4j.rl4j.learning.sync.qlearning.discrete.QLearningDiscreteDense;
@@ -37,6 +38,7 @@ public class RLExample {
                     .l2(0.001).updater(new Adam(0.0005)).numHiddenNodes(16).numLayer(3).listeners(new ScoreIterationListener[]{new ScoreIterationListener(10)}).build();
 
     public static void main(String[] args) throws IOException {
+        BasicConfigurator.configure();
         // cd gym-http-api
         // python gym_http_server.py
         trainCartpole();

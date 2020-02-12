@@ -2,19 +2,13 @@ id: topology-1
 
 tasks:
   # Services
-  microservice-rest:
+  microservice:
     type: image
     replication: 1
 
-  # Databases
-  database-mysql-core:
-    type: database
-    replication: 1
-
 connections:
-  # Second tier
-  microservice-rest-to-database-mysql-core:
+  microservice-to-internet:
     type: proprietary
     direction: bidirectional
     from: microservice-rest
-    to: database-mysql-core
+    to: internet

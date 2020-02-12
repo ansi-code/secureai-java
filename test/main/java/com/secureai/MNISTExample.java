@@ -1,5 +1,6 @@
 package com.secureai;
 
+import org.apache.log4j.BasicConfigurator;
 import org.deeplearning4j.datasets.iterator.impl.MnistDataSetIterator;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
@@ -20,6 +21,7 @@ public class MNISTExample {
     private static Logger log = LoggerFactory.getLogger(MNISTExample.class);
 
     public static void main(String[] args) throws Exception {
+        BasicConfigurator.configure();
         //number of rows and columns in the input pictures
         final int numRows = 28;
         final int numColumns = 28;
