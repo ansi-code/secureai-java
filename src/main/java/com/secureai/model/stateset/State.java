@@ -11,7 +11,8 @@ public enum State {
     updated(1),
     upgradable(2),
     corrupted(3),
-    vulnerable(4);
+    vulnerable(4),
+    firewall_active(5);
 
     @Getter
     @NonNull

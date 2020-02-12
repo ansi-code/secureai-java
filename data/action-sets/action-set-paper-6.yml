@@ -14,6 +14,12 @@ actions:
     disruptive: true
     pre-condition: state[active] == true && state[corrupted] == true
     post-condition: state[corrupted] = rand(0)
+  start-firewall:
+    execution-time: 100
+    execution-cost: 5
+    disruptive: true
+    pre-condition: state[firewall_active] == true
+    post-condition: state[firewall_active] = rand(1)
   update:
     execution-time: 1000
     execution-cost: 150
