@@ -2,9 +2,6 @@ package com.secureai;
 
 public class SeqMain {
     public static void main(String[] args) throws Exception {
-        DQNMain.main("--layers", "3", "--topology", "paper-4", "--gamma", "2");
-        /*
-
         // THIS IS THE TEST FOR LAYERS COMPARISON
         DQNMain.main("--layers", "1", "--topology", "0");
         DQNMain.main("--layers", "2", "--topology", "0");
@@ -38,6 +35,5 @@ public class SeqMain {
         // THIS IS THE TEST FOR DynDDQN
         DynDQNMain.main("--layers", "3", "--gamma", "0.75");
         DynDQNMain.main("--layers", "3", "--gamma", "0.75", "--doubleDQN", "true");
-         */
     }
 }
