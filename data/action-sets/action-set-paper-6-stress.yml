@@ -1,0 +1,40 @@
+id: action-set-paper
+
+actions:
+
+  start:
+    execution-time: 2000
+    execution-cost: 200
+    disruptive: false
+    pre-condition: state[active] == false
+    post-condition: state[active] = rand(1)
+  restart:
+    execution-time: 300
+    execution-cost: 50
+    disruptive: true
+    pre-condition: state[active] == true && state[corrupted] == true
+    post-condition: state[corrupted] = rand(0)
+  start-firewall:
+    execution-time: 100
+    execution-cost: 5
+    disruptive: false
+    pre-condition: state[firewall_active] == false
+    post-condition: state[firewall_active] = rand(1)
+  update:
+    execution-time: 1000
+    execution-cost: 150
+    disruptive: false
+    pre-condition: state[active] == true && state[upgradable] == true && state[updated] == false
+    post-condition: state[upgradable] = rand(0), state[updated] = rand(1)
+  heal:
+    execution-time: 1200
+    execution-cost: 200
+    disruptive: true
+    pre-condition: state[active] == true && state[corrupted] == true
+    post-condition: state[corrupted] = rand(0)
+  fix:
+    execution-time: 700
+    execution-cost: 100
+    disruptive: true
+    pre-condition: state[active] == true && state[vulnerable] == true
+    post-condition: state[vulnerable] = rand(0)

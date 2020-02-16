@@ -53,7 +53,7 @@ public class DynNNBuilder<NN extends MultiLayerNetwork> {
         paramsTable.put("W", Nd4jUtils.hInsert(weights, Nd4j.rand(weights.rows(), count * this.currentLayerBlockSize).mul(weights.maxNumber().doubleValue() - weights.minNumber().doubleValue()).add(weights.minNumber()), i * this.currentLayerBlockSize));
         paramsTable.put("b", Nd4jUtils.hInsert(biases, Nd4j.rand(biases.rows(), count * this.currentLayerBlockSize).mul(biases.maxNumber().doubleValue() - biases.minNumber().doubleValue()).add(biases.minNumber()), i * this.currentLayerBlockSize));
 
-        return this.setParamTable(paramsTable);
+        return this.setParamTableOut(paramsTable);
     }
 
     public DynNNBuilder<NN> switchOut(int from, int to) {
@@ -62,7 +62,7 @@ public class DynNNBuilder<NN extends MultiLayerNetwork> {
         paramsTable.put("W", Nd4jUtils.hSwitch(paramsTable.get("W"), NDArrayIndex.interval(from * this.currentLayerBlockSize, (from + 1) * this.currentLayerBlockSize), NDArrayIndex.interval(to * this.currentLayerBlockSize, (to + 1) * this.currentLayerBlockSize)));
         paramsTable.put("b", Nd4jUtils.hSwitch(paramsTable.get("b"), NDArrayIndex.interval(from * this.currentLayerBlockSize, (from + 1) * this.currentLayerBlockSize), NDArrayIndex.interval(to * this.currentLayerBlockSize, (to + 1) * this.currentLayerBlockSize)));
 
-        return this.setParamTable(paramsTable);
+        return this.setParamTableOut(paramsTable);
     }
 
     public DynNNBuilder<NN> deleteOut(int i) {
@@ -71,7 +71,7 @@ public class DynNNBuilder<NN extends MultiLayerNetwork> {
         paramsTable.put("W", Nd4jUtils.hDelete(paramsTable.get("W"), NDArrayIndex.interval(i * this.currentLayerBlockSize, 1, (i + 1) * this.currentLayerBlockSize)));
         paramsTable.put("b", Nd4jUtils.hDelete(paramsTable.get("b"), NDArrayIndex.interval(i * this.currentLayerBlockSize, 1, (i + 1) * this.currentLayerBlockSize)));
 
-        return this.setParamTable(paramsTable);
+        return this.setParamTableOut(paramsTable);
     }
 
     public DynNNBuilder<NN> moveOut(int from, int to) {
@@ -80,7 +80,7 @@ public class DynNNBuilder<NN extends MultiLayerNetwork> {
         paramsTable.put("W", Nd4jUtils.hMove(paramsTable.get("W"), NDArrayIndex.interval(from * this.currentLayerBlockSize, (from + 1) * this.currentLayerBlockSize), to * this.currentLayerBlockSize));
         paramsTable.put("b", Nd4jUtils.hMove(paramsTable.get("b"), NDArrayIndex.interval(from * this.currentLayerBlockSize, (from + 1) * this.currentLayerBlockSize), to * this.currentLayerBlockSize));
 
-        return this.setParamTable(paramsTable);
+        return this.setParamTableOut(paramsTable);
     }
 
     public DynNNBuilder<NN> transferIn(List<String> oldMap, List<String> newMap) {
@@ -95,7 +95,7 @@ public class DynNNBuilder<NN extends MultiLayerNetwork> {
 
         paramsTable.put("W", Nd4j.vstack(newWeights));
 
-        return this.setParamTable(paramsTable);
+        return this.setParamTableIn(paramsTable);
     }
 
     public DynNNBuilder<NN> transferOut(List<String> oldMap, List<String> newMap) {
@@ -118,7 +118,7 @@ public class DynNNBuilder<NN extends MultiLayerNetwork> {
         paramsTable.put("W", Nd4j.hstack(newWeights).add(0));
         paramsTable.put("b", Nd4j.hstack(newBiases).add(0));
 
-        return this.setParamTable(paramsTable);
+        return this.setParamTableOut(paramsTable);
     }
 
     public DynNNBuilder<NN> replaceIn(List<String> oldMap, List<String> newMap) {
@@ -137,13 +137,25 @@ public class DynNNBuilder<NN extends MultiLayerNetwork> {
         return this;
     }
 
-    private DynNNBuilder<NN> setParamTable(Map<String, INDArray> paramsTable) {
-        MultiLayerNetwork newModel = new TransferLearning.Builder(this.model)
-                .nInReplace(this.currentLayerIndex, paramsTable.get("W").rows(), WeightInit.XAVIER)
-                .nOutReplace(this.currentLayerIndex, paramsTable.get("W").columns(), WeightInit.XAVIER)
+    private DynNNBuilder<NN> setParamTableIn(Map<String, INDArray> paramsTable) {
+        this.model = new TransferLearning.Builder(this.model)
+                .nInReplace(this.currentLayerIndex, paramsTable.get("W").rows(), WeightInit.ZERO)
                 .build();
-        newModel.getLayer(this.currentLayerIndex).setParamTable(paramsTable);
-        this.model = newModel;
+
+        return this.setParamTable(paramsTable);
+    }
+
+    private DynNNBuilder<NN> setParamTableOut(Map<String, INDArray> paramsTable) {
+        this.model = new TransferLearning.Builder(this.model)
+                .nOutReplace(this.currentLayerIndex, paramsTable.get("W").columns(), WeightInit.ZERO)
+                .build();
+
+        return this.setParamTable(paramsTable);
+    }
+
+    private DynNNBuilder<NN> setParamTable(Map<String, INDArray> paramsTable) {
+        this.model.getLayer(this.currentLayerIndex).setParam("W", paramsTable.get("W"));
+        this.model.getLayer(this.currentLayerIndex).setParam("b", paramsTable.get("b"));
 
         return this;
     }

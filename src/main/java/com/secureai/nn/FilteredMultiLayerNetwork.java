@@ -34,6 +34,7 @@ public class FilteredMultiLayerNetwork extends MultiLayerNetwork {
 
     @Override
     public INDArray output(INDArray input, boolean train, INDArray featuresMask, INDArray labelsMask) {
+        //System.out.println(super.output(input, train, featuresMask, labelsMask));
         INDArray result = this.multiLayerNetworkPredictionFilter != null ? super.output(input, train, featuresMask, labelsMask).muli(this.multiLayerNetworkPredictionFilter.run(input)) : super.output(input, train, featuresMask, labelsMask);
         // This is needed to add some salt when we are masking too many actions
         for (int i = 0; i < result.rows(); i++)

@@ -29,6 +29,7 @@ public class SystemState extends DiscreteState {
             this.set(resourceId, State.upgradable, RandomUtils.getRandom().nextDouble() > 0.5);
             this.set(resourceId, State.corrupted, RandomUtils.getRandom().nextDouble() > 0.6);
             this.set(resourceId, State.vulnerable, RandomUtils.getRandom().nextDouble() > 0.7);
+            this.set(resourceId, State.firewall_active, RandomUtils.getRandom().nextDouble() > 0.5);
         });
     }
 
@@ -39,6 +40,7 @@ public class SystemState extends DiscreteState {
             this.set(resourceId, State.upgradable, true);
             this.set(resourceId, State.corrupted, true);
             this.set(resourceId, State.vulnerable, true);
+            this.set(resourceId, State.firewall_active, false);
         });
     }
 
